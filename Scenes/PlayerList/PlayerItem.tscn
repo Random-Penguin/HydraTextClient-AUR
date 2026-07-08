@@ -1,0 +1,154 @@
+[gd_scene format=3 uid="uid://c45atmr4ebp3"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_7wary"]
+[ext_resource type="Script" uid="uid://bpuakogk7oyn2" path="res://Scripts/PlayerList/PlayerItem.cs" id="1_u4hbj"]
+[ext_resource type="Script" uid="uid://hf60jst6h03l" path="res://Scripts/Utility/UIHelpers/RichLabelInteractions.cs" id="2_huhc0"]
+[ext_resource type="PackedScene" uid="uid://ept1ew3d5xe3" path="res://Scenes/Utility/Highlighter.tscn" id="2_mu871"]
+
+[sub_resource type="Gradient" id="Gradient_huhc0"]
+offsets = PackedFloat32Array(0, 0.35573122, 1)
+colors = PackedColorArray(0.98274976, 6.08854e-06, 1.540184e-06, 1, 1, 0.51666665, 0, 1, 0, 1, 0.4, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u4hbj"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.39607844)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="Gradient" id="Gradient_u4hbj"]
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(0, 1, 0.4000001, 0.23529412, 0, 0, 0, 0.16862746)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_huhc0"]
+gradient = SubResource("Gradient_u4hbj")
+
+[sub_resource type="Gradient" id="Gradient_mu871"]
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(0.98, 0, 0, 0.23529412, 0, 0, 0, 0.16862746)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gxn6j"]
+gradient = SubResource("Gradient_mu871")
+
+[sub_resource type="Gradient" id="Gradient_gxn6j"]
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(1, 0.9333334, 0, 0.23529412, 0, 0, 0, 0.16862746)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_irqym"]
+gradient = SubResource("Gradient_gxn6j")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uq7wj"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w1qgd"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 1, 1, 0.4)
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 10
+
+[node name="PlayerItem" type="PanelContainer" unique_id=1141079990 node_paths=PackedStringArray("Player", "CheckCounter", "CheckIndicator", "CheckProgress", "ConnectedIndicator", "DisconnectedIndicator", "GoalIndicator")]
+clip_contents = true
+offset_right = 368.0
+offset_bottom = 27.0
+size_flags_horizontal = 3
+script = ExtResource("1_u4hbj")
+CheckGradient = SubResource("Gradient_huhc0")
+GoalColor = Color(1, 0.9333334, 0, 1)
+Player = NodePath("VBoxContainer/HBoxContainer/RichTextLabel")
+CheckCounter = NodePath("VBoxContainer/HBoxContainer/Label")
+CheckIndicator = NodePath("VBoxContainer/HBoxContainer/Label2")
+CheckProgress = NodePath("VBoxContainer/ProgressBar")
+ConnectedIndicator = NodePath("Panel/StatusConnected")
+DisconnectedIndicator = NodePath("Panel/StatusNotConnected")
+GoalIndicator = NodePath("Panel/StatusGoal")
+
+[node name="Panel" type="Panel" parent="." unique_id=51070588]
+clip_children = 1
+clip_contents = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u4hbj")
+
+[node name="StatusConnected" type="TextureRect" parent="Panel" unique_id=851708737]
+visible = false
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_huhc0")
+
+[node name="StatusNotConnected" type="TextureRect" parent="Panel" unique_id=339405206]
+visible = false
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_gxn6j")
+
+[node name="StatusGoal" type="TextureRect" parent="Panel" unique_id=21543730]
+visible = false
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_irqym")
+
+[node name="Highlighter" parent="Panel" unique_id=902065195 instance=ExtResource("2_mu871")]
+layout_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=707604762]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1982694005]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer" unique_id=351135448]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = " Player A"
+fit_content = true
+script = ExtResource("2_huhc0")
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1287203400]
+layout_mode = 2
+text = "##,###/##,### "
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1826289608]
+modulate = Color(0, 1, 0.4000001, 0)
+layout_mode = 2
+text = "+ "
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer" unique_id=509337129]
+modulate = Color(0, 1, 0.4000001, 1)
+layout_mode = 2
+theme = ExtResource("1_7wary")
+theme_override_styles/background = SubResource("StyleBoxFlat_uq7wj")
+theme_override_styles/fill = SubResource("StyleBoxFlat_w1qgd")
+value = 24.53
+show_percentage = false

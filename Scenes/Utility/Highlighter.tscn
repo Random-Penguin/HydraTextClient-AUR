@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://ept1ew3d5xe3"]
+
+[ext_resource type="Script" uid="uid://bju54mkmirfb0" path="res://Scripts/Utility/Highlighter.cs" id="1_al5p0"]
+
+[node name="Highlighter" type="ColorRect" unique_id=902065195]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 1, 0)
+script = ExtResource("1_al5p0")
+Hover = Color(0.94100165, 0.97269243, 1, 0.573)

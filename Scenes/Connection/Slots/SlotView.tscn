@@ -1,0 +1,137 @@
+[gd_scene format=3 uid="uid://33405pmiteac"]
+
+[ext_resource type="PackedScene" uid="uid://4ur15x2eqbbi" path="res://Scenes/Connection/Slots/SlotPortrait.tscn" id="1_87y10"]
+[ext_resource type="Script" uid="uid://cxd4eja0kq2r6" path="res://Scripts/Connection/Slots/SlotView.cs" id="1_j5y7k"]
+[ext_resource type="Script" uid="uid://7agnoy5egtoa" path="res://Scripts/Utility/UIHelpers/UISaver.cs" id="2_oacbj"]
+[ext_resource type="Texture2D" uid="uid://fopjjxgkvyiv" path="res://Assets/Images/UI/UnknownGame.png" id="3_nusw7"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="5_28ygy"]
+
+[node name="View" type="MarginContainer" unique_id=1050209111 node_paths=PackedStringArray("MainSlotContainer", "SubSlotContainer", "LeaderChanger", "FontSize", "ScaleBox")]
+offset_right = 665.0
+offset_bottom = 530.0
+script = ExtResource("1_j5y7k")
+MainSlotContainer = NodePath("VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/SlotContainer")
+SubSlotContainer = NodePath("VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/FoldableContainer/SlotContainer")
+SlotPortraitScene = ExtResource("1_87y10")
+LeaderChanger = NodePath("VBoxContainer/HBoxContainer/OptionButton")
+FontSize = NodePath("VBoxContainer/HBoxContainer/FontSize")
+ScaleBox = NodePath("VBoxContainer/HBoxContainer/ScaleBox")
+UnknownGame = ExtResource("3_nusw7")
+metadata/_tab_index = 1
+
+[node name="UISaver" type="Control" parent="." unique_id=189766631 node_paths=PackedStringArray("Controls")]
+visible = false
+layout_mode = 2
+script = ExtResource("2_oacbj")
+Prefix = "Connection/SlotsMenu"
+Controls = {
+"PortraitFontSize": NodePath("../VBoxContainer/HBoxContainer/FontSize"),
+"PortraitScale": NodePath("../VBoxContainer/HBoxContainer/ScaleBox"),
+"SlotsNotConnectedFolder": NodePath("../VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/FoldableContainer")
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2009290757]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=801656394]
+modulate = Color(1, 0.5803922, 0.5647059, 1)
+custom_minimum_size = Vector2(0.005, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Please limit or disconnect from slots you don't need open, it causes unneeded stress on the AP servers"
+autowrap_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer" unique_id=873715717]
+custom_minimum_size = Vector2(0.005, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Click a slot to edit it"
+autowrap_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=723575523]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=705082872]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1277811073]
+layout_mode = 2
+text = "Leader:"
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/HBoxContainer" unique_id=1084373754]
+layout_mode = 2
+theme = ExtResource("5_28ygy")
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=1795081307]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1223610009]
+layout_mode = 2
+text = "Font Size:"
+
+[node name="FontSize" type="SpinBox" parent="VBoxContainer/HBoxContainer" unique_id=1408129143]
+layout_mode = 2
+min_value = 5.0
+value = 14.0
+rounded = true
+allow_greater = true
+custom_arrow_step = 1.0
+custom_arrow_round = true
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=939361100]
+layout_mode = 2
+
+[node name="PortraitScale" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=862110446]
+layout_mode = 2
+text = "Portrait Scale:"
+
+[node name="ScaleBox" type="SpinBox" parent="VBoxContainer/HBoxContainer" unique_id=1784734131]
+layout_mode = 2
+min_value = 0.55
+step = 0.05
+value = 1.0
+allow_greater = true
+custom_arrow_step = 0.05
+custom_arrow_round = true
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=1650162209]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1248246170]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer" unique_id=386599398]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/ScrollContainer" unique_id=1541207336]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SlotContainer" type="HFlowContainer" parent="VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1256287948]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+offset_transform_enabled = true
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer" unique_id=2021628835]
+layout_mode = 2
+
+[node name="FoldableContainer" type="FoldableContainer" parent="VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1223318099]
+layout_mode = 2
+folded = true
+title = "Slots not in the Multiworld"
+
+[node name="SlotContainer" type="HFlowContainer" parent="VBoxContainer/MarginContainer/ScrollContainer/VBoxContainer/FoldableContainer" unique_id=1931599529]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+offset_transform_enabled = true
+
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer/OptionButton" to="." method="ChangeLeader"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/FontSize" to="." method="ChangeFontSize"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/ScaleBox" to="." method="ChangePortraitScale"]

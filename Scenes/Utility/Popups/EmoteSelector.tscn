@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://cqvlljkvk1syn"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_qm8it"]
+[ext_resource type="Script" uid="uid://btlg6rir4bi7" path="res://Scripts/Clients/TextClient/EmotePicker.cs" id="2_qm8it"]
+
+[node name="Window" type="Window" unique_id=1985108309 node_paths=PackedStringArray("Search", "Container")]
+oversampling_override = 1.0
+title = "Select an Emote"
+initial_position = 2
+size = Vector2i(600, 400)
+visible = false
+wrap_controls = true
+always_on_top = true
+popup_window = true
+minimize_disabled = true
+maximize_disabled = true
+force_native = true
+theme = ExtResource("1_qm8it")
+script = ExtResource("2_qm8it")
+Search = NodePath("Panel/MarginContainer/VBoxContainer/LineEdit")
+Container = NodePath("Panel/MarginContainer/VBoxContainer/ScrollContainer/HFlowContainer")
+
+[node name="Panel" type="Panel" parent="." unique_id=620912998]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_qm8it")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=374771991]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1314315719]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer" unique_id=584210933]
+layout_mode = 2
+placeholder_text = " Search"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1314438525]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HFlowContainer" type="HFlowContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1754987363]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="text_changed" from="Panel/MarginContainer/VBoxContainer/LineEdit" to="." method="UpdateSearch"]

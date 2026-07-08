@@ -1,0 +1,252 @@
+[gd_scene format=3 uid="uid://d0g6mjcmbbqen"]
+
+[ext_resource type="Script" uid="uid://dffct8u1kstx7" path="res://Scripts/Clients/TextClient/TextClient.cs" id="1_vppm8"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_x4lw8"]
+[ext_resource type="PackedScene" uid="uid://bjg10wgdw17bq" path="res://Scenes/Clients/TextClient/MessageTypes/ClientMessage.tscn" id="2_8nh8t"]
+[ext_resource type="PackedScene" uid="uid://tdmfkdval8ia" path="res://Scenes/Clients/TextClient/MessageTypes/ItemMessage.tscn" id="3_o81v0"]
+[ext_resource type="Script" uid="uid://bnlheu4hq2ewo" path="res://Scripts/Utility/UIHelpers/ScrollFix.cs" id="3_sx71t"]
+[ext_resource type="Script" uid="uid://be8bo4berv6ms" path="res://Scripts/Utility/UIHelpers/ChildLimiter.cs" id="4_d5e06"]
+[ext_resource type="PackedScene" uid="uid://cqvlljkvk1syn" path="res://Scenes/Utility/Popups/EmoteSelector.tscn" id="4_n7wuu"]
+[ext_resource type="PackedScene" uid="uid://cqwyxstxspd35" path="res://Scenes/Clients/TextClient/MessageTypes/HintMessage.tscn" id="4_vllav"]
+[ext_resource type="PackedScene" uid="uid://car7skclasfsc" path="res://Scenes/Clients/TextClient/MessageTypes/ServerMessage.tscn" id="5_tmo5f"]
+[ext_resource type="PackedScene" uid="uid://dneop5q6hxcgo" path="res://Scenes/Clients/TextClient/MessageTypes/ItemCheatMessage.tscn" id="6_wjoxs"]
+[ext_resource type="PackedScene" uid="uid://bpnchslgr66vo" path="res://Scenes/Clients/TextClient/MessageTypes/CommandResultMessage.tscn" id="7_wjoxs"]
+[ext_resource type="PackedScene" uid="uid://bfte8rmbrdrk7" path="res://Scenes/Clients/TextClient/MessageTypes/JoinMessage.tscn" id="8_cr5du"]
+[ext_resource type="PackedScene" uid="uid://bx552iie8qvy6" path="res://Scenes/Clients/TextClient/MessageTypes/LeaveMessage.tscn" id="9_x4lw8"]
+[ext_resource type="PackedScene" uid="uid://cr7om1wo83s1h" path="res://Scenes/Clients/TextClient/MessageTypes/TagsChangedMessage.tscn" id="10_bcay1"]
+[ext_resource type="PackedScene" uid="uid://bqisbomfxfu6r" path="res://Scenes/Utility/Popout.tscn" id="12_bcay1"]
+[ext_resource type="PackedScene" uid="uid://bsgcxmwr6vdi2" path="res://Scenes/Clients/TextClient/MessageTypes/GoalMessage.tscn" id="12_jucmm"]
+[ext_resource type="PackedScene" uid="uid://bsi5phhveo36w" path="res://Scenes/Clients/TextClient/MessageTypes/DeathLinkMessage.tscn" id="13_r31ss"]
+[ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="17_f17e1"]
+
+[node name="Text Client" type="VBoxContainer" unique_id=763075218 node_paths=PackedStringArray("Containers", "ScrollFixes", "UniqueLimiters", "SendMessageEdit", "EmotePicker")]
+offset_right = 1152.0
+offset_bottom = 617.0
+theme = ExtResource("1_x4lw8")
+script = ExtResource("1_vppm8")
+Containers = {
+0: NodePath("TabContainer/All/AllScroll/MarginContainer/AllLimiter"),
+1: NodePath("TabContainer/Chat Only/ChatOnlyScroll/MarginContainer2/ChatLimiter"),
+2: NodePath("TabContainer/Item Only/ItemOnlyScroll/MarginContainer3/ItemLimiter"),
+3: NodePath("TabContainer/Item Only/ItemOnlyScroll/MarginContainer3/ItemLimiter"),
+4: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+5: NodePath("TabContainer/Hint Only/HintOnlyScroll/MarginContainer4/HintLimiter"),
+6: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+7: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+8: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+9: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+10: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+11: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
+}
+MessageScenes = Dictionary[int, PackedScene]({
+1: ExtResource("2_8nh8t"),
+2: ExtResource("3_o81v0"),
+3: ExtResource("6_wjoxs"),
+4: ExtResource("5_tmo5f"),
+5: ExtResource("4_vllav"),
+6: ExtResource("7_wjoxs"),
+7: ExtResource("8_cr5du"),
+8: ExtResource("9_x4lw8"),
+9: ExtResource("10_bcay1"),
+10: ExtResource("12_jucmm"),
+11: ExtResource("13_r31ss")
+})
+ScrollFixes = [NodePath("TabContainer/All/AllScroll"), NodePath("TabContainer/Chat Only/ChatOnlyScroll"), NodePath("TabContainer/Item Only/ItemOnlyScroll"), NodePath("TabContainer/Hint Only/HintOnlyScroll"), NodePath("TabContainer/Server Only/ServerOnlyScroll")]
+UniqueLimiters = [NodePath("TabContainer/All/AllScroll/MarginContainer/AllLimiter"), NodePath("TabContainer/Chat Only/ChatOnlyScroll/MarginContainer2/ChatLimiter"), NodePath("TabContainer/Item Only/ItemOnlyScroll/MarginContainer3/ItemLimiter"), NodePath("TabContainer/Hint Only/HintOnlyScroll/MarginContainer4/HintLimiter"), NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")]
+SendMessageEdit = NodePath("MarginContainer5/HBoxContainer/LineEdit")
+EmotePicker = NodePath("EmotePicker")
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1908550667]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="All" parent="TabContainer" unique_id=763240208 node_paths=PackedStringArray("Child") instance=ExtResource("12_bcay1")]
+layout_mode = 2
+Title = "All Client Messages"
+Child = NodePath("AllScroll")
+metadata/_tab_index = 0
+
+[node name="AllScroll" type="ScrollContainer" parent="TabContainer/All" unique_id=612864098]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+follow_focus = true
+draw_focus_border = true
+script = ExtResource("3_sx71t")
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/All/AllScroll" unique_id=1751431455]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AllLimiter" type="VBoxContainer" parent="TabContainer/All/AllScroll/MarginContainer" unique_id=456857069]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+script = ExtResource("4_d5e06")
+
+[node name="Chat Only" parent="TabContainer" unique_id=541597068 node_paths=PackedStringArray("Child") instance=ExtResource("12_bcay1")]
+visible = false
+layout_mode = 2
+Title = "Chat Only Client Messages"
+Child = NodePath("ChatOnlyScroll")
+metadata/_tab_index = 1
+
+[node name="ChatOnlyScroll" type="ScrollContainer" parent="TabContainer/Chat Only" unique_id=1138373235]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+follow_focus = true
+draw_focus_border = true
+script = ExtResource("3_sx71t")
+
+[node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Chat Only/ChatOnlyScroll" unique_id=1635861533]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ChatLimiter" type="VBoxContainer" parent="TabContainer/Chat Only/ChatOnlyScroll/MarginContainer2" unique_id=1125797672]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+script = ExtResource("4_d5e06")
+
+[node name="Item Only" parent="TabContainer" unique_id=1906818241 node_paths=PackedStringArray("Child") instance=ExtResource("12_bcay1")]
+visible = false
+layout_mode = 2
+Title = "Item Only Client Messages"
+Child = NodePath("ItemOnlyScroll")
+metadata/_tab_index = 2
+
+[node name="ItemOnlyScroll" type="ScrollContainer" parent="TabContainer/Item Only" unique_id=983542383]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+follow_focus = true
+draw_focus_border = true
+script = ExtResource("3_sx71t")
+
+[node name="MarginContainer3" type="MarginContainer" parent="TabContainer/Item Only/ItemOnlyScroll" unique_id=1184904329]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ItemLimiter" type="VBoxContainer" parent="TabContainer/Item Only/ItemOnlyScroll/MarginContainer3" unique_id=153466606]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+script = ExtResource("4_d5e06")
+
+[node name="Hint Only" parent="TabContainer" unique_id=184285727 node_paths=PackedStringArray("Child") instance=ExtResource("12_bcay1")]
+visible = false
+layout_mode = 2
+Title = "Hint Only Client Messages"
+Child = NodePath("HintOnlyScroll")
+metadata/_tab_index = 3
+
+[node name="HintOnlyScroll" type="ScrollContainer" parent="TabContainer/Hint Only" unique_id=1506464808]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+follow_focus = true
+draw_focus_border = true
+script = ExtResource("3_sx71t")
+
+[node name="MarginContainer4" type="MarginContainer" parent="TabContainer/Hint Only/HintOnlyScroll" unique_id=201344722]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HintLimiter" type="VBoxContainer" parent="TabContainer/Hint Only/HintOnlyScroll/MarginContainer4" unique_id=1315179150]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+script = ExtResource("4_d5e06")
+
+[node name="Server Only" parent="TabContainer" unique_id=1623854532 node_paths=PackedStringArray("Child") instance=ExtResource("12_bcay1")]
+visible = false
+layout_mode = 2
+Title = "Server Only Client Messages"
+Child = NodePath("ServerOnlyScroll")
+metadata/_tab_index = 4
+
+[node name="ServerOnlyScroll" type="ScrollContainer" parent="TabContainer/Server Only" unique_id=1634355400]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+follow_focus = true
+draw_focus_border = true
+script = ExtResource("3_sx71t")
+
+[node name="MarginContainer5" type="MarginContainer" parent="TabContainer/Server Only/ServerOnlyScroll" unique_id=1546660297]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ServerLimit" type="VBoxContainer" parent="TabContainer/Server Only/ServerOnlyScroll/MarginContainer5" unique_id=674338099]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+script = ExtResource("4_d5e06")
+
+[node name="MarginContainer5" type="MarginContainer" parent="." unique_id=1230388268]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer5" unique_id=409863719]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer5/HBoxContainer" unique_id=818725739]
+layout_mode = 2
+text = " Send "
+script = ExtResource("17_f17e1")
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer5/HBoxContainer" unique_id=1042117949]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = " Send Message"
+keep_editing_on_text_submit = true
+clear_button_enabled = true
+
+[node name="Button3" type="Button" parent="MarginContainer5/HBoxContainer" unique_id=690488898]
+layout_mode = 2
+text = ":)"
+script = ExtResource("17_f17e1")
+
+[node name="Button2" type="Button" parent="MarginContainer5/HBoxContainer" unique_id=1945411663]
+layout_mode = 2
+text = "Scroll to Bottom"
+script = ExtResource("17_f17e1")
+
+[node name="EmotePicker" parent="." unique_id=1985108309 instance=ExtResource("4_n7wuu")]
+
+[connection signal="pressed" from="MarginContainer5/HBoxContainer/Button" to="." method="SubmitMsg"]
+[connection signal="text_submitted" from="MarginContainer5/HBoxContainer/LineEdit" to="." method="Clear" flags=18]
+[connection signal="text_submitted" from="MarginContainer5/HBoxContainer/LineEdit" to="." method="SendMessage"]
+[connection signal="pressed" from="MarginContainer5/HBoxContainer/Button3" to="EmotePicker" method="show"]
+[connection signal="pressed" from="MarginContainer5/HBoxContainer/Button2" to="." method="ScrollToBottom"]

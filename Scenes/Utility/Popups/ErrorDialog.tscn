@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dwwtwy2mhiqmu"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_w4e6j"]
+[ext_resource type="Script" uid="uid://by4lpbh11nus3" path="res://Scripts/Utility/Popups/ErrorDialog.cs" id="2_udxma"]
+
+[node name="Window" type="Window" unique_id=1985108309 node_paths=PackedStringArray("Msg")]
+oversampling_override = 1.0
+title = "An Error has Occurred"
+initial_position = 2
+size = Vector2i(600, 400)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+minimize_disabled = true
+maximize_disabled = true
+force_native = true
+theme = ExtResource("1_w4e6j")
+script = ExtResource("2_udxma")
+Msg = NodePath("Panel/ScrollContainer/VBoxContainer/RichTextLabel")
+
+[node name="Panel" type="Panel" parent="." unique_id=620912998]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_w4e6j")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel" unique_id=1314438525]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer" unique_id=1314315719]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1284531940]
+modulate = Color(0.98984355, 5.4869056e-06, 9.62615e-07, 1)
+layout_mode = 2
+size_flags_vertical = 3
+fit_content = true
+
+[node name="Button" type="Button" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1578141905]
+layout_mode = 2
+theme = ExtResource("1_w4e6j")
+text = "OK"
+
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/Button" to="." method="hide"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/Button" to="." method="queue_free"]

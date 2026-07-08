@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://bqisbomfxfu6r"]
+
+[ext_resource type="Script" uid="uid://b5qlnkkqvcd5t" path="res://Scripts/Utility/UIHelpers/PopoutWindow.cs" id="1_kdg8i"]
+[ext_resource type="Texture2D" uid="uid://cld3kfwprixo2" path="res://Assets/Images/UI/Popout.png" id="2_scr47"]
+[ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="3_scr47"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hfk5j"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.60038817, 0.60038817, 0.60038817, 0)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w57e5"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Popout" type="Control" unique_id=763240208]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("1_kdg8i")
+
+[node name="Label" type="Label" parent="." unique_id=1477835798]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Window Popped Out"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="." unique_id=1678180442]
+top_level = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -8.0
+offset_bottom = 8.0
+grow_horizontal = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_hfk5j")
+theme_override_styles/hover = SubResource("StyleBoxFlat_w57e5")
+icon = ExtResource("2_scr47")
+expand_icon = true
+script = ExtResource("3_scr47")
+
+[connection signal="PoppedIn" from="." to="Label" method="set_visible" binds= [false]]
+[connection signal="PoppedOut" from="." to="Label" method="set_visible" binds= [true]]
+[connection signal="pressed" from="Button" to="." method="ToggleWindow"]

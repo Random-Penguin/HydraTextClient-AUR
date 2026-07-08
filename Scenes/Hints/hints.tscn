@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://bvm64478byib1"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_s5cbg"]
+[ext_resource type="Script" uid="uid://mkwym5gbr8rr" path="res://Scripts/Hints/HintTable.cs" id="2_ks14s"]
+[ext_resource type="Script" uid="uid://7agnoy5egtoa" path="res://Scripts/Utility/UIHelpers/UISaver.cs" id="3_k2v0s"]
+
+[node name="Hints" type="MarginContainer" unique_id=664656044]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_s5cbg")
+metadata/_tab_index = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1212527365]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FlowContainer" type="FlowContainer" parent="VBoxContainer" unique_id=2084420670]
+layout_mode = 2
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/FlowContainer" unique_id=1551349472]
+layout_mode = 2
+selected = 0
+item_count = 4
+popup/item_0/text = "All Hints"
+popup/item_0/id = 0
+popup/item_1/text = "Has Slot"
+popup/item_1/id = 1
+popup/item_2/text = "Signed In Only"
+popup/item_2/id = 2
+popup/item_3/text = "Leader Only"
+popup/item_3/id = 3
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/FlowContainer" unique_id=1605576700]
+layout_mode = 2
+text = "Show Found"
+
+[node name="CheckBox2" type="CheckBox" parent="VBoxContainer/FlowContainer" unique_id=125872548]
+layout_mode = 2
+button_pressed = true
+text = "Show Priority"
+
+[node name="CheckBox3" type="CheckBox" parent="VBoxContainer/FlowContainer" unique_id=1091371815]
+layout_mode = 2
+button_pressed = true
+text = "Show Unspecified"
+
+[node name="CheckBox4" type="CheckBox" parent="VBoxContainer/FlowContainer" unique_id=1495656394]
+layout_mode = 2
+button_pressed = true
+text = "Show No Priority"
+
+[node name="CheckBox5" type="CheckBox" parent="VBoxContainer/FlowContainer" unique_id=2022201390]
+layout_mode = 2
+button_pressed = true
+text = "Show Avoid"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1701859526]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/ScrollContainer" unique_id=939697757]
+layout_mode = 2
+size_flags_horizontal = 3
+fit_content = true
+autowrap_mode = 0
+script = ExtResource("2_ks14s")
+
+[node name="Control" type="Control" parent="." unique_id=206399141 node_paths=PackedStringArray("Controls")]
+layout_mode = 2
+script = ExtResource("3_k2v0s")
+Prefix = "hint_table"
+Controls = {
+"show_avoid": NodePath("../VBoxContainer/FlowContainer/CheckBox5"),
+"show_client": NodePath("../VBoxContainer/FlowContainer/OptionButton"),
+"show_found": NodePath("../VBoxContainer/FlowContainer/CheckBox"),
+"show_nopriority": NodePath("../VBoxContainer/FlowContainer/CheckBox4"),
+"show_priority": NodePath("../VBoxContainer/FlowContainer/CheckBox2"),
+"show_unspecified": NodePath("../VBoxContainer/FlowContainer/CheckBox3")
+}

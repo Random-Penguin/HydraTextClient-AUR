@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://4ur15x2eqbbi"]
+
+[ext_resource type="Texture2D" uid="uid://fopjjxgkvyiv" path="res://Assets/Images/UI/UnknownGame.png" id="1_nokb1"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_x5rjo"]
+[ext_resource type="Script" uid="uid://dm20krbjbxm4g" path="res://Scripts/Connection/Slots/SlotPortrait.cs" id="3_364q8"]
+[ext_resource type="PackedScene" uid="uid://ept1ew3d5xe3" path="res://Scenes/Utility/Highlighter.tscn" id="4_hrh00"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x5rjo"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.37342674, 0.09985284, 0.09985284, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_364q8"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.6538066, 1, 0.57396513, 0.4)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 10
+
+[node name="SlotPortrait" type="TextureRect" unique_id=118846534 node_paths=PackedStringArray("Portrait", "SlotNameLabel", "CheckCountPanel", "CheckCountLabel", "CheckProgressBar", "Tinter")]
+custom_minimum_size = Vector2(150, 225)
+offset_right = 150.0
+offset_bottom = 225.0
+offset_transform_scale = Vector2(0.425, 0.425)
+mouse_filter = 0
+theme = ExtResource("1_x5rjo")
+texture = ExtResource("1_nokb1")
+expand_mode = 4
+script = ExtResource("3_364q8")
+UnknownPortrait = ExtResource("1_nokb1")
+Portrait = NodePath(".")
+SlotNameLabel = NodePath("MarginContainer/VBoxContainer/PanelContainer/Label")
+CheckCountPanel = NodePath("MarginContainer/VBoxContainer/PanelContainer2")
+CheckCountLabel = NodePath("MarginContainer/VBoxContainer/PanelContainer2/Label")
+CheckProgressBar = NodePath("MarginContainer/VBoxContainer/PanelContainer2/ProgressBar")
+Tinter = NodePath("ColorRect")
+IdleTint = Color(0.1680183, 0.1680183, 0.1680183, 0.18)
+ConnectingTint = Color(0, 0.18039216, 0.078431375, 0.5568628)
+ConnectedTint = Color(0, 0.8235294, 0.35686275, 0.29803923)
+ErrorTint = Color(0.9882353, 0, 0.015686275, 0.25882354)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=234036211]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Highlighter" parent="." unique_id=902065195 instance=ExtResource("4_hrh00")]
+layout_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1477608573]
+clip_children = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=231748111]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=1590314869]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/PanelContainer" unique_id=1642843154]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Slot Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=72983717]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=1611016850]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/PanelContainer2" unique_id=86282782]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9499975, 0.9499975, 0.9499975, 0)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/background = SubResource("StyleBoxFlat_x5rjo")
+theme_override_styles/fill = SubResource("StyleBoxFlat_364q8")
+max_value = 1.0
+value = 0.46
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/PanelContainer2" unique_id=857967524]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "##,###/##,###"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true

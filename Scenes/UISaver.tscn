@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://ddi3pfkycocro"]
+
+[ext_resource type="Script" uid="uid://7agnoy5egtoa" path="res://Scripts/Utility/UIHelpers/UISaver.cs" id="1_utwwt"]
+
+[node name="UISaver" type="Control" unique_id=1084530359]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_utwwt")

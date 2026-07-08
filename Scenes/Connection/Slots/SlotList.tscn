@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dsrm5x73hmd0"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_7r6n1"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="2_o1y21"]
+[ext_resource type="PackedScene" uid="uid://drqnnywbiqkb2" path="res://Scenes/Connection/Slots/CreateSlot.tscn" id="2_p6cio"]
+[ext_resource type="PackedScene" uid="uid://33405pmiteac" path="res://Scenes/Connection/Slots/SlotView.tscn" id="4_o1y21"]
+
+[node name="Slots" type="HSplitContainer" unique_id=426991449]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_7r6n1")
+split_offsets = PackedInt32Array(410)
+split_offset = 410
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("2_o1y21")]
+layout_mode = 2
+Prefix = "Connection/SlotsMenu"
+Controls = {
+"HSplitView": NodePath("..")
+}
+
+[node name="Create" parent="." unique_id=40431195 instance=ExtResource("2_p6cio")]
+layout_mode = 2
+
+[node name="View" parent="." unique_id=1050209111 instance=ExtResource("4_o1y21")]
+layout_mode = 2
+
+[connection signal="EditPortrait" from="View" to="Create" method="EditPortrait"]

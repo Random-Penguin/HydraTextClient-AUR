@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://b6bu3tqarbf4m"]
+
+[ext_resource type="Script" uid="uid://doiycbot1un4y" path="res://Scripts/Utility/Popups/ConnectIndicator.cs" id="1_tj4qi"]
+
+[node name="PanelContainer" type="PanelContainer" unique_id=1016816571 node_paths=PackedStringArray("Label")]
+script = ExtResource("1_tj4qi")
+Label = NodePath("Label")
+
+[node name="Label" type="Label" parent="." unique_id=198975361]
+layout_mode = 2
+text = " Connecting"

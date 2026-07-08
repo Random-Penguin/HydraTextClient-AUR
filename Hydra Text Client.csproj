@@ -1,0 +1,39 @@
+<Project Sdk="Godot.NET.Sdk/4.7.1-rc.1">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <RootNamespace>HydraTextClient</RootNamespace>
+    <LangVersion>14</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Lib\Archipelago.MultiClient.Net.dll" />
+    <Content Include="Lib\CreepyUtil.Archipelago.dll" />
+    <Content Include="Lib\Font LICENSE.md" />
+    <Content Include="Lib\LICENSE.md" />
+    <Content Include="Lib\MultiClient LICENSE.md" />
+    <Content Include="Lib\Newtonsoft LICENSE.md" />
+    <Content Include="Lib\Newtonsoft.Json.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Archipelago.MultiClient.Net">
+      <HintPath>Lib\Archipelago.MultiClient.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="CreepyUtil.Archipelago">
+      <HintPath>Lib\CreepyUtil.Archipelago.dll</HintPath>
+    </Reference>
+    <Reference Include="CreepyUtil.DiscordRpc">
+      <HintPath>Lib\CreepyUtil.DiscordRpc.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
+    <PackageReference Include="KaitoKid.ArchipelagoUtilities.AssetDownloader" Version="3.1.13" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\PlayerList\" />
+  </ItemGroup>
+</Project>

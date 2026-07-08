@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://cs3goc3qhi627"]
+
+[ext_resource type="Script" uid="uid://byljo23dnp51n" path="res://Scripts/Connection/Multiworld/MultiworldLabel.cs" id="1_pbbyp"]
+[ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="2_m8ik5"]
+
+[node name="MultiworldLabel" type="PanelContainer" unique_id=511647106 node_paths=PackedStringArray("Set", "Edit", "ClearCache", "Delete", "WorldName")]
+script = ExtResource("1_pbbyp")
+Set = NodePath("MarginContainer/HBoxContainer/Set")
+Edit = NodePath("MarginContainer/HBoxContainer/Edit")
+ClearCache = NodePath("MarginContainer/HBoxContainer/ClearCache")
+Delete = NodePath("MarginContainer/HBoxContainer/Delete")
+WorldName = NodePath("MarginContainer/HBoxContainer/Label")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1271278699]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1409836876]
+layout_mode = 2
+
+[node name="Set" type="Button" parent="MarginContainer/HBoxContainer" unique_id=1082198779]
+modulate = Color(0.3540313, 1, 0.482589, 1)
+layout_mode = 2
+text = "Set"
+script = ExtResource("2_m8ik5")
+
+[node name="Edit" type="Button" parent="MarginContainer/HBoxContainer" unique_id=753042446]
+modulate = Color(0.91676694, 0.8532224, 0, 1)
+layout_mode = 2
+text = "Edit"
+script = ExtResource("2_m8ik5")
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer" unique_id=956388085]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Untitled Multiworld"
+horizontal_alignment = 1
+
+[node name="ClearCache" type="Button" parent="MarginContainer/HBoxContainer" unique_id=188558164]
+modulate = Color(0.9192285, 0.25766784, 0, 1)
+layout_mode = 2
+text = "Clear Cache"
+script = ExtResource("2_m8ik5")
+
+[node name="Delete" type="Button" parent="MarginContainer/HBoxContainer" unique_id=1790778238]
+modulate = Color(0.999996, 0.26342845, 0.29194015, 1)
+layout_mode = 2
+text = "Delete"
+script = ExtResource("2_m8ik5")
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Set" to="." method="EmitSetWorld"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Edit" to="." method="EmitEditWorld"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/ClearCache" to="." method="EmitClearWorld"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Delete" to="." method="EmitDeleteWorld"]

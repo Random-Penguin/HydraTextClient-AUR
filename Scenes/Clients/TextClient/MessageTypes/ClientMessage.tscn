@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://bjg10wgdw17bq"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_st1kx"]
+[ext_resource type="Script" uid="uid://b3wy1g1xtdmpu" path="res://Scripts/Clients/TextClient/MessageTypes/ClientMessage.cs" id="2_roi67"]
+[ext_resource type="PackedScene" uid="uid://ept1ew3d5xe3" path="res://Scenes/Utility/Highlighter.tscn" id="3_tryat"]
+[ext_resource type="Texture2D" uid="uid://fopjjxgkvyiv" path="res://Assets/Images/UI/UnknownGame.png" id="4_okge8"]
+[ext_resource type="Script" uid="uid://bvk0i3283dwhs" path="res://Scripts/Utility/UIHelpers/EmptyRichLabelInteractor.cs" id="5_uatwv"]
+
+[node name="Client Message" type="PanelContainer" unique_id=990107739 node_paths=PackedStringArray("PlayerName", "GamePortrait", "TimeStamp", "Message")]
+clip_contents = true
+offset_right = 253.0
+offset_bottom = 64.0
+theme = ExtResource("1_st1kx")
+script = ExtResource("2_roi67")
+PlayerName = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Name")
+GamePortrait = NodePath("MarginContainer/HBoxContainer/TextureRect")
+TimeStamp = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Label2")
+Message = NodePath("MarginContainer/HBoxContainer/VBoxContainer/PanelContainer/RichTextLabel")
+
+[node name="Highlighter" parent="." unique_id=902065195 instance=ExtResource("3_tryat")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1635397619]
+clip_contents = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1607992871]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1544779802]
+custom_minimum_size = Vector2(40, 60)
+layout_mode = 2
+texture = ExtResource("4_okge8")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1226258858]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1071484664]
+layout_mode = 2
+
+[node name="Name" type="RichTextLabel" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=864147981]
+layout_mode = 2
+size_flags_horizontal = 3
+offset_transform_enabled = true
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("5_uatwv")
+
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1388370851]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.51718444, 0.5171845, 0.51718444, 1)
+theme_override_font_sizes/font_size = 15
+text = "[Time]"
+horizontal_alignment = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=744265455]
+self_modulate = Color(1, 1, 1, 0)
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/VBoxContainer/PanelContainer" unique_id=1390733889]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+offset_transform_enabled = true
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("5_uatwv")

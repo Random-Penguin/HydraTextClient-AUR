@@ -21,6 +21,7 @@ public partial class MainController : Control
 
     public override void _Ready()
     {
+        DRPC.Init();
         GlobalTheme = Theme;
         GlobalThemeSettings.Init();
         Singleton = this;
@@ -29,7 +30,6 @@ public partial class MainController : Control
     public override void _Notification(int what)
     {
         if (what != NotificationWMCloseRequest) return;
-        // DiscordIntegration.Discord.Dispose();
         Save();
     }
 

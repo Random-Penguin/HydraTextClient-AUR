@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Enums;
 using Godot;
+using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
+using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
 // {{item;game name;item name}}
 // {{item;game name;item name;item flags}}
@@ -26,17 +28,14 @@ public class ItemEffect : MessageParserEffect
             return;
         }
 
-        var id = string.Join(";", args);
-
-        var hasItemFlags = args.Length > 2;
-
+        var id = $"{args[0]};{args[1]}";
         if (!CustomAssetsItemCache.TryGetValue(id, out var value))
         {
             CustomAssetsItemCache[id] = value = SaveType<string>.Load(SaveId, Default).CompileRichText(
                 new Dictionary<string, Action<RichTextLabel, string[]>>
                 {
                     ["img"] = (l, _) => l.AddImage(
-                        CustomAssets.ItemImage(args[0], args[1], args[1], reloadFunction), 0, 20
+                        CustomAssets.ItemImage(args[0], args[1], args[0], reloadFunction), 0, 20
                     ),
                     ["name"] = (l, _) => l.AppendText(args[1]),
                 }, false
@@ -44,7 +43,22 @@ public class ItemEffect : MessageParserEffect
         }
 
         label.PushContext();
-        if (hasItemFlags) label.PushColor(((ItemFlags)int.Parse(args[2])).GetColorFromItemFlag());
+        if (args.Length > 2)
+        {
+            var flags = (ItemFlags)int.Parse(args[2]);
+            var ft = SaveType<FilterType>.Load(FilterType.MakeUID(args[1], args[0], flags), default, false);
+
+            if (ft.IsSpecial)
+            {
+                label.PushColor(SpecialItemColor.Color()); 
+                label.PushBgcolor(SpecialItemBackgroundColor.Color());   
+            }
+            else
+            {
+                label.PushColor(flags.GetColorFromItemFlag()); 
+                label.PushBgcolor(flags.GetBgColorFromItemFlag());
+            }
+        }
         label.ApplyCompiledPrintableObjs(value);
         label.PopContext();
     }

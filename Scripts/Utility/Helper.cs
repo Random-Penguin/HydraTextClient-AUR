@@ -27,4 +27,12 @@ public static class Helper
         if (itemFlags.HasFlag(ItemFlags.Trap)) return TrapItemColor.Color();
         return NormalItemColor.Color();
     }
+    
+    public static Color GetBgColorFromItemFlag(this ItemFlags itemFlags)
+    {
+        if (itemFlags.HasFlag(ItemFlags.Advancement)) return ProgressiveItemBackgroundColor.Color();
+        if (itemFlags.HasFlag(ItemFlags.NeverExclude)) return UsefulItemBackgroundColor.Color();
+        if (itemFlags.HasFlag(ItemFlags.Trap)) return TrapItemBackgroundColor.Color();
+        return NormalItemBackgroundColor.Color();
+    }
 }

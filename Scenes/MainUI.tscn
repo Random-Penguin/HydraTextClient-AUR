@@ -105,7 +105,8 @@ Containers = {
 8: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
 9: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
 10: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
-11: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
+11: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+12: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
 }
 metadata/_tab_index = 0
 
@@ -141,3 +142,9 @@ alignment = 2
 [node name="PanelContainer" parent="UpperLayer" unique_id=1016816571 instance=ExtResource("9_2s37q")]
 layout_mode = 2
 mouse_filter = 2
+
+[node name="Timer" type="Timer" parent="." unique_id=1543308095]
+wait_time = 20.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="UpdateDiscord"]

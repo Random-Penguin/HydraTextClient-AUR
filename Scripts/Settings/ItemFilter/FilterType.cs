@@ -1,6 +1,7 @@
 ﻿using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using HydraTextClient.Scripts.Controllers;
+using static HydraTextClient.Scripts.Settings.ItemFilter.FilterType;
 
 namespace HydraTextClient.Scripts.Settings.ItemFilter;
 
@@ -12,14 +13,17 @@ public struct FilterType(string itemName, string gameName, ItemFlags itemFlags)
     public bool ShowInHintsTable = true;
     public bool ShowInItemLog = true;
     public bool IsSpecial = false;
-    public string UID => $"{ItemName}%__%{GameName}%__%{ItemFlags}";
+    public string UID => MakeUID(ItemName, GameName, ItemFlags);
+
+    public static string MakeUID(string itemName, string gameName, ItemFlags itemFlags)
+        => $"{itemName}%__%{gameName}%__%{(int)itemFlags}";
 }
 
 public static class FilterExtensions
 {
     extension(ItemInfo itemInfo)
     {
-        public string UID => $"{itemInfo.ItemName}%__%{itemInfo.ItemGame}%__%{itemInfo.Flags}";
+        public string UID => MakeUID(itemInfo.ItemName, itemInfo.ItemGame, itemInfo.Flags);
     }
 
     extension(Hint hint)
@@ -30,6 +34,6 @@ public static class FilterExtensions
         public string? ItemName => ConnectionController.HasLeaderClient
             ? ConnectionController.LeaderClient!.ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer) : null;
 
-        public string UID => $"{hint.ItemName}%__%{hint.ItemGame}%__%{hint.ItemFlags}";
+        public string UID => MakeUID(hint.ItemName, hint.ItemGame, hint.ItemFlags);
     }
 }

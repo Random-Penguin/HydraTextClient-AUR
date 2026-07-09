@@ -23,6 +23,7 @@ namespace HydraTextClient.Scripts.Hints;
 
 public partial class HintTable : TextTable
 {
+    public const string GlobalCopyFormatProgressive = "Theme/HintTable/CopyFormat/Progressive";
     public const string GlobalCopyFormat = "Theme/HintTable/CopyFormat";
     public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
 
@@ -57,15 +58,20 @@ public partial class HintTable : TextTable
 
         SaveType<string>.OnSaveEvent += (id, _) =>
         {
-            if (id != PlayerEffect.SaveIdNoAlias && id != PlayerEffect.SaveIdWithAlias && id != ItemEffect.SaveId) return;
+            if (id != PlayerEffect.SaveIdNoAlias && id != PlayerEffect.SaveIdWithAlias
+                                                 && id != ItemEffect.SaveId) return;
             RefreshHintUi.Add(false);
         };
-        
+
         SettingsCreator.Tab(
             "Hints",
             tab =>
             {
                 tab.AddSetting(
+                    SettingType.Input_TextChange, "Copy Hint Text Format (Progressive Items)",
+                    GlobalCopyFormatProgressive,
+                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
+                ).AddSetting(
                     SettingType.Input_TextChange, "Copy Hint Text Format", GlobalCopyFormat,
                     "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
                 );
@@ -272,6 +278,8 @@ public partial class HintTable : TextTable
                 _HintChangePopup.Popup(
                     new Rect2I((Vector2I)_HintChangePopup.GetMousePosition(), _HintChangePopup.Size)
                 );
+                break;
+            case "copyhint":
                 break;
             default: DisplayServer.ClipboardSet(text[0]); break;
         }

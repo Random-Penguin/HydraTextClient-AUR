@@ -17,7 +17,7 @@ public abstract partial class TextTable : RichLabelInteractions
     public Color HeaderBgColor = new("#00000069");
     public Color OddBgColor = new("#00000044");
     public Color EvenBgColor = new("#00000000");
-    private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects = null;
+    private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects;
     public IPrintableObj[] CompiledMessage;
 
     public void UpdateData(bool recompile)

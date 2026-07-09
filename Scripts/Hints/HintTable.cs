@@ -6,6 +6,7 @@ using System.Text;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
+using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Settings.ItemFilter;
@@ -48,7 +49,7 @@ public partial class HintTable : TextTable
             {
                 tab.AddSetting(
                     SettingType.Input_TextChange, "Copy Hint Text Format", GlobalCopyFormat,
-                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}", 0
+                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
                 );
             }
         );
@@ -209,7 +210,7 @@ public partial class HintTable : TextTable
     {
         var player = ConnectionController.LeaderClient!.PlayerNames[slot];
         if (ConnectionController.IsConnected(player)) return 3;
-        return Connection.Slots.SlotView.ContainsSlot(player) ? 2 : 1;
+        return SlotView.ContainsSlot(player) ? 2 : 1;
     }
 
     public static int SortNumber(ItemFlags flags)

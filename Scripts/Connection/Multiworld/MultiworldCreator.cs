@@ -1,6 +1,7 @@
 using Godot;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 using static HydraTextClient.Scripts.Controllers.ConnectionController;
 
 namespace HydraTextClient.Scripts.Connection.Multiworld;
@@ -15,9 +16,9 @@ public partial class MultiworldCreator : MarginContainer
     [Export] private LineEdit Port;
     [Export] private LineEdit Password;
     [Export] private LineEdit MultiworldName;
-    [Export] private Utility.UIHelpers.ListAdder ListAdder;
+    [Export] private ListAdder ListAdder;
 
-    private MultiworldData? EditData = null;
+    private MultiworldData? EditData;
 
     public override void _Ready()
     {

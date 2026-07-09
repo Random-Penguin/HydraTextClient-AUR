@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using HydraTextClient.Scripts.Controllers;
 using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;
@@ -19,7 +20,7 @@ public static class SaveType<T>
         if (!Directory.Exists(SaveDir)) Directory.CreateDirectory(SaveDir);
         LoadFromFile();
         if (SaveItems is null) SaveItems = [];
-        Controllers.MainController.OnLateSave += SaveToFile;
+        MainController.OnLateSave += SaveToFile;
     }
 
     public static void Save(string id, T value, bool broadcast)

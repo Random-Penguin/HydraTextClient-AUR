@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Archipelago.MultiClient.Net.Enums;
+﻿using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using HydraTextClient.Scripts.Controllers;
 
@@ -14,36 +13,6 @@ public struct FilterType(string itemName, string gameName, ItemFlags itemFlags)
     public bool ShowInItemLog = true;
     public bool IsSpecial = false;
     public string UID => $"{ItemName}%__%{GameName}%__%{ItemFlags}";
-
-    // public static bool operator ==(FilterType ft, ItemInfo item)
-    //     => ft.ItemName == item!.ItemName && ft.GameName == item.ItemGame && ft.ItemFlags == item.Flags;
-    //
-    // public static bool operator !=(FilterType ft, ItemInfo item) => !(ft == item);
-    //
-    // public static bool operator ==(FilterType ft, Hint hint)
-    // {
-    //     var leader = ConnectionController.LeaderClient!;
-    //     return ft.ItemName == leader.ItemIdToItemName(hint!.ItemId, hint.ReceivingPlayer)
-    //            && ft.GameName == leader.PlayerGames[hint.ReceivingPlayer] && ft.ItemFlags == hint.ItemFlags;
-    // }
-    //
-    // public static bool operator !=(FilterType ft, Hint hint) => !(ft == hint);
-    //
-    // public static bool operator ==(FilterType ft1, FilterType ft2) =>
-    //     ft1.ItemName == ft2.ItemName && ft1.GameName == ft2.ItemName && ft1.ItemFlags == ft2.ItemFlags;
-    //
-    // public static bool operator !=(FilterType ft1, FilterType ft2) => !(ft1 == ft2);
-    //
-    // public static implicit operator FilterType(ItemInfo item) => new(item.ItemName, item.ItemGame, item.Flags);
-    //
-    // public static implicit operator FilterType(Hint hint)
-    // {
-    //     var leader = ConnectionController.LeaderClient!;
-    //     return new FilterType(
-    //         leader.ItemIdToItemName(hint!.ItemId, hint.ReceivingPlayer), leader.PlayerGames[hint.ReceivingPlayer],
-    //         hint.ItemFlags
-    //     );
-    // }
 }
 
 public static class FilterExtensions

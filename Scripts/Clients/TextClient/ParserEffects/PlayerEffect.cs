@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Godot;
+using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -66,7 +67,7 @@ public class PlayerEffect : MessageParserEffect
 
         var color = ConnectionController.IsConnected(name)
             ? PlayerConnected.Color()
-            : Connection.Slots.SlotView.ContainsSlot(name)
+            : SlotView.ContainsSlot(name)
                 ? PlayerListedNonConnected.Color()
                 : PlayerNonConnected.Color();
 

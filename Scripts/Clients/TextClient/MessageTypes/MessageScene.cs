@@ -13,7 +13,7 @@ public abstract partial class MessageScene : PanelContainer
     [Export] public RichTextLabel Message;
 
     public Dictionary<string, string> CachedReplacement;
-    private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects = null;
+    private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects;
     private string MultiWorld;
 
     public abstract void SetPacket(IMessagePacket packetBase);

@@ -2,6 +2,7 @@ using System;
 using Godot;
 using HydraTextClient.Scripts.Discord;
 using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Utility.Popups;
 
 namespace HydraTextClient.Scripts.Controllers;
 
@@ -9,7 +10,7 @@ public partial class MainController : Control
 {
     [Export] private PackedScene ErrorWindow;
 
-    private Utility.Popups.ErrorDialog ErrorDialog;
+    private ErrorDialog ErrorDialog;
 
     private static MainController Singleton;
 
@@ -41,7 +42,7 @@ public partial class MainController : Control
     {
         if (ErrorDialog is null)
         {
-            ErrorDialog = ErrorWindow.Instantiate<Utility.Popups.ErrorDialog>();
+            ErrorDialog = ErrorWindow.Instantiate<ErrorDialog>();
             AddChild(ErrorDialog);
             ErrorDialog.Show();
             ErrorDialog.CloseRequested += () => ErrorDialog = null;

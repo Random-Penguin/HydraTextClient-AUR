@@ -16,7 +16,7 @@ public partial class PlayerList : MarginContainer
     [Export] private VBoxContainer ItemContainer;
 
     private PlayerItem[] Items;
-    private Action<string, int, int>[] CheckFunctions = null;
+    private Action<string, int, int>[]? CheckFunctions = null;
 
     public override void _Ready()
     {

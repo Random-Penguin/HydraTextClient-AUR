@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Packets;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
-using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;

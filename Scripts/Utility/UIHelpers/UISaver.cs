@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Collections;
 using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Utility.UIHelpers;
@@ -7,7 +8,7 @@ namespace HydraTextClient.Scripts.Utility.UIHelpers;
 public partial class UISaver : Node
 {
     [Export] private string Prefix;
-    [Export] private Godot.Collections.Dictionary<string, Control> Controls = [];
+    [Export] private Dictionary<string, Control> Controls = [];
 
     public override void _Ready()
     {

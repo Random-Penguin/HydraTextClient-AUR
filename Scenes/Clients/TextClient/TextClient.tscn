@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://bqisbomfxfu6r" path="res://Scenes/Utility/Popout.tscn" id="12_bcay1"]
 [ext_resource type="PackedScene" uid="uid://bsgcxmwr6vdi2" path="res://Scenes/Clients/TextClient/MessageTypes/GoalMessage.tscn" id="12_jucmm"]
 [ext_resource type="PackedScene" uid="uid://bsi5phhveo36w" path="res://Scenes/Clients/TextClient/MessageTypes/DeathLinkMessage.tscn" id="13_r31ss"]
+[ext_resource type="PackedScene" uid="uid://g0tvn7j75ujx" path="res://Scenes/Clients/TextClient/MessageTypes/TrapLinkMessage.tscn" id="14_q866f"]
 [ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="17_f17e1"]
 
 [node name="Text Client" type="VBoxContainer" unique_id=763075218 node_paths=PackedStringArray("Containers", "ScrollFixes", "UniqueLimiters", "SendMessageEdit", "EmotePicker")]
@@ -36,7 +37,8 @@ Containers = {
 8: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
 9: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
 10: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
-11: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
+11: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+12: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
 }
 MessageScenes = Dictionary[int, PackedScene]({
 1: ExtResource("2_8nh8t"),
@@ -49,7 +51,8 @@ MessageScenes = Dictionary[int, PackedScene]({
 8: ExtResource("9_x4lw8"),
 9: ExtResource("10_bcay1"),
 10: ExtResource("12_jucmm"),
-11: ExtResource("13_r31ss")
+11: ExtResource("13_r31ss"),
+12: ExtResource("14_q866f")
 })
 ScrollFixes = [NodePath("TabContainer/All/AllScroll"), NodePath("TabContainer/Chat Only/ChatOnlyScroll"), NodePath("TabContainer/Item Only/ItemOnlyScroll"), NodePath("TabContainer/Hint Only/HintOnlyScroll"), NodePath("TabContainer/Server Only/ServerOnlyScroll")]
 UniqueLimiters = [NodePath("TabContainer/All/AllScroll/MarginContainer/AllLimiter"), NodePath("TabContainer/Chat Only/ChatOnlyScroll/MarginContainer2/ChatLimiter"), NodePath("TabContainer/Item Only/ItemOnlyScroll/MarginContainer3/ItemLimiter"), NodePath("TabContainer/Hint Only/HintOnlyScroll/MarginContainer4/HintLimiter"), NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")]

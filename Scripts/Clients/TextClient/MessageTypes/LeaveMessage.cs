@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Packets;
-using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 

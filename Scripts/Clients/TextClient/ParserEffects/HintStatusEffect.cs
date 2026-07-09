@@ -1,5 +1,4 @@
 ﻿using System;
-using Archipelago.MultiClient.Net.Enums;
 using Godot;
 using HydraTextClient.Scripts.Utility;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;

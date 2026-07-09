@@ -1,21 +1,24 @@
 using System.Collections.Concurrent;
 using Archipelago.MultiClient.Net;
 using Godot;
+using Godot.Collections;
+using HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Clients.TextClient;
 
 public partial class TextClient : Control
 {
-    [Export] private Godot.Collections.Dictionary<MessageType, Utility.UIHelpers.ChildLimiter> Containers = [];
-    [Export] private Godot.Collections.Dictionary<MessageType, PackedScene> MessageScenes = [];
-    [Export] private Godot.Collections.Array<Utility.UIHelpers.ScrollFix> ScrollFixes = [];
-    [Export] private Godot.Collections.Array<Utility.UIHelpers.ChildLimiter> UniqueLimiters = [];
+    [Export] private Dictionary<MessageType, ChildLimiter> Containers = [];
+    [Export] private Dictionary<MessageType, PackedScene> MessageScenes = [];
+    [Export] private Array<ScrollFix> ScrollFixes = [];
+    [Export] private Array<ChildLimiter> UniqueLimiters = [];
     [Export] private LineEdit SendMessageEdit;
     [Export] private EmotePicker EmotePicker;
 
@@ -40,43 +43,51 @@ public partial class TextClient : Control
             client.OnTagsChangedLogPacketReceived += packet => Enqueue(MessageType.TagsChangedMessage, packet);
             client.OnGoalPrintJsonPacketReceived += packet => Enqueue(MessageType.GoalMessage, packet);
             client.OnDeathLinkPacketReceived += (groups, player, message)
-                => MessageQueue.Enqueue(new DeathlinkPacket(groups, player, message));
+                => MessageQueue.Enqueue(new DeathLinkPacket(groups, player, message));
+            client.OnUnregisteredTrapLinkReceived
+                += (player, trap) => MessageQueue.Enqueue(new TrapLinkPacket(player, trap));
         };
 
         SettingsCreator.Tab(
             "Text Client",
             tab =>
             {
-                tab.AddSetting(SettingType.Input_Submitted, "Join Message", MessageTypes.JoinMessage.SaveId, MessageTypes.JoinMessage.Default)
+                tab.AddSetting(SettingType.Input_Submitted, "Join Message", JoinMessage.SaveId, JoinMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Leave Message", MessageTypes.LeaveMessage.SaveId, MessageTypes.LeaveMessage.Default)
+                   .AddSetting(SettingType.Input_Submitted, "Leave Message", LeaveMessage.SaveId, LeaveMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Tags Changed", MessageTypes.TagsChanged.SaveId, MessageTypes.TagsChanged.Default)
+                   .AddSetting(SettingType.Input_Submitted, "Tags Changed", TagsChanged.SaveId, TagsChanged.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Goal Message", MessageTypes.GoalMessage.SaveId, MessageTypes.GoalMessage.Default)
+                   .AddSetting(SettingType.Input_Submitted, "Goal Message", GoalMessage.SaveId, GoalMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Hint Message", MessageTypes.HintMessage.SaveId, MessageTypes.HintMessage.Default)
-                   .AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Death Message", MessageTypes.DeathLinkMessage.SaveIdMessage,
-                        MessageTypes.DeathLinkMessage.DefaultMessage
-                    ) // todo: forgor traplink
+                   .AddSetting(SettingType.Input_Submitted, "Hint Message", HintMessage.SaveId, HintMessage.Default)
                    .AddSeparator()
                    .AddSetting(
-                        SettingType.Input_Submitted, "Unknown Death Cause", MessageTypes.DeathLinkMessage.SaveIdUnknown,
-                        MessageTypes.DeathLinkMessage.DefaultUnknown
+                        SettingType.Input_Submitted, "Trap Message", TrapLinkMessage.SaveIdMessage,
+                        TrapLinkMessage.Default
                     )
                    .AddSeparator()
                    .AddSetting(
-                        SettingType.Input_Submitted, "Item Message (Same Person)", MessageTypes.ItemMessage.SaveIdSamePerson,
-                        MessageTypes.ItemMessage.DefaultSamePerson
+                        SettingType.Input_Submitted, "Death Message", DeathLinkMessage.SaveIdMessage,
+                        DeathLinkMessage.DefaultMessage
+                    )
+                   .AddSeparator()
+                   .AddSetting(
+                        SettingType.Input_Submitted, "Unknown Death Cause", DeathLinkMessage.SaveIdUnknown,
+                        DeathLinkMessage.DefaultUnknown
+                    )
+                   .AddSeparator()
+                   .AddSetting(
+                        SettingType.Input_Submitted, "Item Message (Same Person)", ItemMessage.SaveIdSamePerson,
+                        ItemMessage.DefaultSamePerson
                     ).AddSeparator()
                    .AddSetting(
-                        SettingType.Input_Submitted, "Item Message (Different Person)", MessageTypes.ItemMessage.SaveIdDifferentPerson,
-                        MessageTypes.ItemMessage.DefaultDifferentPerson
+                        SettingType.Input_Submitted, "Item Message (Different Person)",
+                        ItemMessage.SaveIdDifferentPerson, ItemMessage.DefaultDifferentPerson
                     ).AddSeparator()
                    .AddSetting(
-                        SettingType.Input_Submitted, "Item Message (Cheated)", MessageTypes.ItemCheatMessage.SaveId, MessageTypes.ItemCheatMessage.Default
+                        SettingType.Input_Submitted, "Item Message (Cheated)", ItemCheatMessage.SaveId,
+                        ItemCheatMessage.Default
                     ).AddSeparator()
                    .AddSetting(
                         SettingType.Input_Submitted, "Player Text (Without Alias)", PlayerEffect.SaveIdNoAlias,
@@ -94,8 +105,8 @@ public partial class TextClient : Control
         SaveType<HexColor>.OnSaveEvent += (id, _) => ReloadUi(id);
         SaveType<string>.OnSaveEvent += (id, _) => ReloadUi(id);
 
-        ConnectionController.OnClientConnection += (_, _, _) => ReloadUi(MessageTypes.MessageScene.PlayerConnect);
-        ConnectionController.OnClientRemoved += (_, _, _) => ReloadUi(MessageTypes.MessageScene.PlayerConnect);
+        ConnectionController.OnClientConnection += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);
+        ConnectionController.OnClientRemoved += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);
     }
 
     public override void _Process(double delta)
@@ -111,8 +122,8 @@ public partial class TextClient : Control
         if (!MessageQueue.TryDequeue(out var messagePacket)) return;
         if (!MessageScenes.TryGetValue(messagePacket.GetMsgType(), out var scene)) return;
 
-        var msgScene1 = scene.Instantiate<MessageTypes.MessageScene>();
-        var msgScene2 = scene.Instantiate<MessageTypes.MessageScene>();
+        var msgScene1 = scene.Instantiate<MessageScene>();
+        var msgScene2 = scene.Instantiate<MessageScene>();
         msgScene1.SetPacket(messagePacket);
         msgScene2.SetPacket(messagePacket);
         msgScene1.TimeStamp.Text = messagePacket.GetTimestamp();
@@ -144,7 +155,7 @@ public partial class TextClient : Control
         foreach (var container in UniqueLimiters)
             container.ForEach(control =>
                 {
-                    if (control is not MessageTypes.MessageScene msg) return;
+                    if (control is not MessageScene msg) return;
                     msg.ReloadUi(id);
                 }
             );
@@ -160,13 +171,23 @@ public enum MessageType
     TrapLink,
 }
 
-public readonly struct DeathlinkPacket(string[] group, string player, string? cause) : IMessagePacket
+public readonly struct DeathLinkPacket(string[] group, string player, string? cause) : IMessagePacket
 {
     public readonly string[] Groups = group;
     public readonly string Player = player;
     public readonly string? Cause = cause;
     public readonly string TimeStamp = MainController.GetTimestamp();
     public MessageType GetMsgType() => MessageType.DeathLink;
+    public string GetTimestamp() => TimeStamp;
+    public ArchipelagoPacketBase GetPacket() => null;
+}
+
+public readonly struct TrapLinkPacket(string player, string trap) : IMessagePacket
+{
+    public readonly string Player = player;
+    public readonly string Trap = trap;
+    public readonly string TimeStamp = MainController.GetTimestamp();
+    public MessageType GetMsgType() => MessageType.TrapLink;
     public string GetTimestamp() => TimeStamp;
     public ArchipelagoPacketBase GetPacket() => null;
 }

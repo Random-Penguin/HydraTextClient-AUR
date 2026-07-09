@@ -13,7 +13,7 @@ public abstract partial class AnimatedMessageScene : MessageScene
     private double Timer;
     private Vector2 EndSize;
     private Tween Tween;
-    private bool RunAnimation = false;
+    private bool RunAnimation;
     
     public override void _Ready() => SetupMessage(true);
 

@@ -1,32 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 
-public partial class DeathLinkMessage : MessageScene
+public partial class TrapLinkMessage : MessageScene
 {
-    public const string SaveIdMessage = "Clients/TextClient/DeathLinkMessage";
-    public const string DefaultMessage = "☠️ [{{groups}}] {{cause}}";
+    public const string SaveIdMessage = "Clients/TextClient/TrapLinkMessage";
+    public const string Default = "🪤 {{player}} triggered a(n) {{trap}}";
 
-    public const string SaveIdUnknown = "Clients/TextClient/DeathLinkUnknown";
-    public const string DefaultUnknown = "{{player}} Died by an Unknown cause";
-
-    public string? LastCause;
+    public string Trap;
     public string Player;
     public int PlayerSlot;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
-        if (packetBase is not DeathLinkPacket dl) return;
+        if (packetBase is not TrapLinkPacket tl) return;
         if (!ConnectionController.HasLeaderClient) return;
         var leader = ConnectionController.LeaderClient!;
 
-        Player = dl.Player;
-        LastCause = dl.Cause;
+        Player = tl.Player;
+        Trap = tl.Trap;
 
         if (Player.Contains('(') && Player.Contains(')'))
         {
@@ -42,29 +38,17 @@ public partial class DeathLinkMessage : MessageScene
         CachedReplacement = new Dictionary<string, string>
         {
             ["player"] = PlayerSlot is -1 ? $"[hint=?]{Player}[/hint]" : $"{{{{player;{PlayerSlot}}}}}",
-            ["groups"] = $"{string.Join(", ", dl.Groups.Select(g => $"DeathLink{g}").ToArray())}",
+            ["trap"] = Trap,
         };
-
-        if (LastCause is not null)
-        {
-            LastCause = LastCause.Contains(dl.Player) ? LastCause.Replace(dl.Player, "{{player}}")
-                : $"{{player}} {LastCause}";
-
-            CachedReplacement["cause"] = LastCause;
-        }
 
         Reload();
     }
 
     public override void Reload()
     {
-        CachedReplacement.Remove("cause");
-        CachedReplacement["cause"] = SaveType<string>.Load(SaveIdUnknown, DefaultUnknown)
-                                                     .CompileSimpleText(CachedReplacement);
-
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(
-            SaveType<string>.Load(SaveIdMessage, DefaultMessage).CompileSimpleText(CachedReplacement)
+            SaveType<string>.Load(SaveIdMessage, Default).CompileSimpleText(CachedReplacement)
                             .CompileRichText(GetCompileEffects(), false)
         );
     }
@@ -73,7 +57,6 @@ public partial class DeathLinkMessage : MessageScene
     {
         if (saveId is PlayerConnect) return true;
         if (IdToConstant.TryGetValue(saveId, out var constant)) return constant.IsPlayerColor();
-
-        return saveId is SaveIdMessage or SaveIdUnknown;
+        return saveId is SaveIdMessage;
     }
 }

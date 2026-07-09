@@ -5,7 +5,7 @@ using HydraTextClient.Scripts.Utility;
 namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 
 // {{entrance;entrance text}}
-public partial class EntranceEffect : MessageParserEffect
+public class EntranceEffect : MessageParserEffect
 {
     public override string Key => "entrance";
 

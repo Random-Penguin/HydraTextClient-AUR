@@ -6,14 +6,18 @@ using System.Text;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Settings.ItemFilter;
+using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
+using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Hints;
 
@@ -43,6 +47,20 @@ public partial class HintTable : TextTable
 
     public override void _Ready()
     {
+        SaveType<HexColor>.OnSaveEvent += (id, _) =>
+        {
+            if (!IdToConstant.TryGetValue(id, out var constant)) return;
+            if (!constant.IsPlayerColor() && !constant.IsItemColor() && constant is not (ColorConstant.FoundColor
+                    or ColorConstant.NotFoundColor or ColorConstant.LocationColor)) return;
+            RefreshHintUi.Add(false);
+        };
+
+        SaveType<string>.OnSaveEvent += (id, _) =>
+        {
+            if (id != PlayerEffect.SaveIdNoAlias && id != PlayerEffect.SaveIdWithAlias && id != ItemEffect.SaveId) return;
+            RefreshHintUi.Add(false);
+        };
+        
         SettingsCreator.Tab(
             "Hints",
             tab =>

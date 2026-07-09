@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://g0tvn7j75ujx"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_4fek4"]
+[ext_resource type="Script" uid="uid://cxx5f5ucycsdf" path="res://Scripts/Clients/TextClient/MessageTypes/TrapLinkMessage.cs" id="2_4fek4"]
+[ext_resource type="PackedScene" uid="uid://ept1ew3d5xe3" path="res://Scenes/Utility/Highlighter.tscn" id="3_rlnbi"]
+[ext_resource type="Script" uid="uid://bvk0i3283dwhs" path="res://Scripts/Utility/UIHelpers/EmptyRichLabelInteractor.cs" id="4_mmlvn"]
+
+[node name="TrapLink Message" type="PanelContainer" unique_id=990107739 node_paths=PackedStringArray("TimeStamp", "Message")]
+clip_contents = true
+offset_right = 253.0
+offset_bottom = 64.0
+theme = ExtResource("1_4fek4")
+script = ExtResource("2_4fek4")
+TimeStamp = NodePath("MarginContainer/HBoxContainer/HFlowContainer/Label2")
+Message = NodePath("MarginContainer/HBoxContainer/HFlowContainer/RichTextLabel")
+
+[node name="Highlighter" parent="." unique_id=902065195 instance=ExtResource("3_rlnbi")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1635397619]
+clip_contents = true
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1607992871]
+layout_mode = 2
+
+[node name="HFlowContainer" type="HFlowContainer" parent="MarginContainer/HBoxContainer" unique_id=30741723]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/HFlowContainer" unique_id=1390733889]
+layout_mode = 2
+size_flags_horizontal = 3
+offset_transform_enabled = true
+bbcode_enabled = true
+text = "Error 404 something happened???"
+fit_content = true
+script = ExtResource("4_mmlvn")
+
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/HFlowContainer" unique_id=1388370851]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.51718444, 0.5171845, 0.51718444, 1)
+theme_override_font_sizes/font_size = 15
+text = "[Time]"
+horizontal_alignment = 2

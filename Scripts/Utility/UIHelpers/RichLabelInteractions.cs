@@ -7,7 +7,7 @@ namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
 public abstract partial class RichLabelInteractions : RichTextLabel
 {
-    public override void _Ready()
+    public override void _EnterTree()
     {
         MetaClicked += meta =>
         {

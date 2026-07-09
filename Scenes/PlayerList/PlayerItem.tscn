@@ -2,8 +2,8 @@
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_7wary"]
 [ext_resource type="Script" uid="uid://bpuakogk7oyn2" path="res://Scripts/PlayerList/PlayerItem.cs" id="1_u4hbj"]
-[ext_resource type="Script" uid="uid://hf60jst6h03l" path="res://Scripts/Utility/UIHelpers/RichLabelInteractions.cs" id="2_huhc0"]
 [ext_resource type="PackedScene" uid="uid://ept1ew3d5xe3" path="res://Scenes/Utility/Highlighter.tscn" id="2_mu871"]
+[ext_resource type="Script" uid="uid://bvk0i3283dwhs" path="res://Scripts/Utility/UIHelpers/EmptyRichLabelInteractor.cs" id="3_mu871"]
 
 [sub_resource type="Gradient" id="Gradient_huhc0"]
 offsets = PackedFloat32Array(0, 0.35573122, 1)
@@ -133,7 +133,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 text = " Player A"
 fit_content = true
-script = ExtResource("2_huhc0")
+script = ExtResource("3_mu871")
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1287203400]
 layout_mode = 2
@@ -150,5 +150,4 @@ layout_mode = 2
 theme = ExtResource("1_7wary")
 theme_override_styles/background = SubResource("StyleBoxFlat_uq7wj")
 theme_override_styles/fill = SubResource("StyleBoxFlat_w1qgd")
-value = 24.53
 show_percentage = false

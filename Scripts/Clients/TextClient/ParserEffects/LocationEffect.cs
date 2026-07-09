@@ -5,6 +5,7 @@ using HydraTextClient.Scripts.Utility;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 
+// {{loc;location id;slot #}}
 public class LocationEffect : MessageParserEffect
 {
     public override string Key => "loc";

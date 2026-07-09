@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
@@ -34,6 +36,8 @@ public partial class HintTable : TextTable
         [Found] = 4,
     };
 
+    public static ConcurrentBag<bool> RefreshHintUi = [];
+
     public override void _Ready()
     {
         ConnectionController.OnClientConnection += (slot, client, _) =>
@@ -43,18 +47,18 @@ public partial class HintTable : TextTable
                 var mw = ConnectionController.GetCurrentMultiworld;
                 if (mw is null) return;
                 mw.Hints[slot] = hints;
-                RefreshUi(true);
+                RefreshHintUi.Add(true);
             };
-            RefreshUi(true);
+            RefreshHintUi.Add(true);
         };
 
         SaveType<bool>.OnSaveEvent += (key, _) =>
         {
             if (!key.StartsWith("hint_table/show_")) return;
-            RefreshUi(true);
+            RefreshHintUi.Add(true);
         };
 
-        _HintChangePopup.IndexPressed += l =>
+        // _HintChangePopup.IndexPressed += l =>
         {
             // var client = ActiveClients.First(client
             //     => client.PlayerName == PlayerSlots[int.Parse(_CurrentItemSelected[0])]);
@@ -65,6 +69,13 @@ public partial class HintTable : TextTable
             //     2 => Avoid
             // });
         };
+    }
+
+    public override void _Process(double delta)
+    {
+        if (RefreshHintUi.IsEmpty) return;
+        RefreshUi(RefreshHintUi.Contains(true));
+        RefreshHintUi.Clear();
     }
 
     public void RefreshUi(bool resort)
@@ -83,9 +94,8 @@ public partial class HintTable : TextTable
                 mw.Hints
                   .Where(kv => SaveType<int>.Load("hint_table/show_client", 0) switch
                        {
-                           1 => Connection.Slots.SlotView.ContainsSlot(kv.Key),
-                           2 => ConnectionController.IsConnected(kv.Key),
-                           3 => ConnectionController.IsLeaderClient(kv.Key), _ => true
+                           1 => ConnectionController.IsConnected(kv.Key),
+                           2 => ConnectionController.IsLeaderClient(kv.Key), _ => true,
                        }
                    )
                   .SelectMany(kv => kv.Value)
@@ -104,11 +114,10 @@ public partial class HintTable : TextTable
                            Priority => SaveType<bool>.Load("hint_table/show_priority", true), _ => false,
                        }
                    )
-                  .Where(hint => !SaveType<FilterType>.TryGet(hint.UID, out var filter) || filter.ShowInHintsTable)
-                  .OrderBy(hint => hint.FindingPlayer)
-                  .ThenBy(hint => hint.ReceivingPlayer);
+                  .Where(hint => !SaveType<FilterType>.TryGet(hint.UID, out var filter) || filter.ShowInHintsTable).Order();
 
             if (SortOrder.Count > 0) orderedHints = SortingOrder(orderedHints, SortOrder[0], true);
+            else orderedHints = orderedHints.OrderBy(hint => hint.FindingPlayer).ThenBy(hint => hint.ReceivingPlayer);
 
             if (SortOrder.Count > 1)
                 orderedHints = SortOrder.Skip(1)
@@ -116,7 +125,8 @@ public partial class HintTable : TextTable
 
             SortedHints = orderedHints.ToArray();
         }
-        UpdateData();
+
+        UpdateData(resort);
         return;
 
         IOrderedEnumerable<Hint> SortingOrder(IOrderedEnumerable<Hint> current, SortObject option,
@@ -138,21 +148,40 @@ public partial class HintTable : TextTable
         }
     }
 
-    public override string GetColumnText(int columnNum, RichTextLabel self)
+    public override string GetColumnText(int columnNum)
     {
         var columnText = Columns[columnNum];
         if (columnNum is 0 or > 4) return columnText;
-        self.PushMeta($"sortorder_{columnText}");
-        self.AddText(columnText);
 
-        if (SortOrder.All(so => so.Name != columnText)) return " --";
+        StringBuilder sb = new();
+        sb.Append("[url=\"sortorder_").Append(columnText).Append("\"]").Append(columnText);
+
+        if (SortOrder.All(so => so.Name != columnText))
+        {
+            sb.Append(" -").Append("[/url]");
+            return sb.ToString();
+        }
+
         var so = SortOrder.First(so => so.Name == columnText);
         var place = SortOrder.IndexOf(so) + 1;
 
-        return so.IsDescending ? $" {place}▼" : $" {place}▲";
+        sb.Append(' ').Append(place).Append(so.IsDescending ? '▼' : '▲').Append("[/url]");
+        return sb.ToString();
     }
 
-    public override void AddData(int row, int col, RichTextLabel self) { }
+    public override string GetData(int row, int col)
+    {
+        var hint = SortedHints[row];
+        return col switch
+        {
+            0 => " ", //todo later
+            1 or 3 => $"{{{{player;{(col is 1 ? hint.ReceivingPlayer : hint.FindingPlayer)}}}}}",
+            2 => $"{{{{item;{hint.ItemGame};{hint.ItemName};{(int)hint.ItemFlags}}}}}", 4 =>
+                $"{{{{hintstatus;{hint.Status switch { Found => '4', NoPriority => '1', Avoid => '2', Priority => '3', _ => '0' }}}}}}",
+            5 => $"{{{{loc;{hint.LocationId};{hint.FindingPlayer}}}}}", 6 => $"{{{{entrance;{hint.Entrance}}}}}",
+            _ => "Error",
+        };
+    }
 
     public IOrderedEnumerable<Hint> Order(IOrderedEnumerable<Hint> arr, Func<Hint, int> compare, bool descending,
         bool first)
@@ -186,20 +215,22 @@ public partial class HintTable : TextTable
                 // SetAndShowItemFilterDialogue(s);
                 break;
             case "sortorder":
-                if (SortOrder.Any(so => so.Name == text[0]))
+                var order = SortOrder.ToList();
+                if (order.Any(so => so.Name == text[0]))
                 {
-                    var so = SortOrder.First(so => so.Name == text[0]);
-                    if (so.IsDescending) SortOrder.Remove(so);
-                    else so.IsDescending = true;
+                    var index = order.FindIndex(so => so.Name == text[0]);
+                    var indexed = order[index];
+                    if (indexed.IsDescending) order.RemoveAt(index);
+                    else
+                    {
+                        indexed.IsDescending = true;
+                        order[index] = indexed;
+                    }
                 }
-                else
-                {
-                    var order = SortOrder.ToList();
-                    order.Add(new SortObject(text[0]));
-                    SaveType<List<SortObject>>.Save("hint_table_sort", order, true);
-                }
+                else order.Add(new SortObject(text[0]));
+                SaveType<List<SortObject>>.Save("hint_table_sort", order, true);
 
-                RefreshUi(true);
+                RefreshHintUi.Add(true);
                 break;
             case "change":
                 _CurrentItemSelected = text;

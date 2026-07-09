@@ -66,7 +66,7 @@ public partial class DeathLinkMessage : MessageScene
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(
             SaveType<string>.Load(SaveIdMessage, DefaultMessage).CompileSimpleText(CachedReplacement)
-                            .CompileRichText(GetCompileEffects())
+                            .CompileRichText(GetCompileEffects(), false)
         );
     }
 

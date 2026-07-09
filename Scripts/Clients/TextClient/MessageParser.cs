@@ -46,18 +46,18 @@ public static class MessageParser
     }
 
     public static IPrintableObj[] CompileRichText(this string rawText,
-        Dictionary<string, Action<RichTextLabel, string[]>> effects)
+        Dictionary<string, Action<RichTextLabel, string[]>> effects, bool appendRawTextAsBBCode)
     {
-        if (!rawText.Contains("{{")) return [new TextPrintObj(rawText)];
+        if (!rawText.Contains("{{")) return [new TextPrintObj(rawText, appendRawTextAsBBCode)];
         List<IPrintableObj> objs = [];
 
         var split = rawText.Split("{{");
-        objs.Add(new TextPrintObj(split[0]));
+        objs.Add(new TextPrintObj(split[0], appendRawTextAsBBCode));
         foreach (var section in split.Skip(1))
         {
             if (!section.Contains("}}"))
             {
-                objs.Add(new TextPrintObj($"{{{{{section}"));
+                objs.Add(new TextPrintObj($"{{{{{section}", appendRawTextAsBBCode));
                 continue;
             }
 
@@ -66,7 +66,7 @@ public static class MessageParser
 
             if (code.Length == 0)
             {
-                objs.Add(new TextPrintObj($"{{{{{section}"));
+                objs.Add(new TextPrintObj($"{{{{{section}", appendRawTextAsBBCode));
                 continue;
             }
 
@@ -74,13 +74,13 @@ public static class MessageParser
 
             if (!effects.ContainsKey(key.ToLower()))
             {
-                objs.Add(new TextPrintObj($"{{{{{section}"));
+                objs.Add(new TextPrintObj($"{{{{{section}", appendRawTextAsBBCode));
                 continue;
             }
 
             objs.Add(new CallablePrintObj(effects[key], code.Length > 1 ? code[1..] : []));
             if (section.Length <= index + 2) continue;
-            objs.Add(new TextPrintObj(section[(index + 2)..]));
+            objs.Add(new TextPrintObj(section[(index + 2)..], appendRawTextAsBBCode));
         }
 
         return objs.ToArray();
@@ -110,9 +110,13 @@ public readonly struct CallablePrintObj(Action<RichTextLabel, string[]> callable
     public void AddText(RichTextLabel label) => callable(label, args);
 }
 
-public readonly struct TextPrintObj(string text) : IPrintableObj
+public readonly struct TextPrintObj(string text, bool append) : IPrintableObj
 {
-    public void AddText(RichTextLabel label) => label.AddText(text);
+    public void AddText(RichTextLabel label)
+    {
+        if (append) label.AppendText(text);
+        else label.AddText(text);
+    }
 }
 
 public interface IPrintableObj

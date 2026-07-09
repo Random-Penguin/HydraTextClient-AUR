@@ -25,7 +25,7 @@ public partial class GoalMessage : MessageScene
         var final = SaveType<string>.Load(SaveId, Default).CompileSimpleText(CachedReplacement);
 
         Message.Clear();
-        Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects()));
+        Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
 
     public override bool CanReload(string saveId)

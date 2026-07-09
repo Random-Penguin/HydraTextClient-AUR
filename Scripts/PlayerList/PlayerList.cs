@@ -57,7 +57,7 @@ public partial class PlayerList : MarginContainer
                 {
                     var player = client.PlayerNames[i + 1];
                     var (count, max) = msg[i];
-                    ConnectionController.UpdateCheckCount(player, count + 1, max);
+                    ConnectionController.UpdateCheckCount(player, count, max);
                 }
             };
 

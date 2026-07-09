@@ -1,52 +1,66 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Godot;
-using Godot.Collections;
+using HydraTextClient.Scripts.Clients.TextClient;
 
 namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
 public abstract partial class TextTable : RichLabelInteractions
 {
     public static readonly Rect2 Zero = new(0, 0, 0, 0);
-        
+
     public abstract string[] Columns { get; }
     public abstract long DataSize { get; }
-    
+
     public int Padding = 0;
-    public Color HeaderBgColor = new("#00000069"); 
-    public Color OddBgColor = new("#00000044"); 
+    public Color HeaderBgColor = new("#00000069");
+    public Color OddBgColor = new("#00000044");
     public Color EvenBgColor = new("#00000000");
+    private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects = null;
+    public IPrintableObj[] CompiledMessage;
 
-    public void UpdateData()
+    public void UpdateData(bool recompile)
     {
-        PushContext();
-        PushTable(Columns.Length);
-
-        SetCellRowBackgroundColor(HeaderBgColor, HeaderBgColor);
-        for (var i = 0; i < Columns.Length; i++)
+        if (recompile)
         {
-            PushContext();
-            PushCell();
-            AddText(GetColumnText(i, this));
-            PopContext();
-        }
+            StringBuilder sb = new();
+            sb.Append("[table=").Append(Columns.Length).Append(']');
 
-        SetCellPadding(Zero);
-        SetCellRowBackgroundColor(OddBgColor, EvenBgColor);
-        for (var i = 0; i < DataSize; i++)
-        {
+            for (var i = 0; i < Columns.Length; i++)
+                sb.Append("[cell bg=").Append(HeaderBgColor.ToHtml()).Append("] ").Append(GetColumnText(i))
+                  .Append(" [/cell]");
+
+            for (var i = 0; i < DataSize; i++)
             for (var j = 0; j < Columns.Length; j++)
             {
-                PushContext();
-                PushCell();
-                AddData(i, j, this);
-                PopContext();
+                var extraPadding = i % 2 == 0 ? 0 : 3;
+                sb.Append(
+                       i % 2 == 0 ? $"[cell bg={EvenBgColor.ToHtml()} padding=0,"
+                           : $"[cell bg={OddBgColor.ToHtml()} padding=0,"
+                   )
+                  .Append(Padding + extraPadding)
+                  .Append(",0,")
+                  .Append(Padding + extraPadding)
+                  .Append("] ")
+                  .Append(GetData(i, j))
+                  .Append(" [/cell]");
             }
+
+            sb.Append("[/table]");
+            CompiledMessage = sb.ToString().CompileRichText(GetCompileEffects(), true);
         }
 
-        PopContext();
+        Clear();
+        this.ApplyCompiledPrintableObjs(CompiledMessage);
     }
 
-    public virtual string GetColumnText(int columnNum, RichTextLabel self) => Columns[columnNum];
-    public abstract void AddData(int row, int col, RichTextLabel self);
+    public virtual Dictionary<string, Action<RichTextLabel, string[]>> GetCompileEffects()
+    {
+        if (CompileEffects is not null) return CompileEffects;
+        return CompileEffects = MessageParser.CreateEffects(() => CallDeferred("UpdateData", false));
     }
+
+    public virtual string GetColumnText(int columnNum) => Columns[columnNum];
+    public abstract string GetData(int row, int col);
+}

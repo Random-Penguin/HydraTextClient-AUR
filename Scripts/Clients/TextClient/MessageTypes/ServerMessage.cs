@@ -13,8 +13,8 @@ public partial class ServerMessage : AnimatedMessageScene
         if (packetBase.GetPacket() is not ServerChatPrintJsonPacket packet) return;
         if (!ConnectionController.HasLeaderClient) return;
 
-        CompiledMessage = packet.Message.Sanitize().CompileRichText(GetCompileEffects());
-        CompiledNameMessage = "{{player;0}}".CompileRichText(GetCompileEffects());
+        CompiledMessage = packet.Message.Sanitize().CompileRichText(GetCompileEffects(), false);
+        CompiledNameMessage = "{{player;0}}".CompileRichText(GetCompileEffects(), false);
 
         Reload();
         RunBounceAnimation();

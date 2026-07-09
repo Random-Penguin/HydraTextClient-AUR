@@ -46,7 +46,7 @@ public partial class ItemMessage : MessageScene
         ).CompileSimpleText(CachedReplacement);
 
         Message.Clear();
-        Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects()));
+        Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
 
     public override bool CanReload(string saveId)

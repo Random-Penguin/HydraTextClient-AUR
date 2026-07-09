@@ -35,7 +35,7 @@ public partial class ClientMessage : AnimatedMessageScene
         Message.Clear();
         PlayerName.Clear();
         
-        Message.ApplyCompiledPrintableObjs(MessageText.CompileRichText(GetCompileEffects()));
-        PlayerName.ApplyCompiledPrintableObjs(Player.CompileRichText(GetCompileEffects()));
+        Message.ApplyCompiledPrintableObjs(MessageText.CompileRichText(GetCompileEffects(), false));
+        PlayerName.ApplyCompiledPrintableObjs(Player.CompileRichText(GetCompileEffects(), false));
     }
 }

@@ -61,7 +61,7 @@ public class PlayerEffect : MessageParserEffect
                       new Dictionary<string, Action<RichTextLabel, string[]>>
                       {
                           ["alias"] = (l, _) => l.AddText(alias), ["name"] = (l, _) => l.AddText(name),
-                      }
+                      }, false
                   );
 
         var color = ConnectionController.IsConnected(name)

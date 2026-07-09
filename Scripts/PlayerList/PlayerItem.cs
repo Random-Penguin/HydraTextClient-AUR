@@ -41,7 +41,7 @@ public partial class PlayerItem : PanelContainer
     public void UpdatePlayerText()
     {
         Player.Clear();
-        Player.ApplyCompiledPrintableObjs(PlayerText.CompileRichText(Effects));
+        Player.ApplyCompiledPrintableObjs(PlayerText.CompileRichText(Effects, false));
     }
 
     public void SetCheckCount(int count = 0, int max = 0)

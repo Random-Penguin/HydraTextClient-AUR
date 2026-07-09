@@ -34,24 +34,28 @@ public partial class SlotPortrait : TextureRect
     public string GameName;
     private Vector2 PortraitSize = new(150, 225);
     private Action<string, int, int> CheckAction;
+    private Action ClearCheckCountOnDisconnect;
     private Tween ColorTween;
     private Tween FontSizeTween;
     private Tween ScaleTween;
 
     public override void _Ready()
     {
-        CheckAction += (slot, amount, max) =>
+        CheckAction = (slot, amount, max) =>
         {
             var mw = ConnectionController.GetCurrentMultiworld;
             if (mw is null) return;
             if (slot != mw.GetSlotName(slot)) return;
             CallDeferred("UpdateCheckCount", amount, max);
         };
+        
+        ClearCheckCountOnDisconnect = () => CheckCountPanel.Visible = false;
 
         CheckCountPanel.Visible = false;
         SetFontSize((int)SaveType<double>.Load("Connection/SlotsMenu/PortraitFontSize", 14));
         SetScale((float)SaveType<double>.Load("Connection/SlotsMenu/PortraitScale", 1f));
         ConnectionController.OnCheckCountUpdated += CheckAction;
+        ConnectionController.OnFullDisconnection += ClearCheckCountOnDisconnect;
 
         Reload();
     }
@@ -144,7 +148,11 @@ public partial class SlotPortrait : TextureRect
         CheckProgressBar.Value = (float)count / max;
     }
 
-    protected override void Dispose(bool disposing) => ConnectionController.OnCheckCountUpdated -= CheckAction;
+    protected override void Dispose(bool disposing)
+    {
+        ConnectionController.OnCheckCountUpdated -= CheckAction;
+        ConnectionController.OnFullDisconnection -= ClearCheckCountOnDisconnect;
+    }
 }
 
 public enum ConnectionStatus

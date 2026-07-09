@@ -114,9 +114,10 @@ public partial class ConnectionController : Control
             Task.Run(() =>
                 {
                     var error = client.TryConnect(
-                        new LoginInfo(int.Parse(mw.Port), name!, mw.Address, mw.Password), "",
-                        ItemsHandlingFlags.AllItems,
-                        tags: tags.ToArray()
+                        new LoginInfo(
+                            int.Parse(mw.Port), name!, mw.Address, GetMultiworldPassword(originalName, false)
+                        ),
+                        "", ItemsHandlingFlags.AllItems, tags: tags.ToArray()
                     );
 
                     if (error is not null && error.Length > 0)
@@ -182,17 +183,30 @@ public partial class ConnectionController : Control
         ConnectionCooldown = 5;
     }
 
+    public static string GetMultiworldPassword(string slot, bool slotOnly, MultiworldData? mw = null)
+    {
+        mw ??= GetCurrentMultiworld;
+        return mw is null ? "" : slotOnly ? mw.SlotPasswords.GetValueOrDefault(slot, "") : mw.Password;
+    }
+
+    public static void SetMultiworldPassword(string slotName, string password, MultiworldData? mw = null)
+    {
+        mw ??= GetCurrentMultiworld;
+        if (password is not "") mw?.SlotPasswords[slotName] = password;
+        else mw?.SlotPasswords.Remove(slotName, out _);
+    }
+
     public static string GetMultiworldName(string name, MultiworldData? mw = null)
     {
-        mw ??= SaveType<MultiworldData>.Load(CurrentMultiworld, null);
+        mw ??= GetCurrentMultiworld;
         return mw is null ? name : mw.GetSlotName(name);
     }
 
     public static void SetMultiworldName(string slotName, string alternateName, MultiworldData? mw = null)
     {
-        mw ??= SaveType<MultiworldData>.Load(CurrentMultiworld, null);
-        if (mw is null) return;
-        mw.SlotNames[slotName] = alternateName;
+        mw ??= GetCurrentMultiworld;
+        if (alternateName is not "") mw?.SlotNames[slotName] = alternateName;
+        else mw?.SlotNames.Remove(slotName, out _);
     }
 
     public static void TryConnect(string name)

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Models;
-using HydraTextClient.Scripts.Settings.ItemFilter;
 
 namespace HydraTextClient.Scripts.Utility.DataTypes;
 
@@ -13,6 +12,7 @@ public class MultiworldData
     public string Password = "";
     public string[] DeathLinkGroups = [];
     public ConcurrentDictionary<string, string> SlotNames = [];
+    public ConcurrentDictionary<string, string> SlotPasswords = [];
     public ConcurrentDictionary<string, int> CheckCountsChecked = [];
     public ConcurrentDictionary<string, int> CheckCounts = [];
     public ConcurrentDictionary<string, Hint[]> Hints = [];
@@ -21,9 +21,14 @@ public class MultiworldData
     public void ClearCache()
     {
         SlotNames.Clear();
+        SlotPasswords.Clear();
+        CheckCountsChecked.Clear();
         CheckCounts.Clear();
         SlotNames.Clear();
+        Hints.Clear();
+        Circles.Clear();
     }
 
     public string GetSlotName(string slot) => SlotNames.GetValueOrDefault(slot, slot);
+    public string GetPassword(string slot) => SlotPasswords.GetValueOrDefault(slot, Password);
 }

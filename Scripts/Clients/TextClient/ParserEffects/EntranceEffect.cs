@@ -11,10 +11,10 @@ public partial class EntranceEffect : MessageParserEffect
 
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
-        if (args.Length == 0) return;
+        var entrance = args.Length == 0 ? "Vanilla" : args[0];
         label.PushContext();
         label.PushColor(ColorIdConstants.ColorConstant.EntranceColor.Color());
-        label.AddText(args[0]);
+        label.AddText(entrance);
         label.PopContext();
     }
 }

@@ -10,7 +10,7 @@
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -755.0
+offset_right = -748.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_osnw7")
@@ -78,12 +78,17 @@ layout_mode = 2
 
 [node name="WorldSlotName" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=920219334]
 layout_mode = 2
-text = "Slot Name (This Multiworld)"
+text = "This Multiworld Only"
 horizontal_alignment = 1
 
 [node name="WorldSlotNameEdit" type="LineEdit" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=2073293605]
 layout_mode = 2
 placeholder_text = "Multiworld Slot Name"
+max_length = 16
+
+[node name="WorldSlotNameEdit2" type="LineEdit" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=103036335]
+layout_mode = 2
+placeholder_text = "Multiworld Password"
 max_length = 16
 
 [node name="HSeparator4" type="HSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1765980038]
@@ -121,8 +126,9 @@ placeholder_text = "Run apps on connect
 {{add}} => address
 {{port}} => port
 {{pass}} => password
+{{ap}} => path to ap
 this runs using C#'s Process
-ex: path/to/ap.exe \"universal tracker\" {{add}} {{port}} {{slot}}"
+ex: {{ap}} \"universal tracker\" {{add}} {{port}} {{slot}}"
 wrap_mode = 1
 autowrap_mode = 2
 scroll_fit_content_height = true

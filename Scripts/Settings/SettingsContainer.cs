@@ -26,13 +26,14 @@ public partial class SettingsContainer : HSplitContainer
                 column.AddChild(CreateBoxWithLabel(box, name, true));
                 break;
 
-            case SettingType.Input:
+            case SettingType.Input_Submitted or SettingType.Input_TextChange:
                 LineEdit edit = new();
                 edit.ExpandToTextLength = true;
                 extraConfig?.Invoke(edit);
 
                 edit.Text = SaveType<string>.Load(saveId, (string)def ?? "");
-                edit.TextSubmitted += s => SaveType<string>.Save(saveId, s, true);
+                if (type is SettingType.Input_Submitted) edit.TextSubmitted += s => SaveType<string>.Save(saveId, s, true);
+                else edit.TextChanged += s => SaveType<string>.Save(saveId, s, true);
 
                 column.AddChild(CreateBoxWithLabel(edit, name, false));
                 break;
@@ -107,4 +108,4 @@ public partial class SettingsContainer : HSplitContainer
     }
 }
 
-public enum SettingType { HexColor, Input, SpinNumber }
+public enum SettingType { HexColor, Input_Submitted, Input_TextChange, SpinNumber }

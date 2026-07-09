@@ -26,15 +26,13 @@ layout_mode = 2
 [node name="OptionButton" type="OptionButton" parent="VBoxContainer/FlowContainer" unique_id=1551349472]
 layout_mode = 2
 selected = 0
-item_count = 4
+item_count = 3
 popup/item_0/text = "All Hints"
 popup/item_0/id = 0
-popup/item_1/text = "Has Slot"
+popup/item_1/text = "Signed In Only"
 popup/item_1/id = 1
-popup/item_2/text = "Signed In Only"
+popup/item_2/text = "Leader Only"
 popup/item_2/id = 2
-popup/item_3/text = "Leader Only"
-popup/item_3/id = 3
 
 [node name="CheckBox" type="CheckBox" parent="VBoxContainer/FlowContainer" unique_id=1605576700]
 layout_mode = 2

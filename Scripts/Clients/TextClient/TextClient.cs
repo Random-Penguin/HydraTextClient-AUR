@@ -47,46 +47,46 @@ public partial class TextClient : Control
             "Text Client",
             tab =>
             {
-                tab.AddSetting(SettingType.Input, "Join Message", MessageTypes.JoinMessage.SaveId, MessageTypes.JoinMessage.Default)
+                tab.AddSetting(SettingType.Input_Submitted, "Join Message", MessageTypes.JoinMessage.SaveId, MessageTypes.JoinMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input, "Leave Message", MessageTypes.LeaveMessage.SaveId, MessageTypes.LeaveMessage.Default)
+                   .AddSetting(SettingType.Input_Submitted, "Leave Message", MessageTypes.LeaveMessage.SaveId, MessageTypes.LeaveMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input, "Tags Changed", MessageTypes.TagsChanged.SaveId, MessageTypes.TagsChanged.Default)
+                   .AddSetting(SettingType.Input_Submitted, "Tags Changed", MessageTypes.TagsChanged.SaveId, MessageTypes.TagsChanged.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input, "Goal Message", MessageTypes.GoalMessage.SaveId, MessageTypes.GoalMessage.Default)
+                   .AddSetting(SettingType.Input_Submitted, "Goal Message", MessageTypes.GoalMessage.SaveId, MessageTypes.GoalMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input, "Hint Message", MessageTypes.HintMessage.SaveId, MessageTypes.HintMessage.Default)
+                   .AddSetting(SettingType.Input_Submitted, "Hint Message", MessageTypes.HintMessage.SaveId, MessageTypes.HintMessage.Default)
                    .AddSeparator()
                    .AddSetting(
-                        SettingType.Input, "Death Message", MessageTypes.DeathLinkMessage.SaveIdMessage,
+                        SettingType.Input_Submitted, "Death Message", MessageTypes.DeathLinkMessage.SaveIdMessage,
                         MessageTypes.DeathLinkMessage.DefaultMessage
-                    )
+                    ) // todo: forgor traplink
                    .AddSeparator()
                    .AddSetting(
-                        SettingType.Input, "Unknown Death Cause", MessageTypes.DeathLinkMessage.SaveIdUnknown,
+                        SettingType.Input_Submitted, "Unknown Death Cause", MessageTypes.DeathLinkMessage.SaveIdUnknown,
                         MessageTypes.DeathLinkMessage.DefaultUnknown
                     )
                    .AddSeparator()
                    .AddSetting(
-                        SettingType.Input, "Item Message (Same Person)", MessageTypes.ItemMessage.SaveIdSamePerson,
+                        SettingType.Input_Submitted, "Item Message (Same Person)", MessageTypes.ItemMessage.SaveIdSamePerson,
                         MessageTypes.ItemMessage.DefaultSamePerson
                     ).AddSeparator()
                    .AddSetting(
-                        SettingType.Input, "Item Message (Different Person)", MessageTypes.ItemMessage.SaveIdDifferentPerson,
+                        SettingType.Input_Submitted, "Item Message (Different Person)", MessageTypes.ItemMessage.SaveIdDifferentPerson,
                         MessageTypes.ItemMessage.DefaultDifferentPerson
                     ).AddSeparator()
                    .AddSetting(
-                        SettingType.Input, "Item Message (Cheated)", MessageTypes.ItemCheatMessage.SaveId, MessageTypes.ItemCheatMessage.Default
+                        SettingType.Input_Submitted, "Item Message (Cheated)", MessageTypes.ItemCheatMessage.SaveId, MessageTypes.ItemCheatMessage.Default
                     ).AddSeparator()
                    .AddSetting(
-                        SettingType.Input, "Player Text (Without Alias)", PlayerEffect.SaveIdNoAlias,
+                        SettingType.Input_Submitted, "Player Text (Without Alias)", PlayerEffect.SaveIdNoAlias,
                         PlayerEffect.DefaultNoAlias
                     ).AddSeparator()
                    .AddSetting(
-                        SettingType.Input, "Player Text (With Alias)", PlayerEffect.SaveIdWithAlias,
+                        SettingType.Input_Submitted, "Player Text (With Alias)", PlayerEffect.SaveIdWithAlias,
                         PlayerEffect.DefaultWithAlias
                     ).AddSeparator()
-                   .AddSetting(SettingType.Input, "Item Text", ItemEffect.SaveId, ItemEffect.Default)
+                   .AddSetting(SettingType.Input_Submitted, "Item Text", ItemEffect.SaveId, ItemEffect.Default)
                     ;
             }
         );

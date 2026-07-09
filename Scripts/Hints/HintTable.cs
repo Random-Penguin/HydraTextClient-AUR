@@ -7,6 +7,7 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
@@ -17,6 +18,7 @@ namespace HydraTextClient.Scripts.Hints;
 
 public partial class HintTable : TextTable
 {
+    public const string GlobalCopyFormat = "Theme/HintTable/CopyFormat";
     public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
 
     public override string[] Columns
@@ -40,6 +42,17 @@ public partial class HintTable : TextTable
 
     public override void _Ready()
     {
+        SettingsCreator.Tab(
+            "Hints",
+            tab =>
+            {
+                tab.AddSetting(
+                    SettingType.Input_TextChange, "Copy Hint Text Format", GlobalCopyFormat,
+                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}", 0
+                );
+            }
+        );
+
         ConnectionController.OnClientConnection += (slot, client, _) =>
         {
             client.HintsTrackedEvent += hints =>
@@ -68,7 +81,8 @@ public partial class HintTable : TextTable
             //     1 => NoPriority,
             //     2 => Avoid
             // });
-        };
+        }
+        ;
     }
 
     public override void _Process(double delta)
@@ -114,10 +128,11 @@ public partial class HintTable : TextTable
                            Priority => SaveType<bool>.Load("hint_table/show_priority", true), _ => false,
                        }
                    )
-                  .Where(hint => !SaveType<FilterType>.TryGet(hint.UID, out var filter) || filter.ShowInHintsTable).Order();
+                  .Where(hint => !SaveType<FilterType>.TryGet(hint.UID, out var filter) || filter.ShowInHintsTable)
+                  .OrderBy(hint => hint.FindingPlayer);
 
             if (SortOrder.Count > 0) orderedHints = SortingOrder(orderedHints, SortOrder[0], true);
-            else orderedHints = orderedHints.OrderBy(hint => hint.FindingPlayer).ThenBy(hint => hint.ReceivingPlayer);
+            else orderedHints = orderedHints.ThenBy(hint => hint.ReceivingPlayer);
 
             if (SortOrder.Count > 1)
                 orderedHints = SortOrder.Skip(1)

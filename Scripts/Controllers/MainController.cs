@@ -9,7 +9,8 @@ namespace HydraTextClient.Scripts.Controllers;
 public partial class MainController : Control
 {
     [Export] private PackedScene ErrorWindow;
-    [Export] private PackedScene ItemFilterWindow;  
+    [Export] private PackedScene ItemFilterWindow;
+    [Export] private PackedScene ItemFilterDisplay;
 
     private ErrorDialog ErrorDialog;
 
@@ -24,6 +25,7 @@ public partial class MainController : Control
         DRPC.Init();
         GlobalTheme = Theme;
         GlobalThemeSettings.Init();
+        SettingsCreator.Tab("Item Filter", sc => sc.AddChild(ItemFilterDisplay.Instantiate()));
         Singleton = this;
     }
 

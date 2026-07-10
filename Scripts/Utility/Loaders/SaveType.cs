@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Settings.ItemFilter;
 using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;
@@ -14,7 +15,8 @@ public static class SaveType<T>
     private static Dictionary<string, T> SaveItems = [];
     public static event Action<string, T>? OnSaveEvent;
     public static event Action<string, T>? OnDeleteEvent;
-
+    public static int Count => SaveItems.Count;
+    
     static SaveType()
     {
         if (!Directory.Exists(SaveDir)) Directory.CreateDirectory(SaveDir);
@@ -43,6 +45,7 @@ public static class SaveType<T>
     }
 
     public static string[] GetKeys() => SaveItems.Keys.ToArray();
+    public static T[] GetValues() => SaveItems.Values.ToArray();
     public static bool ContainsKey(string id) => SaveItems.ContainsKey(id);
     public static bool TryGet(string id, out T val) => SaveItems.TryGetValue(id, out val);
     

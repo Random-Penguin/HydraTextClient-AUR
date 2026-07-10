@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://cktifa82nuw6d" path="res://Scripts/Controllers/ConnectionController.cs" id="3_b5wqe"]
 [ext_resource type="PackedScene" uid="uid://ckvp4iindgmqy" path="res://Scenes/Utility/Popups/ItemFilterDialog.tscn" id="4_p6tld"]
 [ext_resource type="Texture2D" uid="uid://cahn5oddssdk6" path="res://Assets/Images/UI/UnknownItem.png" id="4_uq7wj"]
+[ext_resource type="PackedScene" uid="uid://utog84qrsmp8" path="res://Scenes/Settings/item_filter_display.tscn" id="5_dc4qw"]
 [ext_resource type="PackedScene" uid="uid://dwwtwy2mhiqmu" path="res://Scenes/Utility/Popups/ErrorDialog.tscn" id="8_uwgue"]
 [ext_resource type="PackedScene" uid="uid://b6bu3tqarbf4m" path="res://Scenes/Utility/Popups/ConnectIndicator.tscn" id="9_2s37q"]
 [ext_resource type="Script" uid="uid://cruu5vtwkvyij" path="res://Scripts/Settings/SettingsCreator.cs" id="11_uq7wj"]
@@ -42,6 +43,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_yd0xa")
 script = ExtResource("1_8dqd8")
 ErrorWindow = ExtResource("8_uwgue")
 ItemFilterWindow = ExtResource("4_p6tld")
+ItemFilterDisplay = ExtResource("5_dc4qw")
 
 [node name="CustomAssets" type="Control" parent="." unique_id=1782125956]
 visible = false

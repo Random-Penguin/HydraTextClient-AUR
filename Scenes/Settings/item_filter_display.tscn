@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://utog84qrsmp8"]
+
+[ext_resource type="Script" uid="uid://ckcool0286m1w" path="res://Scripts/Settings/ItemFilter/ItemFilterDisplay.cs" id="1_2hoc3"]
+
+[node name="ItemFilterDisplay" type="Control" unique_id=1407271342]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=500699236]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_2hoc3")

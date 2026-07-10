@@ -10,6 +10,7 @@ public abstract partial class TextTable : RichLabelInteractions
 {
     public static readonly Rect2 Zero = new(0, 0, 0, 0);
 
+    public virtual string[] EffectGroups => ["default"];
     public abstract string[] Columns { get; }
     public abstract long DataSize { get; }
 
@@ -22,6 +23,9 @@ public abstract partial class TextTable : RichLabelInteractions
 
     public void UpdateData(bool recompile)
     {
+        Clear();
+        if (DataSize == 0) return;
+
         if (recompile)
         {
             StringBuilder sb = new();
@@ -51,14 +55,15 @@ public abstract partial class TextTable : RichLabelInteractions
             CompiledMessage = sb.ToString().CompileRichText(GetCompileEffects(), true);
         }
 
-        Clear();
         this.ApplyCompiledPrintableObjs(CompiledMessage);
     }
 
     public virtual Dictionary<string, Action<RichTextLabel, string[]>> GetCompileEffects()
     {
         if (CompileEffects is not null) return CompileEffects;
-        return CompileEffects = MessageParser.CreateEffects(() => CallDeferred("UpdateData", false));
+        return CompileEffects = MessageParser.CreateEffects(
+            () => CallDeferred("UpdateData", false), ["texttable", ..EffectGroups]
+        );
     }
 
     public virtual string GetColumnText(int columnNum) => Columns[columnNum];

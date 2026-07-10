@@ -72,9 +72,10 @@ layout_mode = 2
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 0
+current_tab = 4
 
 [node name="Connection" type="TabContainer" parent="Main Container" unique_id=2072097402]
+visible = false
 layout_mode = 2
 current_tab = 1
 metadata/_tab_index = 0
@@ -123,10 +124,14 @@ visible = false
 layout_mode = 2
 
 [node name="Settings" type="TabContainer" parent="Main Container" unique_id=1972428991]
-visible = false
 layout_mode = 2
+current_tab = 0
 script = ExtResource("11_uq7wj")
 metadata/_tab_index = 4
+
+[node name="Item Filter" parent="Main Container/Settings" unique_id=1407271342 instance=ExtResource("5_dc4qw")]
+layout_mode = 2
+metadata/_tab_index = 0
 
 [node name="Consoles" type="TabContainer" parent="Main Container" unique_id=1719204472]
 visible = false

@@ -25,7 +25,6 @@ public partial class MainController : Control
         DRPC.Init();
         GlobalTheme = Theme;
         GlobalThemeSettings.Init();
-        SettingsCreator.Tab("Item Filter", sc => sc.AddChild(ItemFilterDisplay.Instantiate()));
         Singleton = this;
     }
 
@@ -53,7 +52,7 @@ public partial class MainController : Control
         ErrorDialog.AddText(error);
     }
 
-    public static void ShowItemFilter() => Singleton.CallDeferred("CreateItemFilterDialogue", ["", "", "0"]);
+    public static void ShowItemFilter() => Singleton.CallDeferred("CreateItemFilterDialogue", (string[])["", "", "0"]);
     public static void ShowItemFilter(string[] args) => Singleton.CallDeferred("CreateItemFilterDialogue", args);
     
     public void CreateItemFilterDialogue(string[] args)

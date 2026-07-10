@@ -16,6 +16,7 @@ using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.Popups;
 using HydraTextClient.Scripts.Utility.UIHelpers;
+using HydraTextClient.Scripts.Utility.UtilityEffects;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
@@ -24,6 +25,7 @@ namespace HydraTextClient.Scripts.Hints;
 
 public partial class HintTable : TextTable
 {
+    public override string[] EffectGroups => ["default", "hinttable"];
     public const string GlobalCopyFormatProgressive = "Theme/HintTable/CopyFormat/Progressive";
     public const string GlobalCopyFormat = "Theme/HintTable/CopyFormat";
     public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
@@ -33,8 +35,7 @@ public partial class HintTable : TextTable
 
     public override long DataSize => SortedHints.Length;
 
-    [Export] private PopupMenu _HintChangePopup;
-    private string[] _CurrentItemSelected;
+    [Export] private PopupMenu HintChangePopup;
     private Hint[] SortedHints = [];
 
     public List<SortObject> SortOrder => SaveType<List<SortObject>>.Load("hint_table_sort", []);
@@ -64,7 +65,8 @@ public partial class HintTable : TextTable
             RefreshHintUi.Add(false);
         };
 
-        SaveType<ItemFilter>.OnSaveEvent += (_, _) => RefreshHintUi.Add(true); 
+        SaveType<FilterType>.OnSaveEvent += (_, _) => RefreshHintUi.Add(true); 
+        SaveType<FilterType>.OnDeleteEvent += (_, _) => RefreshHintUi.Add(true); 
 
         SettingsCreator.Tab(
             "Hints",
@@ -90,6 +92,9 @@ public partial class HintTable : TextTable
                 mw.Hints[slot] = hints;
                 RefreshHintUi.Add(true);
             };
+            
+            var mw = ConnectionController.GetCurrentMultiworld;
+            mw?.Hints[slot] = client.Hints;
             RefreshHintUi.Add(true);
         };
 
@@ -123,7 +128,7 @@ public partial class HintTable : TextTable
     public void RefreshUi(bool resort)
     {
         var mw = ConnectionController.GetCurrentMultiworld;
-        if (mw is null)
+        if (mw is null || !ConnectionController.HasLeaderClient)
         {
             SortedHints = [];
             Clear();
@@ -217,16 +222,16 @@ public partial class HintTable : TextTable
         var hint = SortedHints[row];
         return col switch
         {
-            0 => " ", //todo later
+            0 => $"{{{{click;Copy;{row}}}}}",
             1 or 3 => $"{{{{player;{(col is 1 ? hint.ReceivingPlayer : hint.FindingPlayer)}}}}}",
-            2 => $"{{{{item;{hint.ItemGame};{hint.ItemName};{(int)hint.ItemFlags}}}}}", 4 =>
-                $"{{{{hintstatus;{hint.Status switch { Found => '4', NoPriority => '1', Avoid => '2', Priority => '3', _ => '0' }}}}}}",
+            2 => $"{{{{item;{hint.ItemGame};{hint.ItemName};{(int)hint.ItemFlags}}}}}",
+            4 => $"{{{{hintstatus;{hint.Status switch { Found => '4', NoPriority => '1', Avoid => '2', Priority => '3', _ => '0' }};{row}}}}}",
             5 => $"{{{{loc;{hint.LocationId};{hint.FindingPlayer}}}}}", 6 => $"{{{{entrance;{hint.Entrance}}}}}",
             _ => "Error",
         };
     }
 
-    public IOrderedEnumerable<Hint> Order(IOrderedEnumerable<Hint> arr, Func<Hint, int> compare, bool descending,
+    public static IOrderedEnumerable<Hint> Order(IOrderedEnumerable<Hint> arr, Func<Hint, int> compare, bool descending,
         bool first)
     {
         if (first) return !descending ? arr.OrderBy(compare) : arr.OrderByDescending(compare);
@@ -254,9 +259,6 @@ public partial class HintTable : TextTable
     {
         switch (key)
         {
-            case "itemdialog":
-                // SetAndShowItemFilterDialogue(s);
-                break;
             case "sortorder":
                 var order = SortOrder.ToList();
                 if (order.Any(so => so.Name == text[0]))
@@ -275,16 +277,16 @@ public partial class HintTable : TextTable
 
                 RefreshHintUi.Add(true);
                 break;
-            case "change":
-                _CurrentItemSelected = text;
-                _HintChangePopup.Position = Vector2I.Zero;
-                _HintChangePopup.Popup(
-                    new Rect2I((Vector2I)_HintChangePopup.GetMousePosition(), _HintChangePopup.Size)
-                );
+            case "change":;
+                // HintChangePopup.Position = Vector2I.Zero;
+                // HintChangePopup.Popup(
+                //     new Rect2I((Vector2I)HintChangePopup.GetMousePosition(), HintChangePopup.Size)
+                // );
                 break;
-            case "copyhint":
+            case TextTableClickEffect.ClickedEventMsg:
+                
+                // DisplayServer.ClipboardSet(text[0]);
                 break;
-            default: DisplayServer.ClipboardSet(text[0]); break;
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using Godot;
+using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Utility;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
-namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
+namespace HydraTextClient.Scripts.Hints;
 
-// {{hintstatus;status}}
+// {{hintstatus;status;row}}
 /// <summary>
 /// status:
 /// Unspecified = _,
@@ -16,21 +17,23 @@ namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 /// </summary>
 public class HintStatusEffect : MessageParserEffect
 {
+    public override string Group => "hinttable";
     public override string Key => "hintstatus";
 
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
-        var statusRaw = args.Length == 0 ? "0" : args[0];
-        var status = statusRaw switch
+        if (args.Length < 2) return;
+        var status = args[0] switch
         {
             "1" => NoPriority, "2" => Avoid, "3" => Priority, "4" => FoundColor, _ => Unspecified,
         };
-        var statusName = statusRaw switch
+        var statusName = args[0] switch
         {
             "1" => "No Priority", "2" => "Avoid", "3" => "Priority", "4" => "Found", _ => "Unspecified",
         };
 
         label.PushContext();
+        label.PushMeta((string[])["change", args[1]]);
         label.PushColor(status.Color());
         label.AddText(statusName);
         label.PopContext();

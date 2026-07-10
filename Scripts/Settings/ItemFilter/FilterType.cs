@@ -1,5 +1,6 @@
 ﻿using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using Archipelago.MultiClient.Net.Packets;
 using HydraTextClient.Scripts.Controllers;
 using static HydraTextClient.Scripts.Settings.ItemFilter.FilterType;
 
@@ -35,5 +36,20 @@ public static class FilterExtensions
             ? ConnectionController.LeaderClient!.ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer) : null;
 
         public string UID => MakeUID(hint.ItemName, hint.ItemGame, hint.ItemFlags);
+    }
+
+    extension(ItemPrintJsonPacket item)
+    {
+        public string UID
+        {
+            get
+            {
+                var leader = ConnectionController.LeaderClient!;
+                var receiver = item.ReceivingPlayer;
+                return MakeUID(
+                    leader.ItemIdToItemName(item.Item.Item, receiver), leader.PlayerGames[receiver], item.Item.Flags
+                );
+            }
+        }
     }
 }

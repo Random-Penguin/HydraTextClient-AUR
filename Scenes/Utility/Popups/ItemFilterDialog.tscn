@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://ckvp4iindgmqy"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_iqsl2"]
+[ext_resource type="Script" uid="uid://bp1c7s0yodqj4" path="res://Scripts/Utility/Popups/ItemFilter.cs" id="2_iqsl2"]
+
+[node name="Window" type="Window" unique_id=1985108309 node_paths=PackedStringArray("GameName", "ItemName", "ItemType", "ShowInTextClient", "ShowInHintTable", "MarkAsSpecial")]
+oversampling_override = 1.0
+title = "Add Item Filter"
+initial_position = 2
+size = Vector2i(600, 300)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+minimize_disabled = true
+maximize_disabled = true
+force_native = true
+theme = ExtResource("1_iqsl2")
+script = ExtResource("2_iqsl2")
+GameName = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer2/LineEdit")
+ItemName = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer3/LineEdit")
+ItemType = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4/OptionButton")
+ShowInTextClient = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/CheckBox")
+ShowInHintTable = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/CheckBox2")
+MarkAsSpecial = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/CheckBox3")
+
+[node name="Panel" type="Panel" parent="." unique_id=620912998]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_iqsl2")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel" unique_id=1314438525]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer" unique_id=1314315719]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer/VBoxContainer" unique_id=998205532]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=499692318]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=857000052]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " Game"
+
+[node name="LineEdit" type="LineEdit" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1642604878]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Game Name"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=970629910]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer3" unique_id=847302951]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " Item Name"
+
+[node name="LineEdit" type="LineEdit" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer3" unique_id=1958692053]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Item Name"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=749773132]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4" unique_id=1120974928]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " Item Type"
+
+[node name="OptionButton" type="OptionButton" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4" unique_id=324186041]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 4
+popup/item_0/text = "Normal"
+popup/item_0/id = 0
+popup/item_1/text = "Progression"
+popup/item_1/id = 1
+popup/item_2/text = "Useful"
+popup/item_2/id = 2
+popup/item_3/text = "Trap"
+popup/item_3/id = 4
+
+[node name="CheckBox" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=84095128]
+layout_mode = 2
+button_pressed = true
+text = "Show In Text Client"
+
+[node name="CheckBox2" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=786598241]
+layout_mode = 2
+button_pressed = true
+text = "Show In Hint Table"
+
+[node name="CheckBox3" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer/VBoxContainer" unique_id=1705191036]
+layout_mode = 2
+text = "Mark as Special"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1873508467]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1578141905]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_iqsl2")
+text = "Add"
+
+[node name="Button2" type="Button" parent="Panel/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=217739895]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_iqsl2")
+text = "Cancel"
+
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="hide"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="queue_free"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="CreateFilter"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button2" to="." method="hide"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button2" to="." method="queue_free"]

@@ -36,7 +36,7 @@ public partial class SettingsCreator : TabContainer
         }
     }
 
-    public static void Tab(string tabName, Action<SettingsContainer>? callback = null, int priority = int.MaxValue)
+    public static void Tab(string tabName, Action<SettingsContainer>? callback = null, int priority = 1000000)
     {
         if (TabsNames.Add(tabName)) TabCreationPriority.Enqueue(tabName, priority);
         if (callback is null) return;

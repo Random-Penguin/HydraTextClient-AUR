@@ -1,14 +1,17 @@
 using System.Collections.Concurrent;
 using Archipelago.MultiClient.Net;
+using Archipelago.MultiClient.Net.Packets;
 using Godot;
 using Godot.Collections;
 using HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.Popups;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Clients.TextClient;
@@ -120,6 +123,10 @@ public partial class TextClient : Control
         }
 
         if (!MessageQueue.TryDequeue(out var messagePacket)) return;
+        if (messagePacket.GetMsgType() is MessageType.ItemLog
+            && messagePacket.GetPacket() is ItemPrintJsonPacket itemPacket
+            && SaveType<FilterType>.TryGet(itemPacket.UID, out var filter) && !filter.ShowInItemLog) return;
+
         if (!MessageScenes.TryGetValue(messagePacket.GetMsgType(), out var scene)) return;
 
         var msgScene1 = scene.Instantiate<MessageScene>();

@@ -9,6 +9,7 @@ namespace HydraTextClient.Scripts.Controllers;
 public partial class MainController : Control
 {
     [Export] private PackedScene ErrorWindow;
+    [Export] private PackedScene ItemFilterWindow;  
 
     private ErrorDialog ErrorDialog;
 
@@ -16,7 +17,6 @@ public partial class MainController : Control
 
     public static Theme GlobalTheme;
 
-    public static event Action? OnEarlySave;
     public static event Action? OnLateSave;
 
     public override void _Ready()
@@ -51,12 +51,18 @@ public partial class MainController : Control
         ErrorDialog.AddText(error);
     }
 
-    public static void Save()
+    public static void ShowItemFilter() => Singleton.CallDeferred("CreateItemFilterDialogue", ["", "", "0"]);
+    public static void ShowItemFilter(string[] args) => Singleton.CallDeferred("CreateItemFilterDialogue", args);
+    
+    public void CreateItemFilterDialogue(string[] args)
     {
-        OnEarlySave?.Invoke();
-        OnLateSave?.Invoke();
+        var filter = ItemFilterWindow.Instantiate<ItemFilter>();
+        AddChild(filter);
+        filter.SetFilter(args[0], args[1], args[2]);
+        filter.Show();
     }
 
+    public static void Save() => OnLateSave?.Invoke();
     public static string GetTimestamp() => DateTime.Now.ToString("[HH:mm:ss]");
     public void UpdateDiscord() => DRPC.CheckDiscord();
 }

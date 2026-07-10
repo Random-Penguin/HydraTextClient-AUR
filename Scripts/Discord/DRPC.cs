@@ -10,7 +10,7 @@ namespace HydraTextClient.Scripts.Discord;
 public static class DRPC
 {
     private const string AppId = "1339447230909644851"; 
-    public static Dictionary<string, string> LastLocationChecked = [];
+    public static string? LastLocationChecked = null;
 
     public static void Init()
     {
@@ -20,13 +20,11 @@ public static class DRPC
             client.OnItemLogPacketReceived += packet =>
             {
                 var player = packet.Item.Player;
-                LastLocationChecked[client.PlayerNames[player]] = client.LocationIdToLocationName(
-                    packet.Item.Location, player
-                );
+                LastLocationChecked = client.LocationIdToLocationName(packet.Item.Location, player);
                 if (client.PlayerSlot == player) DiscordIntegration.UpdateActivity();
             };
         };
-        ConnectionController.OnFullDisconnection += () => LastLocationChecked.Clear();
+        ConnectionController.OnFullDisconnection += () => LastLocationChecked = null;
 
         DiscordIntegration.LogOut = GD.Print;
         DiscordIntegration.Details = () =>
@@ -55,8 +53,7 @@ public static class DRPC
         DiscordIntegration.LargeText = () =>
         {
             if (!ConnectionController.HasLeaderClient) return "Not Connected";
-            return LastLocationChecked.TryGetValue(ConnectionController.LeaderClient!.PlayerName, out var loc)
-                ? $"Last Location Checked: {loc}" : "Nothing Yet";
+            return LastLocationChecked is null ? "Nothing Yet" : $"Last Location Checked: {LastLocationChecked}";
         };
 
         DiscordIntegration.SmallImage = () => "archipelago";

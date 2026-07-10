@@ -14,6 +14,7 @@ using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.Popups;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
@@ -62,6 +63,8 @@ public partial class HintTable : TextTable
                                                  && id != ItemEffect.SaveId) return;
             RefreshHintUi.Add(false);
         };
+
+        SaveType<ItemFilter>.OnSaveEvent += (_, _) => RefreshHintUi.Add(true); 
 
         SettingsCreator.Tab(
             "Hints",

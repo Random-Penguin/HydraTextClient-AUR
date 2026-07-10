@@ -82,6 +82,9 @@ public abstract partial class RichLabelInteractions : RichTextLabel
     {
         switch (key)
         {
+            case "itemfilter":
+                MainController.ShowItemFilter(text);
+                break;
             default: OnMetaClicked(key, text); break;
         }
     }

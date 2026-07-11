@@ -16,6 +16,7 @@
 [ext_resource type="Script" uid="uid://cruu5vtwkvyij" path="res://Scripts/Settings/SettingsCreator.cs" id="11_uq7wj"]
 [ext_resource type="PackedScene" uid="uid://bvm64478byib1" path="res://Scenes/Hints/hints.tscn" id="11_wplvb"]
 [ext_resource type="PackedScene" uid="uid://cthu6oe5kiqrr" path="res://Scenes/PlayerList/PlayerList.tscn" id="12_w1qgd"]
+[ext_resource type="PackedScene" uid="uid://ddrns4ebu48n3" path="res://Scenes/Utilities/utilities.tscn" id="14_i5ty2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yd0xa"]
 content_margin_left = 0.0
@@ -72,7 +73,7 @@ layout_mode = 2
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 4
+current_tab = 5
 
 [node name="Connection" type="TabContainer" parent="Main Container" unique_id=2072097402]
 visible = false
@@ -119,15 +120,21 @@ metadata/_tab_index = 0
 visible = false
 layout_mode = 2
 
+[node name="Utilities" parent="Main Container" unique_id=1245487862 instance=ExtResource("14_i5ty2")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
 [node name="Players" parent="Main Container" unique_id=936307540 instance=ExtResource("12_w1qgd")]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 4
 
 [node name="Settings" type="TabContainer" parent="Main Container" unique_id=1972428991]
 layout_mode = 2
 current_tab = 0
 script = ExtResource("11_uq7wj")
-metadata/_tab_index = 4
+metadata/_tab_index = 5
 
 [node name="Item Filter" parent="Main Container/Settings" unique_id=1407271342 instance=ExtResource("5_dc4qw")]
 layout_mode = 2
@@ -136,12 +143,12 @@ metadata/_tab_index = 0
 [node name="Consoles" type="TabContainer" parent="Main Container" unique_id=1719204472]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 5
+metadata/_tab_index = 6
 
 [node name="Credits" type="MarginContainer" parent="Main Container" unique_id=1460897819]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 6
+metadata/_tab_index = 7
 
 [node name="UpperLayer" type="VBoxContainer" parent="." unique_id=958285575]
 layout_mode = 2

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://ddrns4ebu48n3"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_awmxu"]
+
+[node name="Utilities" type="TabContainer" unique_id=1245487862]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_awmxu")

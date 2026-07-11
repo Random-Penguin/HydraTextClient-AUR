@@ -249,8 +249,21 @@ public partial class ConnectionController : Control
         Singleton.CallDeferred("ChangeLeader", name);
     }
 
-    public static bool IsConnected(string name) => Singleton.Clients.Contains(name);
+    public static bool IsConnected(int slot) => HasLeaderClient && IsConnected(LeaderClient!.PlayerNames[slot]);
+
+    public static bool IsConnected(string name) => Singleton.Clients.Contains(name)
+                                                   || HasReceipt(name) && Singleton.Clients.Contains(GetReceipt(name));
+
     public static string[] GetClientNames() => Singleton.Clients.ToArray();
+
+    public static ApClient? GetClient(int slot) => HasLeaderClient ? GetClient(LeaderClient!.PlayerNames[slot]) : null;
+
+    public static ApClient? GetClient(string name)
+    {
+        if (Singleton.NamedClients.TryGetValue(name, out var client)) return client;
+        if (HasReceipt(name) && Singleton.NamedClients.TryGetValue(GetReceipt(name), out client)) return client;
+        return null;
+    }
 
     public static bool GetPlayerInfo(int playerSlot, out string name, out string alias, out string game)
     {

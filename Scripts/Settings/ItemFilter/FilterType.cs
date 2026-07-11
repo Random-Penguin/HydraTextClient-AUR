@@ -34,8 +34,13 @@ public static class FilterExtensions
 
         public string? ItemName => ConnectionController.HasLeaderClient
             ? ConnectionController.LeaderClient!.ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer) : null;
-
+        
+        public string? LocationName => ConnectionController.HasLeaderClient
+            ? ConnectionController.LeaderClient!.LocationIdToLocationName(hint.LocationId, hint.FindingPlayer) : null;
+        
         public string UID => MakeUID(hint.ItemName, hint.ItemGame, hint.ItemFlags);
+
+        public string EntranceName => hint.Entrance == "" ? "Vanilla" : hint.Entrance;
     }
 
     extension(ItemPrintJsonPacket item)

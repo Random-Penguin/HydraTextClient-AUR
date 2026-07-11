@@ -6,7 +6,7 @@ using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
 namespace HydraTextClient.Scripts.Hints;
 
-// {{hintstatus;status;row}}
+// {{hintstatus;status;row;t/f}}
 /// <summary>
 /// status:
 /// Unspecified = _,
@@ -22,7 +22,8 @@ public class HintStatusEffect : MessageParserEffect
 
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
-        if (args.Length < 2) return;
+        if (args.Length != 3) return;
+        var isClickable = args[2].ToLower()[0] == 't';
         var status = args[0] switch
         {
             "1" => NoPriority, "2" => Avoid, "3" => Priority, "4" => FoundColor, _ => Unspecified,
@@ -33,7 +34,7 @@ public class HintStatusEffect : MessageParserEffect
         };
 
         label.PushContext();
-        label.PushMeta((string[])["change", args[1]]);
+        if (isClickable) label.PushMeta((string[])["change", args[1]]);
         label.PushColor(status.Color());
         label.AddText(statusName);
         label.PopContext();

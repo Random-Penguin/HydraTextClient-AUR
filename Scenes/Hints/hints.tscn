@@ -62,7 +62,7 @@ text = "Show Avoid"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/ScrollContainer" unique_id=939697757]
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/ScrollContainer" unique_id=939697757 node_paths=PackedStringArray("HintChangePopup")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -70,8 +70,9 @@ bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
 script = ExtResource("2_ks14s")
+HintChangePopup = NodePath("../../../PopupMenu")
 
-[node name="Control" type="Control" parent="." unique_id=206399141 node_paths=PackedStringArray("Controls")]
+[node name="UISaver" type="Control" parent="." unique_id=206399141 node_paths=PackedStringArray("Controls")]
 visible = false
 layout_mode = 2
 script = ExtResource("3_k2v0s")
@@ -84,3 +85,16 @@ Controls = {
 "show_priority": NodePath("../VBoxContainer/FlowContainer/CheckBox2"),
 "show_unspecified": NodePath("../VBoxContainer/FlowContainer/CheckBox3")
 }
+
+[node name="PopupMenu" type="PopupMenu" parent="." unique_id=1473533629]
+oversampling_override = 1.0
+size = Vector2i(169, 100)
+theme = ExtResource("1_s5cbg")
+allow_search = false
+item_count = 3
+item_0/text = "Priority"
+item_0/id = 0
+item_1/text = "No Priority"
+item_1/id = 1
+item_2/text = "Avoid"
+item_2/id = 2

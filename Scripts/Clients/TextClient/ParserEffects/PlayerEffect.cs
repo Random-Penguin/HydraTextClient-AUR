@@ -52,19 +52,8 @@ public class PlayerEffect : MessageParserEffect
             return;
         }
 
-        var hasAlias = ConnectionController.GetPlayerInfo(playerSlot, out var name, out var alias, out _);
+        var player = PlayerName(playerSlot, out var name);
         
-        var val = SaveType<string>
-                 .Load(
-                      hasAlias ? SaveIdWithAlias : SaveIdNoAlias,
-                      hasAlias ? DefaultWithAlias : DefaultNoAlias
-                  ).CompileRichText(
-                      new Dictionary<string, Action<RichTextLabel, string[]>>
-                      {
-                          ["alias"] = (l, _) => l.AddText(alias), ["name"] = (l, _) => l.AddText(name),
-                      }, false
-                  );
-
         var color = ConnectionController.IsConnected(name)
             ? PlayerConnected.Color()
             : SlotView.ContainsSlot(name)
@@ -74,7 +63,17 @@ public class PlayerEffect : MessageParserEffect
         label.PushContext();
         label.PushHint($"player {playerSlot}");
         label.PushColor(color);
-        label.ApplyCompiledPrintableObjs(val);
+        label.AddText(player);
         label.PopContext();
+    }
+
+    public static string PlayerName(int slot, out string rawName)
+    {
+        var hasAlias = ConnectionController.GetPlayerInfo(slot, out rawName, out var alias, out _);
+        return SaveType<string>
+           .Load(
+                hasAlias ? SaveIdWithAlias : SaveIdNoAlias,
+                hasAlias ? DefaultWithAlias : DefaultNoAlias
+            ).CompileSimpleText(new Dictionary<string, string> {["alias"] = alias, ["name"] = rawName});
     }
 }

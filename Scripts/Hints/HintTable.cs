@@ -6,6 +6,7 @@ using System.Text;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
+using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
@@ -36,6 +37,7 @@ public partial class HintTable : TextTable
     public override long DataSize => SortedHints.Length;
 
     [Export] private PopupMenu HintChangePopup;
+    private Hint CurrentlySelectedHint;
     private Hint[] SortedHints = [];
 
     public List<SortObject> SortOrder => SaveType<List<SortObject>>.Load("hint_table_sort", []);
@@ -65,8 +67,8 @@ public partial class HintTable : TextTable
             RefreshHintUi.Add(false);
         };
 
-        SaveType<FilterType>.OnSaveEvent += (_, _) => RefreshHintUi.Add(true); 
-        SaveType<FilterType>.OnDeleteEvent += (_, _) => RefreshHintUi.Add(true); 
+        SaveType<FilterType>.OnSaveEvent += (_, _) => RefreshHintUi.Add(true);
+        SaveType<FilterType>.OnDeleteEvent += (_, _) => RefreshHintUi.Add(true);
 
         SettingsCreator.Tab(
             "Hints",
@@ -92,7 +94,7 @@ public partial class HintTable : TextTable
                 mw.Hints[slot] = hints;
                 RefreshHintUi.Add(true);
             };
-            
+
             var mw = ConnectionController.GetCurrentMultiworld;
             mw?.Hints[slot] = client.Hints;
             RefreshHintUi.Add(true);
@@ -104,18 +106,17 @@ public partial class HintTable : TextTable
             RefreshHintUi.Add(true);
         };
 
-        // _HintChangePopup.IndexPressed += l =>
+        HintChangePopup.IndexPressed += l =>
         {
-            // var client = ActiveClients.First(client
-            //     => client.PlayerName == PlayerSlots[int.Parse(_CurrentItemSelected[0])]);
-            // client.UpdateHint(int.Parse(_CurrentItemSelected[1]), long.Parse(_CurrentItemSelected[4]), l switch
-            // {
-            //     0 => Priority,
-            //     1 => NoPriority,
-            //     2 => Avoid
-            // });
-        }
-        ;
+            var hint = CurrentlySelectedHint;
+            if (!ConnectionController.IsConnected(hint.ReceivingPlayer)) return;
+            var client = ConnectionController.GetClient(hint.ReceivingPlayer);
+            if (client is null) return;
+
+            client.UpdateHint(
+                hint.FindingPlayer, hint.LocationId, l switch { 0 => Priority, 2 => Avoid, _ => NoPriority, }
+            );
+        };
     }
 
     public override void _Process(double delta)
@@ -224,8 +225,8 @@ public partial class HintTable : TextTable
         {
             0 => $"{{{{click;Copy;{row}}}}}",
             1 or 3 => $"{{{{player;{(col is 1 ? hint.ReceivingPlayer : hint.FindingPlayer)}}}}}",
-            2 => $"{{{{item;{hint.ItemGame};{hint.ItemName};{(int)hint.ItemFlags}}}}}",
-            4 => $"{{{{hintstatus;{hint.Status switch { Found => '4', NoPriority => '1', Avoid => '2', Priority => '3', _ => '0' }};{row}}}}}",
+            2 => $"{{{{item;{hint.ItemGame};{hint.ItemName};{(int)hint.ItemFlags}}}}}", 4 =>
+                $"{{{{hintstatus;{hint.Status switch { Found => '4', NoPriority => '1', Avoid => '2', Priority => '3', _ => '0' }};{row};{ConnectionController.IsConnected(hint.ReceivingPlayer)}}}}}",
             5 => $"{{{{loc;{hint.LocationId};{hint.FindingPlayer}}}}}", 6 => $"{{{{entrance;{hint.Entrance}}}}}",
             _ => "Error",
         };
@@ -277,15 +278,28 @@ public partial class HintTable : TextTable
 
                 RefreshHintUi.Add(true);
                 break;
-            case "change":;
-                // HintChangePopup.Position = Vector2I.Zero;
-                // HintChangePopup.Popup(
-                //     new Rect2I((Vector2I)HintChangePopup.GetMousePosition(), HintChangePopup.Size)
-                // );
+            case "change":
+                CurrentlySelectedHint = SortedHints[int.Parse(text[0])];
+                HintChangePopup.Position = Vector2I.Zero;
+                HintChangePopup.Popup(new Rect2I((Vector2I)HintChangePopup.GetMousePosition(), HintChangePopup.Size));
                 break;
             case TextTableClickEffect.ClickedEventMsg:
-                
-                // DisplayServer.ClipboardSet(text[0]);
+                var hint = SortedHints[int.Parse(text[0])];
+                var rawCopy = SaveType<string>.Load(
+                    hint.ItemFlags.HasFlag(Advancement) ? GlobalCopyFormatProgressive : GlobalCopyFormat,
+                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
+                );
+
+                DisplayServer.ClipboardSet(
+                    rawCopy.CompileSimpleText(
+                        new Dictionary<string, string>
+                        {
+                            ["finder"] = PlayerEffect.PlayerName(hint.FindingPlayer, out _),
+                            ["receiver"] = PlayerEffect.PlayerName(hint.ReceivingPlayer, out _),
+                            ["loc"] = hint.LocationName, ["entrance"] = hint.EntranceName, ["item"] = hint.ItemName,
+                        }
+                    )
+                );
                 break;
         }
     }

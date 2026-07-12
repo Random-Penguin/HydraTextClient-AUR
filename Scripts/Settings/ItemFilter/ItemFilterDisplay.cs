@@ -15,10 +15,9 @@ using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Settings.ItemFilter;
 
-public partial class ItemFilterDisplay : TextTable
+public partial class ItemFilterDisplay : TextTable<ItemFilterDisplay>
 {
     public override string[] EffectGroups => ["default", "itemfilter"];
-    public static ConcurrentBag<bool> RefreshTableUi = [];
     public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
     public override string[] Columns => ["Game", "Item", "Item Log", "Hint Table", "Is Special", ""];
     public override long DataSize => SaveType<FilterType>.Count;
@@ -27,34 +26,26 @@ public partial class ItemFilterDisplay : TextTable
     public override void _Ready()
     {
         RefreshUi(true);
-        SaveType<FilterType>.OnSaveEvent += (_, _) => RefreshTableUi.Add(true);
-        SaveType<FilterType>.OnDeleteEvent += (_, _) => RefreshTableUi.Add(true);
+        SaveType<FilterType>.OnSaveEvent += (_, _) => QueueUiRefresh(true);
+        SaveType<FilterType>.OnDeleteEvent += (_, _) => QueueUiRefresh(true);
         
         SaveType<HexColor>.OnSaveEvent += (id, _) =>
         {
             if (!IdToConstant.TryGetValue(id, out var constant)) return;
             if (!constant.IsItemColor()) return;
-            RefreshTableUi.Add(false);
+            QueueUiRefresh(false);
         };
 
         SaveType<string>.OnSaveEvent += (id, _) =>
         {
             if (id != ItemEffect.SaveId) return;
-            RefreshTableUi.Add(false);
+            QueueUiRefresh(false);
         };
     }
 
-    public override void _Process(double delta)
-    {
-        if (RefreshTableUi.IsEmpty) return;
-        RefreshUi(RefreshTableUi.Contains(true));
-        RefreshTableUi.Clear();
-    }
-
-    public void RefreshUi(bool recompile)
+    public override void RefreshUi(bool recompile)
     {
         FilterTypes = SaveType<FilterType>.GetValues().OrderBy(f => f.GameName).ThenBy(f => SortNumber(f.ItemFlags)).ToArray();
-        GD.Print($"types: [{FilterTypes.Length}], [{recompile}]");
         UpdateData(recompile);
     }
 

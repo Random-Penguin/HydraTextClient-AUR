@@ -15,7 +15,6 @@ using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
-using HydraTextClient.Scripts.Utility.Popups;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using HydraTextClient.Scripts.Utility.UtilityEffects;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
@@ -24,7 +23,7 @@ using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Hints;
 
-public partial class HintTable : TextTable
+public partial class HintTable : TextTable<HintTable>
 {
     public override string[] EffectGroups => ["default", "hinttable"];
     public const string GlobalCopyFormatProgressive = "Theme/HintTable/CopyFormat/Progressive";
@@ -48,8 +47,6 @@ public partial class HintTable : TextTable
         [Found] = 4,
     };
 
-    public static ConcurrentBag<bool> RefreshHintUi = [];
-
     public override void _Ready()
     {
         SaveType<HexColor>.OnSaveEvent += (id, _) =>
@@ -57,18 +54,18 @@ public partial class HintTable : TextTable
             if (!IdToConstant.TryGetValue(id, out var constant)) return;
             if (!constant.IsPlayerColor() && !constant.IsItemColor() && constant is not (ColorConstant.FoundColor
                     or ColorConstant.NotFoundColor or ColorConstant.LocationColor)) return;
-            RefreshHintUi.Add(false);
+            QueueUiRefresh(false);
         };
 
         SaveType<string>.OnSaveEvent += (id, _) =>
         {
             if (id != PlayerEffect.SaveIdNoAlias && id != PlayerEffect.SaveIdWithAlias
                                                  && id != ItemEffect.SaveId) return;
-            RefreshHintUi.Add(false);
+            QueueUiRefresh(false);
         };
 
-        SaveType<FilterType>.OnSaveEvent += (_, _) => RefreshHintUi.Add(true);
-        SaveType<FilterType>.OnDeleteEvent += (_, _) => RefreshHintUi.Add(true);
+        SaveType<FilterType>.OnSaveEvent += (_, _) =>QueueUiRefresh(true);
+        SaveType<FilterType>.OnDeleteEvent += (_, _) => QueueUiRefresh(true);
 
         SettingsCreator.Tab(
             "Hints",
@@ -92,18 +89,18 @@ public partial class HintTable : TextTable
                 var mw = ConnectionController.GetCurrentMultiworld;
                 if (mw is null) return;
                 mw.Hints[slot] = hints;
-                RefreshHintUi.Add(true);
+                QueueUiRefresh(true);
             };
 
             var mw = ConnectionController.GetCurrentMultiworld;
             mw?.Hints[slot] = client.Hints;
-            RefreshHintUi.Add(true);
+            QueueUiRefresh(true);
         };
 
         SaveType<bool>.OnSaveEvent += (key, _) =>
         {
             if (!key.StartsWith("hint_table/show_")) return;
-            RefreshHintUi.Add(true);
+            QueueUiRefresh(true);
         };
 
         HintChangePopup.IndexPressed += l =>
@@ -119,14 +116,7 @@ public partial class HintTable : TextTable
         };
     }
 
-    public override void _Process(double delta)
-    {
-        if (RefreshHintUi.IsEmpty) return;
-        RefreshUi(RefreshHintUi.Contains(true));
-        RefreshHintUi.Clear();
-    }
-
-    public void RefreshUi(bool resort)
+    public override void RefreshUi(bool resort)
     {
         var mw = ConnectionController.GetCurrentMultiworld;
         if (mw is null || !ConnectionController.HasLeaderClient)
@@ -275,8 +265,7 @@ public partial class HintTable : TextTable
                 }
                 else order.Add(new SortObject(text[0]));
                 SaveType<List<SortObject>>.Save("hint_table_sort", order, true);
-
-                RefreshHintUi.Add(true);
+                QueueUiRefresh(true);
                 break;
             case "change":
                 CurrentlySelectedHint = SortedHints[int.Parse(text[0])];

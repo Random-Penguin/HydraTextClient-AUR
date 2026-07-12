@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://ddrns4ebu48n3"]
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_awmxu"]
+[ext_resource type="PackedScene" uid="uid://b7g7p2wmgpjtg" path="res://Scenes/Utilities/SlotUtility.tscn" id="2_0fsjf"]
+[ext_resource type="Script" uid="uid://dvd153gmclmll" path="res://Scripts/Utilities/Utilities.cs" id="2_pid02"]
 
 [node name="Utilities" type="TabContainer" unique_id=1245487862]
 anchors_preset = 15
@@ -9,3 +11,5 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_awmxu")
+script = ExtResource("2_pid02")
+SlotUtilScene = ExtResource("2_0fsjf")

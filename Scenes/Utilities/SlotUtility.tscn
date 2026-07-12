@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://b7g7p2wmgpjtg"]
+
+[ext_resource type="Script" uid="uid://b032il0xo6ju5" path="res://Scripts/Utilities/SlotUtility.cs" id="1_4p5od"]
+[ext_resource type="Script" uid="uid://vu1absk21f82" path="res://Scripts/Utilities/PlayerInventory.cs" id="2_02inb"]
+[ext_resource type="PackedScene" uid="uid://duftnvs8wyydo" path="res://Scenes/Utilities/SearchingList.tscn" id="3_mknbs"]
+
+[node name="SlotUtility" type="HSplitContainer" unique_id=1159233697 node_paths=PackedStringArray("Inventory", "ItemList", "LocationList")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offsets = PackedInt32Array(560, 860)
+split_offset = 560
+script = ExtResource("1_4p5od")
+Inventory = NodePath("MarginContainer/VBoxContainer/ScrollContainer/RichTextLabel")
+ItemList = NodePath("ScrollContainer2")
+LocationList = NodePath("ScrollContainer3")
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1216262433]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1715377581]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1911284563]
+layout_mode = 2
+text = "Cheated Item Count:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=1348160020]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=2006626263]
+layout_mode = 2
+bbcode_enabled = true
+text = "inventory      fwefwe fwef wef wfe fweewewff
+item 1 fgwegwe feeeeeeeeeeeeeeeeee"
+fit_content = true
+autowrap_mode = 0
+script = ExtResource("2_02inb")
+
+[node name="ScrollContainer2" parent="." unique_id=1792383220 instance=ExtResource("3_mknbs")]
+layout_mode = 2
+SearchText = "Search Items"
+
+[node name="ScrollContainer3" parent="." unique_id=1579686512 instance=ExtResource("3_mknbs")]
+layout_mode = 2
+SearchText = "Search Locations"

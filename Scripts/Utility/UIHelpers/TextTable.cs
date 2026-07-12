@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
 
 namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
-public abstract partial class TextTable : RichLabelInteractions
+public abstract partial class TextTable<T> : RichLabelInteractions where T : TextTable<T>
 {
+    private static ConcurrentBag<bool> QueueRefreshUi = [];
     public static readonly Rect2 Zero = new(0, 0, 0, 0);
 
     public virtual string[] EffectGroups => ["default"];
@@ -21,6 +24,15 @@ public abstract partial class TextTable : RichLabelInteractions
     private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects;
     public IPrintableObj[] CompiledMessage;
 
+    public override void _Process(double delta)
+    {
+        if (QueueRefreshUi.IsEmpty) return;
+        var recompile = QueueRefreshUi.Contains(true);
+        RefreshUi(recompile);
+        UpdateData(recompile);
+        QueueRefreshUi.Clear();
+    }
+    
     public void UpdateData(bool recompile)
     {
         Clear();
@@ -68,4 +80,7 @@ public abstract partial class TextTable : RichLabelInteractions
 
     public virtual string GetColumnText(int columnNum) => Columns[columnNum];
     public abstract string GetData(int row, int col);
+    public abstract void RefreshUi(bool recompile);
+    public static void QueueUiRefresh(bool recompile) => QueueRefreshUi.Add(recompile);
+
 }

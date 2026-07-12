@@ -6,22 +6,28 @@ namespace HydraTextClient.Scripts.Utilities;
 
 public partial class Utilities : TabContainer
 {
-	[Export] private PackedScene SlotUtilScene;
-	private Dictionary<string, SlotUtility> UtilityPages = [];
+    [Export] private PackedScene SlotUtilScene;
+    private Dictionary<string, SlotUtility> UtilityPages = [];
 
-	public override void _Ready()
-	{
-		ConnectionController.OnClientConnection += (name, client, _) =>
-		{
-			var page = UtilityPages[name] = SlotUtilScene.Instantiate<SlotUtility>();
-			page.SetupPlayer(client);
-			page.Name = name;
-			CallDeferred("add_child", page);
-		};
+    public override void _Ready()
+    {
+        ConnectionController.OnClientConnection += (name, _, _) => CallDeferred("OpenPage", name);
+        ConnectionController.OnClientRemoved += (name, _, _) => CallDeferred("ClosePage", name);
+    }
 
-		ConnectionController.OnClientRemoved += (name, client, _) =>
-		{
+    public void OpenPage(string name)
+    {
+        var client = ConnectionController.GetClient(name);
+        var page = UtilityPages[name] = SlotUtilScene.Instantiate<SlotUtility>();
+        page.SetupPlayer(client);
+        page.Name = name;
+        AddChild(page);
+    }
 
-		};
-	}
+    public void ClosePage(string name)
+    {
+        var page = UtilityPages[name];
+        UtilityPages.Remove(name);
+        RemoveChild(page);
+    }
 }

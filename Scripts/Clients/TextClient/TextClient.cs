@@ -11,7 +11,6 @@ using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
-using HydraTextClient.Scripts.Utility.Popups;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Clients.TextClient;

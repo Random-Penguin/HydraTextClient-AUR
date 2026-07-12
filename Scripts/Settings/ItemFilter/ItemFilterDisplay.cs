@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Godot;
@@ -15,7 +14,7 @@ using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Settings.ItemFilter;
 
-public partial class ItemFilterDisplay : TextTable<ItemFilterDisplay>
+public partial class ItemFilterDisplay : TextTable
 {
     public override string[] EffectGroups => ["default", "itemfilter"];
     public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();

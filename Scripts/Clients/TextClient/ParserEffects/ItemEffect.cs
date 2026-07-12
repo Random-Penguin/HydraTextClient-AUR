@@ -35,7 +35,7 @@ public class ItemEffect : MessageParserEffect
                 new Dictionary<string, Action<RichTextLabel, string[]>>
                 {
                     ["img"] = (l, _) => l.AddImage(
-                        CustomAssets.ItemImage(args[0], args[1], args[0], reloadFunction), 0, 20
+                        CustomAssets.ItemImage(args[0], args[1], args[0], _ => reloadFunction()), 0, 20
                     ),
                     ["name"] = (l, _) => l.AppendText(args[1]),
                 }, false

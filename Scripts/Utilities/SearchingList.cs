@@ -3,48 +3,49 @@ using Godot;
 using System.Collections.Generic;
 using System.Linq;
 
-public partial class SearchingList : ScrollContainer
+public partial class SearchingList : Control
 {
     [Export] private string SearchText;
-    [Export] private HFlowContainer Container;
-    [Export] private LineEdit SearchBar;
+    [Export] public ItemList List;
+    [Export] public LineEdit SearchBar;
     [Export] private CheckBox Box;
     private FuzzySearch Search = new();
-    private Dictionary<string, Button> Items = [];
+    private List<string> Items = [];
     public Func<string[], string, bool> VisibilitySetter = (searchRes, item) => searchRes.Contains(item);
-    private Queue<string> ItemsToAdd = [];
 
     [Signal] public delegate void OnItemPressedEventHandler(string item);
+    [Signal] public delegate void OnItemCreatedEventHandler(ItemList list, int index, string item);
 
-    public override void _Ready() => SearchBar.PlaceholderText = SearchText;
-
-    public override void _Process(double delta)
+    public override void _Ready()
     {
-        for (var i = 0; i < 50; i++)
+        SearchBar.PlaceholderText = SearchText;
+        List.ItemClicked += (index, _, mouseButton) =>
         {
-            if (ItemsToAdd.Count == 0) return;
-            var item = ItemsToAdd.Dequeue();
-            if (Items.ContainsKey(item)) continue;
-            Button button = new();
-            button.Text = item;
-            button.Pressed += () => EmitSignalOnItemPressed(item);
-            Container.AddChild(button);
-            Items[item] = button;
-        }
+            if (mouseButton is not (int)MouseButton.Left) return;
+            EmitSignalOnItemPressed(List.GetItemText((int)index));
+        };
     }
 
-    public void AddItems(params string[] items)
+    public void SetItems(params string[] items)
     {
-        foreach (var item in items.Order()) ItemsToAdd.Enqueue(item);
+        Items.Clear();
+        List.Clear();
+        Items = items.Distinct().Order().ToList();
+        for (var i = 0; i < Items.Count; i++)
+        {
+            var item = Items[i];
+            List.AddItem(item);
+            List.SetItemSelectable(i, false);
+            EmitSignalOnItemCreated(List, i, item);
+        }
     }
 
     public void RemoveItems(params string[] items)
     {
         foreach (var item in items)
         {
-            Items.Remove(item, out var button);
-            Container.RemoveChild(button);
-            button!.QueueFree();
+            List.RemoveItem(Items.IndexOf(item));
+            Items.Remove(item);
         }
     }
 
@@ -52,12 +53,12 @@ public partial class SearchingList : ScrollContainer
     {
         if (text.Trim() == "")
         {
-            foreach (var (_, button) in Items) button.Visible = true;
+            for (var i = 0; i < List.ItemCount; i++) List.SetItemDisabled(i, false);
             return;
         }
 
-        var results = Search.SearchAll(text, Items.Keys.ToArray()).Select(res => res.Target).ToArray();
-        foreach (var (item, button) in Items) button.Visible = VisibilitySetter(results, item);
+        var results = Search.SearchAll(text, Items.ToArray()).Select(res => res.Target).ToArray();
+        for (var i = 0; i < List.ItemCount; i++) List.SetItemDisabled(i, !VisibilitySetter(results, Items[i]));
     }
 
     public void SetupBox(Action<CheckBox> action) => action(Box);

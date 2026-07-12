@@ -32,10 +32,10 @@ public partial class CustomAssets : Control
 
     public static ImageTexture CreateSprite(string file) => ImageTexture.CreateFromImage(Image.LoadFromFile(file));
 
-    public static Texture2D ItemImage(string itemGameName, string itemName, string selfGame, Action callback)
+    public static Texture2D ItemImage(string itemGameName, string itemName, string selfGame, Action<Texture2D> callback)
         => ItemImage(new AssetItem(itemGameName, itemName), selfGame, callback);
 
-    private static Texture2D ItemImage(AssetItem location, string selfGame, Action callback)
+    private static Texture2D ItemImage(AssetItem location, string selfGame, Action<Texture2D> callback)
     {
         if (ItemSprites.TryGetValue(location.Uid, out var sprite)) return sprite;
         Task.Run(() =>
@@ -50,8 +50,7 @@ public partial class CustomAssets : Control
                     if (!res || spriteData is null) return Task.FromResult(Task.FromResult(Singleton.Fallback));
                     var file = spriteData.FilePath;
                     ItemSprites[location.Uid] = sprite = CreateSprite(file);
-
-                    callback();
+                    callback(sprite);
                 }
                 catch (Exception e) { GD.PrintErr(e); }
                 return Task.CompletedTask;

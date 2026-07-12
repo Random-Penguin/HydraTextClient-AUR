@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HydraTextClient.Scripts.Controllers;
-using HydraTextClient.Scripts.Settings.ItemFilter;
 using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;

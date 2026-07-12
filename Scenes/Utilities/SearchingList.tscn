@@ -2,46 +2,32 @@
 
 [ext_resource type="Script" uid="uid://cu8modir803qn" path="res://Scripts/Utilities/SearchingList.cs" id="1_olg2g"]
 
-[node name="ScrollContainer2" type="ScrollContainer" unique_id=1792383220 node_paths=PackedStringArray("Container", "SearchBar", "Box")]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_olg2g")
-SearchText = "Search"
-Container = NodePath("MarginContainer/VBoxContainer/FoldableContainer/HFlowContainer")
-SearchBar = NodePath("MarginContainer/VBoxContainer/LineEdit2")
-Box = NodePath("MarginContainer/VBoxContainer/CheckBox")
-
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1737226973]
-layout_mode = 2
+[node name="MarginContainer" type="MarginContainer" unique_id=1737226973 node_paths=PackedStringArray("List", "SearchBar", "Box")]
+offset_right = 1152.0
+offset_bottom = 648.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_olg2g")
+List = NodePath("VBoxContainer/ItemList")
+SearchBar = NodePath("VBoxContainer/LineEdit2")
+Box = NodePath("VBoxContainer/CheckBox")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=2057196867]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2057196867]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LineEdit2" type="LineEdit" parent="MarginContainer/VBoxContainer" unique_id=748434364]
+[node name="LineEdit2" type="LineEdit" parent="VBoxContainer" unique_id=748434364]
 layout_mode = 2
 placeholder_text = "Search"
+alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="MarginContainer/VBoxContainer" unique_id=1203624115]
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer" unique_id=1203624115]
 visible = false
 layout_mode = 2
 
-[node name="FoldableContainer" type="FoldableContainer" parent="MarginContainer/VBoxContainer" unique_id=1157509110]
+[node name="ItemList" type="ItemList" parent="VBoxContainer" unique_id=2011391541]
 layout_mode = 2
-folded = true
-title = "Folded to reduce lag"
+size_flags_vertical = 3
+fixed_icon_size = Vector2i(16, 16)
 
-[node name="HFlowContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer/FoldableContainer" unique_id=249172610]
-visible = false
-layout_mode = 2
-
-[node name="ItemList" type="ItemList" parent="MarginContainer/VBoxContainer/FoldableContainer" unique_id=2011391541]
-visible = false
-layout_mode = 2
-
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/LineEdit2" to="." method="UpdateSearch"]
+[connection signal="text_changed" from="VBoxContainer/LineEdit2" to="." method="UpdateSearch"]

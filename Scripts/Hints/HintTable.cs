@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +22,7 @@ using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Hints;
 
-public partial class HintTable : TextTable<HintTable>
+public partial class HintTable : TextTable
 {
     public override string[] EffectGroups => ["default", "hinttable"];
     public const string GlobalCopyFormatProgressive = "Theme/HintTable/CopyFormat/Progressive";

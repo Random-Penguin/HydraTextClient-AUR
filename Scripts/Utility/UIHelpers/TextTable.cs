@@ -8,9 +8,9 @@ using HydraTextClient.Scripts.Clients.TextClient;
 
 namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
-public abstract partial class TextTable<T> : RichLabelInteractions where T : TextTable<T>
+public abstract partial class TextTable : RichLabelInteractions
 {
-    private static ConcurrentBag<bool> QueueRefreshUi = [];
+    private ConcurrentBag<bool> QueueRefreshUi = [];
     public static readonly Rect2 Zero = new(0, 0, 0, 0);
 
     public virtual string[] EffectGroups => ["default"];
@@ -81,6 +81,6 @@ public abstract partial class TextTable<T> : RichLabelInteractions where T : Tex
     public virtual string GetColumnText(int columnNum) => Columns[columnNum];
     public abstract string GetData(int row, int col);
     public abstract void RefreshUi(bool recompile);
-    public static void QueueUiRefresh(bool recompile) => QueueRefreshUi.Add(recompile);
+    public void QueueUiRefresh(bool recompile) => QueueRefreshUi.Add(recompile);
 
 }

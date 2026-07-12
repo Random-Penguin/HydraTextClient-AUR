@@ -15,13 +15,8 @@ public partial class ItemCheatMessage : MessageScene
 
     public override void SetPacket(IMessagePacket packetBase)
     {
-        if (packetBase.GetPacket() is not ItemCheatPrintJsonPacket item)
-        {
-            GD.Print($"packet is not cheat: [{packetBase.GetMsgType()}]");
-            return;
-        }
+        if (packetBase.GetPacket() is not ItemCheatPrintJsonPacket item) return;
 
-        GD.Print("packet is cheat");
         var leader = ConnectionController.LeaderClient!;
         var finder = item.Item.Player;
         var receiver = item.ReceivingPlayer;

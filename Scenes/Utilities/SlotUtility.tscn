@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b032il0xo6ju5" path="res://Scripts/Utilities/SlotUtility.cs" id="1_4p5od"]
 [ext_resource type="Script" uid="uid://vu1absk21f82" path="res://Scripts/Utilities/PlayerInventory.cs" id="2_02inb"]
+[ext_resource type="PackedScene" uid="uid://deiabdossqvll" path="res://Scenes/Utility/Popups/InventorySenders.tscn" id="3_80wbg"]
 [ext_resource type="PackedScene" uid="uid://duftnvs8wyydo" path="res://Scenes/Utilities/SearchingList.tscn" id="3_mknbs"]
 
 [node name="SlotUtility" type="HSplitContainer" unique_id=1159233697 node_paths=PackedStringArray("Inventory", "ItemList", "LocationList")]
@@ -24,6 +25,10 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1715377581]
 layout_mode = 2
 
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1978777269]
+layout_mode = 2
+text = "View Item History"
+
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1911284563]
 layout_mode = 2
 text = "Cheated Item Count:"
@@ -32,7 +37,7 @@ text = "Cheated Item Count:"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=2006626263]
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=2006626263 node_paths=PackedStringArray("CheatCounter")]
 layout_mode = 2
 bbcode_enabled = true
 text = "inventory      fwefwe fwef wef wfe fweewewff
@@ -40,6 +45,8 @@ item 1 fgwegwe feeeeeeeeeeeeeeeeee"
 fit_content = true
 autowrap_mode = 0
 script = ExtResource("2_02inb")
+SendersPopup = ExtResource("3_80wbg")
+CheatCounter = NodePath("../../Label")
 
 [node name="ScrollContainer2" parent="." unique_id=1792383220 instance=ExtResource("3_mknbs")]
 layout_mode = 2
@@ -48,3 +55,5 @@ SearchText = "Search Items"
 [node name="ScrollContainer3" parent="." unique_id=1579686512 instance=ExtResource("3_mknbs")]
 layout_mode = 2
 SearchText = "Search Locations"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Button" to="MarginContainer/VBoxContainer/ScrollContainer/RichTextLabel" method="ViewItemHistory"]

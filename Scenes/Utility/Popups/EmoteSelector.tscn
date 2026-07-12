@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_qm8it"]
 [ext_resource type="Script" uid="uid://btlg6rir4bi7" path="res://Scripts/Clients/TextClient/EmotePicker.cs" id="2_qm8it"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="3_oplon"]
 
 [node name="Window" type="Window" unique_id=1985108309 node_paths=PackedStringArray("Search", "Container")]
 oversampling_override = 1.0
@@ -55,5 +56,11 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("3_oplon")]
+Prefix = "window_nodes"
+Controls = {
+"EmoteWindow": NodePath("..")
+}
 
 [connection signal="text_changed" from="Panel/MarginContainer/VBoxContainer/LineEdit" to="." method="UpdateSearch"]

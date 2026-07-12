@@ -1,7 +1,9 @@
 using System;
-using Godot;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
+
+namespace HydraTextClient.Scripts.Utilities;
 
 public partial class SearchingList : Control
 {

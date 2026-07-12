@@ -2,12 +2,15 @@ using System;
 using Godot;
 using HydraTextClient.Scripts.Discord;
 using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.Popups;
 
 namespace HydraTextClient.Scripts.Controllers;
 
 public partial class MainController : Control
 {
+    public const string WindowSaveId = "window_nodes/MAIN_WINDOW";
+    
     [Export] private PackedScene ErrorWindow;
     [Export] private PackedScene ItemFilterWindow;
     [Export] private PackedScene ItemFilterDisplay;
@@ -18,7 +21,16 @@ public partial class MainController : Control
 
     public static Theme GlobalTheme;
 
-    public static event Action? OnLateSave;
+    public static event Action? OnSave;
+
+    public override void _EnterTree()
+    {
+        var window = GetWindow();
+        window.Size = SaveType<Vector2I>.Load($"{WindowSaveId}_size", window.Size);
+        window.Position = SaveType<Vector2I>.Load($"{WindowSaveId}_pos", window.Position);
+        window.SizeChanged += () => SaveType<Vector2I>.Save($"{WindowSaveId}_size", window.Size, true);
+        OnSave += () => SaveType<Vector2I>.Save($"{WindowSaveId}_pos", window.Position, true);
+    }
 
     public override void _Ready()
     {
@@ -63,7 +75,7 @@ public partial class MainController : Control
         filter.Show();
     }
 
-    public static void Save() => OnLateSave?.Invoke();
+    public static void Save() => OnSave?.Invoke();
     public static string GetTimestamp() => DateTime.Now.ToString("[HH:mm:ss]");
     public void UpdateDiscord() => DRPC.CheckDiscord();
 }

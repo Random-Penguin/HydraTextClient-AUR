@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_iqsl2"]
 [ext_resource type="Script" uid="uid://bp1c7s0yodqj4" path="res://Scripts/Utility/Popups/ItemFilter.cs" id="2_iqsl2"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="3_fsvdm"]
 
 [node name="Window" type="Window" unique_id=1985108309 node_paths=PackedStringArray("GameName", "ItemName", "ItemType", "ShowInTextClient", "ShowInHintTable", "MarkAsSpecial")]
 oversampling_override = 1.0
@@ -128,6 +129,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_iqsl2")
 text = "Cancel"
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("3_fsvdm")]
+Prefix = "window_nodes"
+Controls = {
+"item_filter_dialog": NodePath("..")
+}
 
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="hide"]
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="queue_free"]

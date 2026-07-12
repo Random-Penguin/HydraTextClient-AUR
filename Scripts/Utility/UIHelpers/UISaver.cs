@@ -8,7 +8,7 @@ namespace HydraTextClient.Scripts.Utility.UIHelpers;
 public partial class UISaver : Node
 {
     [Export] private string Prefix;
-    [Export] private Dictionary<string, Control> Controls = [];
+    [Export] private Dictionary<string, Node> Controls = [];
 
     public override void _Ready()
     {
@@ -42,6 +42,12 @@ public partial class UISaver : Node
                 case CheckBox cb:
                     cb.ButtonPressed = SaveType<bool>.Load(id, cb.ButtonPressed);
                     cb.Pressed += () => SaveType<bool>.Save(id, cb.ButtonPressed, true); break;
+                case Window win:
+                    win.Position =SaveType<Vector2I>.Load($"{id}_pos", win.GetPosition());
+                    win.Size = SaveType<Vector2I>.Load($"{id}_size", win.GetSize());
+                    win.TreeExiting += () => SaveType<Vector2I>.Save($"{id}_pos", win.Position, true);
+                    win.SizeChanged += () => SaveType<Vector2I>.Save($"{id}_size", win.Size, true);
+                    break;
                 default:
                     GD.Print(
                         $"{control.GetType()} is not configured UiSaver (can ignore if not dev)"

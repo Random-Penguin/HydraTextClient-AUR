@@ -21,7 +21,7 @@ public static class SaveType<T>
         if (!Directory.Exists(SaveDir)) Directory.CreateDirectory(SaveDir);
         LoadFromFile();
         if (SaveItems is null) SaveItems = [];
-        MainController.OnLateSave += SaveToFile;
+        MainController.OnSave += SaveToFile;
     }
 
     public static void Save(string id, T value, bool broadcast)

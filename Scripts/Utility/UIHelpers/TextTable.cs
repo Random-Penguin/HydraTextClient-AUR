@@ -24,6 +24,13 @@ public abstract partial class TextTable : RichLabelInteractions
     private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects;
     public IPrintableObj[] CompiledMessage;
 
+    protected TextTable()
+    {
+        BbcodeEnabled = true;
+        FitContent = true;
+        AutowrapMode = TextServer.AutowrapMode.Off;
+    }
+
     public override void _Process(double delta)
     {
         if (QueueRefreshUi.IsEmpty) return;

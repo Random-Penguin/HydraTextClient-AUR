@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
+using CreepyUtil.Archipelago;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
@@ -44,7 +45,7 @@ public partial class ItemFilterDisplay : TextTable
 
     public override void RefreshUi(bool recompile)
     {
-        FilterTypes = SaveType<FilterType>.GetValues().OrderBy(f => f.GameName).ThenBy(f => SortNumber(f.ItemFlags)).ToArray();
+        FilterTypes = SaveType<FilterType>.GetValues().OrderBy(f => f.GameName).ThenBy(f => f.ItemFlags.SortNumber()).ToArray();
         UpdateData(recompile);
     }
 
@@ -60,16 +61,6 @@ public partial class ItemFilterDisplay : TextTable
         };
     }
     
-    public static int SortNumber(ItemFlags flags)
-    {
-        if (ItemToSortIdCache.TryGetValue(flags, out var id)) return id;
-        if ((flags & Advancement) == Advancement) id = 0;
-        else if ((flags & NeverExclude) == NeverExclude) id = 1;
-        else if ((flags & Trap) == Trap) id = 10;
-        else id = 2;
-        return ItemToSortIdCache[flags] = id;
-    }
-
     public override void OnMetaClicked(string key, string[] text)
     {
         switch (key)

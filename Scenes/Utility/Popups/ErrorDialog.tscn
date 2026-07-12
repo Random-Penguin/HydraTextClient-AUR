@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_w4e6j"]
 [ext_resource type="Script" uid="uid://by4lpbh11nus3" path="res://Scripts/Utility/Popups/ErrorDialog.cs" id="2_udxma"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="3_xtduv"]
 
 [node name="Window" type="Window" unique_id=1985108309 node_paths=PackedStringArray("Msg")]
 oversampling_override = 1.0
@@ -52,6 +53,12 @@ fit_content = true
 layout_mode = 2
 theme = ExtResource("1_w4e6j")
 text = "OK"
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("3_xtduv")]
+Prefix = "window_nodes"
+Controls = {
+"error_dialog": NodePath("..")
+}
 
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/Button" to="." method="hide"]
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/Button" to="." method="queue_free"]

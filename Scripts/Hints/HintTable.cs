@@ -27,7 +27,6 @@ public partial class HintTable : TextTable
     public override string[] EffectGroups => ["default", "hinttable"];
     public const string GlobalCopyFormatProgressive = "Theme/HintTable/CopyFormat/Progressive";
     public const string GlobalCopyFormat = "Theme/HintTable/CopyFormat";
-    public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
 
     public override string[] Columns
         => ["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"];
@@ -176,7 +175,7 @@ public partial class HintTable : TextTable
                     current, hint => GetOrderSlot(hint.ReceivingPlayer),
                     option.IsDescending, isFirst
                 ),
-                "Item" => Order(current, hint => SortNumber(hint.ItemFlags), option.IsDescending, isFirst),
+                "Item" => Order(current, hint => hint.ItemFlags.SortNumber(), option.IsDescending, isFirst),
                 "Finding Player" => Order(
                     current, hint => GetOrderSlot(hint.FindingPlayer), option.IsDescending,
                     isFirst
@@ -235,16 +234,6 @@ public partial class HintTable : TextTable
         return SlotView.ContainsSlot(player) ? 2 : 1;
     }
 
-    public static int SortNumber(ItemFlags flags)
-    {
-        if (ItemToSortIdCache.TryGetValue(flags, out var id)) return id;
-        if ((flags & Advancement) == Advancement) id = 0;
-        else if ((flags & NeverExclude) == NeverExclude) id = 1;
-        else if ((flags & Trap) == Trap) id = 10;
-        else id = 2;
-        return ItemToSortIdCache[flags] = id;
-    }
-
     public override void OnMetaClicked(string key, string[] text)
     {
         switch (key)
@@ -291,4 +280,23 @@ public partial class HintTable : TextTable
                 break;
         }
     }
+}
+
+public static class Ext
+{ 
+    public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
+    
+    extension(ItemFlags flags)
+    {
+        public int SortNumber()
+        {
+            if (ItemToSortIdCache.TryGetValue(flags, out var id)) return id;
+            if ((flags & Advancement) == Advancement) id = 0;
+            else if ((flags & NeverExclude) == NeverExclude) id = 1;
+            else if ((flags & Trap) == Trap) id = 10;
+            else id = 2;
+            return ItemToSortIdCache[flags] = id;
+        }
+
+    } 
 }

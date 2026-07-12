@@ -1,6 +1,7 @@
 using Archipelago.MultiClient.Net.Packets;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Utility;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 

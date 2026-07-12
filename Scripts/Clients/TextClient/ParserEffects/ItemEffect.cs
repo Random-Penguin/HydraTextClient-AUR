@@ -48,16 +48,16 @@ public class ItemEffect : MessageParserEffect
             var flags = (ItemFlags)int.Parse(args[2]);
             if ((int)flags == 3) flags = ItemFlags.Advancement;
             var ft = SaveType<FilterType>.Load(FilterType.MakeUID(args[1], args[0], flags), default, false);
-            
+
             label.PushMeta((string[])["itemfilter", ..args]);
             if (ft.IsSpecial)
             {
-                label.PushColor(SpecialItemColor.Color()); 
-                label.PushBgcolor(SpecialItemBackgroundColor.Color());   
+                label.PushColor(SpecialItemColor.Color());
+                label.PushBgcolor(SpecialItemBackgroundColor.Color());
             }
             else
             {
-                label.PushColor(flags.GetColorFromItemFlag()); 
+                label.PushColor(flags.GetColorFromItemFlag());
                 label.PushBgcolor(flags.GetBgColorFromItemFlag());
             }
         }

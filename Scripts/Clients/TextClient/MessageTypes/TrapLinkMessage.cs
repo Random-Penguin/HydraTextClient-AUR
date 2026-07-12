@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b032il0xo6ju5" path="res://Scripts/Utilities/SlotUtility.cs" id="1_4p5od"]
 [ext_resource type="Script" uid="uid://vu1absk21f82" path="res://Scripts/Utilities/PlayerInventory.cs" id="2_02inb"]
-[ext_resource type="PackedScene" uid="uid://deiabdossqvll" path="res://Scenes/Utility/Popups/InventorySenders.tscn" id="3_80wbg"]
+[ext_resource type="PackedScene" uid="uid://deiabdossqvll" path="res://Scenes/Utilities/Popups/InventorySenders.tscn" id="3_80wbg"]
 [ext_resource type="PackedScene" uid="uid://duftnvs8wyydo" path="res://Scenes/Utilities/SearchingList.tscn" id="3_mknbs"]
 
 [node name="SlotUtility" type="HSplitContainer" unique_id=1159233697 node_paths=PackedStringArray("Inventory", "ItemList", "LocationList")]

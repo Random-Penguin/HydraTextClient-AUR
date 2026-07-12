@@ -1,11 +1,12 @@
 ﻿using Archipelago.MultiClient.Net.Models;
 using Godot;
+using HydraTextClient.Scripts.Utility.Popups;
 
-namespace HydraTextClient.Scripts.Utility.Popups;
+namespace HydraTextClient.Scripts.Utilities.Popups;
 
 public partial class InventorySenders : WindowSetter
 {
-    [Export] private Utilities.PopupTables.SendersTable Table;
+    [Export] private PopupTables.SendersTable Table;
 
     public void SetItems(ItemInfo[] items)
     {

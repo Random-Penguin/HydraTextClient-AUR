@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Packets;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
@@ -21,17 +22,12 @@ public partial class ItemMessage : MessageScene
         if (packetBase.GetPacket() is not ItemPrintJsonPacket item) return;
         if (!ConnectionController.HasLeaderClient) return;
 
-        var leader = ConnectionController.LeaderClient!;
-        var finder = item.Item.Player;
-        var receiver = item.ReceivingPlayer;
-        var itemName = leader.ItemIdToItemName(item.Item.Item, receiver);
-        FinderIsReceiver = item.ReceivingPlayer == finder;
-
+        FinderIsReceiver = item.FinderIsReceiver;
         CachedReplacement = new Dictionary<string, string>
         {
-            ["finder"] = $"{{{{player;{finder}}}}}", ["receiver"] = $"{{{{player;{receiver}}}}}",
-            ["loc"] = $"{{{{loc;{item.Item.Location};{finder}}}}}",
-            ["item"] = $"{{{{item;{leader.PlayerGames[receiver]};{itemName};{(int)item.Item.Flags}}}}}",
+            ["finder"] = $"{{{{player;{item.FindingPlayer}}}}}", ["receiver"] = $"{{{{player;{item.ReceivingPlayer}}}}}",
+            ["loc"] = $"{{{{loc;{item.Item.Location};{item.FindingPlayer}}}}}",
+            ["item"] = item.GetItemEffectText(),
         };
 
         Reload();

@@ -5,7 +5,6 @@ using System.Text;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
-using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
@@ -213,7 +212,7 @@ public partial class HintTable : TextTable
         {
             0 => $"{{{{click;Copy;{row}}}}}",
             1 or 3 => $"{{{{player;{(col is 1 ? hint.ReceivingPlayer : hint.FindingPlayer)}}}}}",
-            2 => $"{{{{item;{hint.ItemGame};{hint.ItemName};{(int)hint.ItemFlags}}}}}", 4 =>
+            2 => hint.GetItemEffectText(), 4 =>
                 $"{{{{hintstatus;{hint.Status switch { Found => '4', NoPriority => '1', Avoid => '2', Priority => '3', _ => '0' }};{row};{ConnectionController.IsConnected(hint.ReceivingPlayer)}}}}}",
             5 => $"{{{{loc;{hint.LocationId};{hint.FindingPlayer}}}}}", 6 => $"{{{{entrance;{hint.Entrance}}}}}",
             _ => "Error",
@@ -280,23 +279,4 @@ public partial class HintTable : TextTable
                 break;
         }
     }
-}
-
-public static class Ext
-{ 
-    public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
-    
-    extension(ItemFlags flags)
-    {
-        public int SortNumber()
-        {
-            if (ItemToSortIdCache.TryGetValue(flags, out var id)) return id;
-            if ((flags & Advancement) == Advancement) id = 0;
-            else if ((flags & NeverExclude) == NeverExclude) id = 1;
-            else if ((flags & Trap) == Trap) id = 10;
-            else id = 2;
-            return ItemToSortIdCache[flags] = id;
-        }
-
-    } 
 }

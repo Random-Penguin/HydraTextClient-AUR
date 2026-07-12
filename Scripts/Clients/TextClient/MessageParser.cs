@@ -39,63 +39,6 @@ public static class MessageParser
 
         return effects;
     }
-
-    public static void ApplyCompiledPrintableObjs(this RichTextLabel label, IPrintableObj[] objs)
-    {
-        foreach (var printableObj in objs) printableObj.AddText(label);
-    }
-
-    public static IPrintableObj[] CompileRichText(this string rawText,
-        Dictionary<string, Action<RichTextLabel, string[]>> effects, bool appendRawTextAsBBCode)
-    {
-        if (!rawText.Contains("{{")) return [new TextPrintObj(rawText, appendRawTextAsBBCode)];
-        List<IPrintableObj> objs = [];
-
-        var split = rawText.Split("{{");
-        objs.Add(new TextPrintObj(split[0], appendRawTextAsBBCode));
-        foreach (var section in split.Skip(1))
-        {
-            if (!section.Contains("}}"))
-            {
-                objs.Add(new TextPrintObj($"{{{{{section}", appendRawTextAsBBCode));
-                continue;
-            }
-
-            var index = section.IndexOf("}}", StringComparison.Ordinal);
-            var code = section[..index].Split(';');
-
-            if (code.Length == 0)
-            {
-                objs.Add(new TextPrintObj($"{{{{{section}", appendRawTextAsBBCode));
-                continue;
-            }
-
-            var key = code[0];
-
-            if (!effects.ContainsKey(key.ToLower()))
-            {
-                objs.Add(new TextPrintObj($"{{{{{section}", appendRawTextAsBBCode));
-                continue;
-            }
-
-            objs.Add(new CallablePrintObj(effects[key], code.Length > 1 ? code[1..] : []));
-            if (section.Length <= index + 2) continue;
-            objs.Add(new TextPrintObj(section[(index + 2)..], appendRawTextAsBBCode));
-        }
-
-        return objs.ToArray();
-    }
-
-    public static string CompileSimpleText(this string text, Dictionary<string, string> replacers)
-        => replacers.Aggregate(text, (s, kv) => s.Replace($"{{{{{kv.Key}}}}}", kv.Value));
-
-    public static string Sanitize(this string text) => ((string[]) //bbcode blacklist
-    [
-        "img", "opentype_features", "bgcolor", "hint", "outline_size", "outline_color", "color", "font_size",
-        "font", "code", "url",
-    ]).Distinct().Aggregate(text, (s, replace) => s.Replace($"[{replace}", $"[lb]{replace}"))
-    // .Replace("\r", "")
-    ;
 }
 
 public abstract class MessageParserEffect

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://deiabdossqvll"]
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_ua7hp"]
-[ext_resource type="Script" uid="uid://chwrdboemof7u" path="res://Scripts/Utility/Popups/InventorySenders.cs" id="2_3mkfb"]
+[ext_resource type="Script" uid="uid://chwrdboemof7u" path="res://Scripts/Utilities/Popups/InventorySenders.cs" id="2_3mkfb"]
 [ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="3_sjxkb"]
 [ext_resource type="Script" uid="uid://dytf5t8hn1ie1" path="res://Scripts/Utilities/PopupTables/SendersTable.cs" id="4_3mkfb"]
 

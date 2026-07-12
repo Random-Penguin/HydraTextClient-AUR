@@ -6,8 +6,8 @@ using Archipelago.MultiClient.Net.Enums;
 using CreepyUtil.Archipelago;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
-using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Connection.Slots;
+using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 

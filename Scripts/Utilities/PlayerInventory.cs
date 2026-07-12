@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Models;
-using CreepyUtil.Archipelago;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
-using HydraTextClient.Scripts.Settings.ItemFilter;
-using HydraTextClient.Scripts.Utility.Popups;
+using HydraTextClient.Scripts.Utilities.Popups;
+using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using HydraTextClient.Scripts.Utility.UtilityEffects;
 
@@ -50,9 +50,7 @@ public partial class PlayerInventory : TextTable
         var items = Inventory[Keys[row]];
         return col switch
         {
-            0 => $"{items.Length}",
-            1 => $"{{{{item;{items[0].ItemGame};{items[0].ItemName};{(int)items[0].Flags}}}}}",
-            2 => $"{{{{click;View;{row}}}}}", _ => "Error",
+            0 => $"{items.Length}", 1 => items[0].GetEffectText(), 2 => $"{{{{click;View;{row}}}}}", _ => "Error",
         };
     }
 
@@ -69,8 +67,5 @@ public partial class PlayerInventory : TextTable
         }
     }
 
-    public void ViewItemHistory()
-    {
-        
-    }
+    public void ViewItemHistory() { }
 }

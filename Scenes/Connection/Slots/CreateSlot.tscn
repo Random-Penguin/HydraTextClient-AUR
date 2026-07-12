@@ -15,93 +15,81 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_osnw7")
 script = ExtResource("2_ty5pc")
-SlotName = NodePath("MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/SlotNameEdit")
-WorldSlotName = NodePath("MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/WorldSlotNameEdit")
-GameImages = NodePath("MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer/OptionButton")
-SlotCommands = NodePath("MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/TerminalCommands/CodeEdit")
+SlotName = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/SlotNameEdit")
+WorldSlotName = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/WorldSlotNameEdit")
+GameImages = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer/OptionButton")
+SlotCommands = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/TerminalCommands/CodeEdit")
 UnknownImage = ExtResource("3_77wv5")
 metadata/_tab_index = 1
 
-[node name="UISaver" type="Control" parent="." unique_id=77343901 node_paths=PackedStringArray("Controls")]
-visible = false
-layout_mode = 2
-script = ExtResource("3_4dn7x")
-Prefix = "Connection/SlotsMenu"
-Controls = {
-"SlotSideAppRunner": NodePath("../MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/TerminalCommands")
-}
-
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=311212218]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1858205034]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=1858205034]
-layout_mode = 2
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/ScrollContainer" unique_id=75259046]
+[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer" unique_id=75259046]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer2" unique_id=755134473]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer2" unique_id=755134473]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=655959795]
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=655959795]
 layout_mode = 2
 
-[node name="ClearCache" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=167274466]
+[node name="ClearCache" type="Button" parent="ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=167274466]
 modulate = Color(0.9192285, 0.25766784, 0, 1)
 layout_mode = 2
 text = "Clear"
 script = ExtResource("5_77wv5")
 
-[node name="SlotName" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=1418696935]
+[node name="SlotName" type="Label" parent="ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=1418696935]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Slot Name"
 horizontal_alignment = 1
 
-[node name="Delete" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=83228144]
+[node name="Delete" type="Button" parent="ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=83228144]
 modulate = Color(0.999996, 0.26342845, 0.29194015, 1)
 layout_mode = 2
 text = "Delete"
 script = ExtResource("5_77wv5")
 
-[node name="SlotNameEdit" type="LineEdit" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1926132930]
+[node name="SlotNameEdit" type="LineEdit" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1926132930]
 layout_mode = 2
 placeholder_text = "Slot Name"
 max_length = 16
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1855565839]
+[node name="HSeparator" type="HSeparator" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1855565839]
 layout_mode = 2
 
-[node name="WorldSlotName" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=920219334]
+[node name="WorldSlotName" type="Label" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=920219334]
 layout_mode = 2
 text = "This Multiworld Only"
 horizontal_alignment = 1
 
-[node name="WorldSlotNameEdit" type="LineEdit" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=2073293605]
+[node name="WorldSlotNameEdit" type="LineEdit" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=2073293605]
 layout_mode = 2
 placeholder_text = "Multiworld Slot Name"
 max_length = 16
 
-[node name="WorldSlotNameEdit2" type="LineEdit" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=103036335]
+[node name="WorldSlotNameEdit2" type="LineEdit" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=103036335]
 layout_mode = 2
 placeholder_text = "Multiworld Password"
 max_length = 16
 
-[node name="HSeparator4" type="HSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1765980038]
+[node name="HSeparator4" type="HSeparator" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1765980038]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1697333717]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1697333717]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer" unique_id=91818490]
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer" unique_id=91818490]
 layout_mode = 2
 text = "Game: "
 
-[node name="OptionButton" type="OptionButton" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer" unique_id=1569490977]
+[node name="OptionButton" type="OptionButton" parent="ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer" unique_id=1569490977]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
@@ -110,15 +98,15 @@ popup/item_0/text = "Unknown"
 popup/item_0/icon = ExtResource("3_77wv5")
 popup/item_0/id = 0
 
-[node name="HSeparator3" type="HSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=357078879]
+[node name="HSeparator3" type="HSeparator" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=357078879]
 layout_mode = 2
 
-[node name="TerminalCommands" type="FoldableContainer" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1628663918]
+[node name="TerminalCommands" type="FoldableContainer" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1628663918]
 layout_mode = 2
 title = "Side App Runner"
 title_alignment = 1
 
-[node name="CodeEdit" type="CodeEdit" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/TerminalCommands" unique_id=1621118533]
+[node name="CodeEdit" type="CodeEdit" parent="ScrollContainer/VBoxContainer2/VBoxContainer/TerminalCommands" unique_id=1621118533]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 placeholder_text = "Run apps on connect
@@ -134,14 +122,23 @@ autowrap_mode = 2
 scroll_fit_content_height = true
 gutters_draw_line_numbers = true
 
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1296235864]
+[node name="HSeparator2" type="HSeparator" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1296235864]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer2" unique_id=835844324]
+[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer2" unique_id=835844324]
 layout_mode = 2
 text = "Add/Override"
 script = ExtResource("5_77wv5")
 
-[connection signal="pressed" from="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/ClearCache" to="." method="Clear"]
-[connection signal="pressed" from="MarginContainer/ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/Delete" to="." method="Delete"]
-[connection signal="pressed" from="MarginContainer/ScrollContainer/VBoxContainer2/Button" to="." method="AddOverride"]
+[node name="UISaver" type="Control" parent="." unique_id=77343901 node_paths=PackedStringArray("Controls")]
+visible = false
+layout_mode = 2
+script = ExtResource("3_4dn7x")
+Prefix = "Connection/SlotsMenu"
+Controls = {
+"SlotSideAppRunner": NodePath("../ScrollContainer/VBoxContainer2/VBoxContainer/TerminalCommands")
+}
+
+[connection signal="pressed" from="ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/ClearCache" to="." method="Clear"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/Delete" to="." method="Delete"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer2/Button" to="." method="AddOverride"]

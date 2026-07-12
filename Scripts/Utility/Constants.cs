@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Settings;
-using HydraTextClient.Scripts.Utility.DataTypes;
-using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
 namespace HydraTextClient.Scripts.Utility;
@@ -79,23 +77,6 @@ public static class ColorIdConstants
             }, int.MinValue
         );
     }
-
-    public static Color Color(this ColorConstant constant) => SaveType<HexColor>.Load(
-        ConstantToId[constant], ConstantToDefaultColor[constant]
-    );
-
-    public static Color Color(this string constant) => IdToConstant.GetValueOrDefault(constant, Unknown).Color();
-
-    public static void Save(this ColorConstant constant, Color color, bool broadcast = true)
-        => SaveType<HexColor>.Save(ConstantToId[constant], color, broadcast);
-
-    public static bool IsPlayerColor(this ColorConstant constant) => constant is PlayerConnected
-        or PlayerListedNonConnected or PlayerNonConnected or ServerColor;
-
-    public static bool IsItemColor(this ColorConstant constant) => constant
-        is NormalItemColor or ProgressiveItemColor or TrapItemColor or UsefulItemColor or SpecialItemColor
-        or NormalItemBackgroundColor or ProgressiveItemBackgroundColor or TrapItemBackgroundColor
-        or UsefulItemBackgroundColor or SpecialItemBackgroundColor;
 
     public enum ColorConstant
     {

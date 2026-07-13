@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Models;
+using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Utilities.PopupTables;
@@ -27,7 +28,7 @@ public partial class SendersTable : TextTable
         {
             0 => $"{items.Length:###,##0}", 1 => $"{{{{player;{player}}}}}",
             2 => items.Length > 10 ? "Various Locations" : string.Join(
-                "\n ", items.Select(item => $"{{{{loc;{item.LocationId};{player}}}}}")
+                "\n ", items.Select(item => item.GetLocationEffectText())
             ),
             _ => "Error",
         };

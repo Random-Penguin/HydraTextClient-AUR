@@ -35,6 +35,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\PlayerList\" />
-    <Folder Include="Scripts\Utilities\Popups\" />
   </ItemGroup>
 </Project>

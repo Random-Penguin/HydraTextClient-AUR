@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://vu1absk21f82" path="res://Scripts/Utilities/PlayerInventory.cs" id="2_02inb"]
 [ext_resource type="PackedScene" uid="uid://deiabdossqvll" path="res://Scenes/Utilities/Popups/InventorySenders.tscn" id="3_80wbg"]
 [ext_resource type="PackedScene" uid="uid://duftnvs8wyydo" path="res://Scenes/Utilities/SearchingList.tscn" id="3_mknbs"]
+[ext_resource type="PackedScene" uid="uid://lhi65rdnf4eg" path="res://Scenes/Utilities/Popups/InventoryCounter.tscn" id="4_p40g0"]
+[ext_resource type="PackedScene" uid="uid://cbwouwen0n4nl" path="res://Scenes/Utilities/Popups/InventoryHistory.tscn" id="5_3y6xe"]
 
 [node name="SlotUtility" type="HSplitContainer" unique_id=1159233697 node_paths=PackedStringArray("Inventory", "ItemList", "LocationList")]
 anchors_preset = 15
@@ -40,12 +42,13 @@ size_flags_vertical = 3
 [node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=2006626263 node_paths=PackedStringArray("CheatCounter")]
 layout_mode = 2
 bbcode_enabled = true
-text = "inventory      fwefwe fwef wef wfe fweewewff
-item 1 fgwegwe feeeeeeeeeeeeeeeeee"
+text = "inventory    "
 fit_content = true
 autowrap_mode = 0
 script = ExtResource("2_02inb")
 SendersPopup = ExtResource("3_80wbg")
+ItemCountPopup = ExtResource("4_p40g0")
+ItemHistoryPopup = ExtResource("5_3y6xe")
 CheatCounter = NodePath("../../Label")
 
 [node name="ScrollContainer2" parent="." unique_id=1792383220 instance=ExtResource("3_mknbs")]

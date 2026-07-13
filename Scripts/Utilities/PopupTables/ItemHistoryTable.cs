@@ -1,26 +1,91 @@
-﻿using Archipelago.MultiClient.Net.Models;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
+using Godot;
+using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Utilities.PopupTables;
 
 public partial class ItemHistoryTable : TextTable
 {
-    public override string[] Columns { get; }
-    public override long DataSize { get; }
-    public override string GetData(int row, int col) => throw new System.NotImplementedException();
+    public override string[] Columns => ["Received Order", "Item", "From", "Location"];
+    public override long DataSize => ItemHistory.Length;
+    private ItemEntry[] ItemHistory = [];
 
-    public void SetItems(ItemInfo[] items)
+    public void SetItems(ReadOnlyCollection<ItemInfo> items)
     {
-        
+        var itemHistoryRaw = items
+                            .Select((item, index) => new ItemEntry(
+                                     index + 1, -1, [item.GetEffectText()], item.Flags,
+                                     item.LocationName == "Cheat Console" ? 0 : item.Player.Slot,
+                                     [item.GetLocationEffectText()]
+                                 )
+                             )
+                            .ToArray();
+
+        List<ItemEntry> itemHistory = [itemHistoryRaw[0]];
+        for (var index = 1; index < itemHistoryRaw.Length; index++)
+        {
+            var current = itemHistoryRaw[index];
+            var last = itemHistory[^1];
+
+            if (last.From == current.From && last.Flags == current.Flags)
+            {
+                GD.Print($"{(int)last.Flags} == {(int)current.Flags}; [{last.ItemsText}] + [{current.ItemsText}]");
+                if (last.Flags.HasFlag(ItemFlags.Advancement) && last.Items.First() != current.Items.First())
+                {
+                    itemHistory.Add(current);
+                    continue;
+                }
+
+                itemHistory[^1] = new ItemEntry(
+                    last.IndexStart, current.IndexStart, [..last.Items, ..current.Items],
+                    last.Flags, last.From, [..last.Locations, ..current.Locations]
+                );
+                continue;
+            }
+
+            itemHistory.Add(current);
+        }
+
+        ItemHistory = itemHistory.ToArray();
+        QueueUiRefresh(true);
     }
-    
-    public override void RefreshUi(bool recompile)
+
+    public override string GetData(int row, int col)
     {
-        throw new System.NotImplementedException();
+        var entry = ItemHistory[row];
+        return col switch
+        {
+            0 => entry.OrderText, 1 => entry.ItemsText, 2 => entry.FromText, 3 => entry.LocationText, _ => "Error"
+        };
     }
-    
-    public override void OnMetaClicked(string key, string[] text)
+
+    public override void RefreshUi(bool recompile) { }
+    public override void OnMetaClicked(string key, string[] text) { }
+
+    private readonly struct ItemEntry(int indexStart,
+        int indexEnd,
+        HashSet<string> items,
+        ItemFlags flags,
+        int from,
+        HashSet<string> locations)
     {
-        throw new System.NotImplementedException();
+        public readonly int IndexStart = indexStart;
+        public readonly int IndexEnd = indexEnd;
+        public readonly HashSet<string> Items = items;
+        public readonly ItemFlags Flags = flags;
+        public readonly int From = from;
+        public readonly HashSet<string> Locations = locations;
+
+        public string OrderText
+            => indexEnd == -1 ? $"{IndexStart:###,###}" : $"{IndexStart:###,###} - {IndexEnd:###,###}";
+
+        public string ItemsText => string.Join(",\n ", Items);
+        public string FromText => $"{{{{player;{From}}}}}";
+        public string LocationText => Locations.Count > 10 ? "Various Locations" : string.Join(",\n ", Locations);
     }
 }

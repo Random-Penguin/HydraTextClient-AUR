@@ -17,6 +17,7 @@ public class MultiworldData
     public ConcurrentDictionary<string, int> CheckCounts = [];
     public ConcurrentDictionary<string, Hint[]> Hints = [];
     public ConcurrentDictionary<string, Circle[]> Circles = [];
+    public ConcurrentDictionary<string, int> ItemHistory = [];
 
     public void ClearCache()
     {
@@ -27,6 +28,7 @@ public class MultiworldData
         SlotNames.Clear();
         Hints.Clear();
         Circles.Clear();
+        ItemHistory.Clear();
     }
 
     public string GetSlotName(string slot) => SlotNames.GetValueOrDefault(slot, slot);

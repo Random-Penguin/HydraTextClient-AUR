@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cbwouwen0n4nl"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_iu57q"]
+[ext_resource type="Script" uid="uid://drokgqkswy81l" path="res://Scripts/Utilities/Popups/InventoryHistory.cs" id="2_iu57q"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="3_vl856"]
+[ext_resource type="Script" uid="uid://dfr3lbgk6x1bb" path="res://Scripts/Utilities/PopupTables/ItemHistoryTable.cs" id="4_gg1h1"]
+
+[node name="InventorySenders" type="Window" unique_id=1370684078 node_paths=PackedStringArray("Table")]
+oversampling_override = 1.0
+title = "Senders"
+size = Vector2i(400, 300)
+theme = ExtResource("1_iu57q")
+script = ExtResource("2_iu57q")
+Table = NodePath("Panel/ScrollContainer/MarginContainer/RichTextLabel")
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("3_vl856")]
+Prefix = "window_nodes"
+Controls = {
+"inv_senders": NodePath("..")
+}
+
+[node name="Panel" type="Panel" parent="." unique_id=1253733552]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel" unique_id=1202998922]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/ScrollContainer" unique_id=2099802952]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/ScrollContainer/MarginContainer" unique_id=1901025711]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("4_gg1h1")

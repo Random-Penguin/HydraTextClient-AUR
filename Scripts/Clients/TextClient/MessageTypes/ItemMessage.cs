@@ -25,9 +25,8 @@ public partial class ItemMessage : MessageScene
         FinderIsReceiver = item.FinderIsReceiver;
         CachedReplacement = new Dictionary<string, string>
         {
-            ["finder"] = $"{{{{player;{item.FindingPlayer}}}}}", ["receiver"] = $"{{{{player;{item.ReceivingPlayer}}}}}",
-            ["loc"] = $"{{{{loc;{item.Item.Location};{item.FindingPlayer}}}}}",
-            ["item"] = item.GetItemEffectText(),
+            ["finder"] = $"{{{{player;{item.FindingPlayer}}}}}", ["item"] = item.GetItemEffectText(),
+            ["receiver"] = $"{{{{player;{item.ReceivingPlayer}}}}}", ["loc"] = item.GetLocationEffectText(),
         };
 
         Reload();

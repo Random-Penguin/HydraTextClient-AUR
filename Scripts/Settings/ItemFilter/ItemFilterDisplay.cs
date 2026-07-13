@@ -26,7 +26,7 @@ public partial class ItemFilterDisplay : TextTable
         RefreshUi(true);
         SaveType<FilterType>.OnSaveEvent += (_, _) => QueueUiRefresh(true);
         SaveType<FilterType>.OnDeleteEvent += (_, _) => QueueUiRefresh(true);
-        
+
         SaveType<HexColor>.OnSaveEvent += (id, _) =>
         {
             if (!IdToConstant.TryGetValue(id, out var constant)) return;
@@ -43,7 +43,8 @@ public partial class ItemFilterDisplay : TextTable
 
     public override void RefreshUi(bool recompile)
     {
-        FilterTypes = SaveType<FilterType>.GetValues().OrderBy(f => f.GameName).ThenBy(f => f.ItemFlags.SortNumber()).ToArray();
+        FilterTypes = SaveType<FilterType>.GetValues().OrderBy(f => f.GameName).ThenBy(f => f.ItemFlags.SortNumber())
+                                          .ToArray();
         UpdateData(recompile);
     }
 
@@ -52,23 +53,21 @@ public partial class ItemFilterDisplay : TextTable
         var filter = FilterTypes[row];
         return col switch
         {
-            0 => filter.GameName, 1 => $"{{{{item;{filter.GameName};{filter.ItemName};{(int)filter.ItemFlags}}}}}",
-            2 => $"{{{{log;{filter.ShowInItemLog};{row}}}}}", 
-            3 => $"{{{{table;{filter.ShowInHintsTable};{row}}}}}",
-            4 => $"{{{{special;{filter.IsSpecial};{row}}}}}", 5 => $"{{{{click;Remove;{row}}}}}", _ => "Error",
+            0 => filter.GameName, 1 => filter.GetEffectText(), 2 => $"{{{{log;{filter.ShowInItemLog};{row}}}}}",
+            3 => $"{{{{table;{filter.ShowInHintsTable};{row}}}}}", 4 => $"{{{{special;{filter.IsSpecial};{row}}}}}",
+            5 => $"{{{{click;Remove;{row}}}}}", _ => "Error",
         };
     }
-    
+
     public override void OnMetaClicked(string key, string[] text)
     {
         switch (key)
         {
             case TextTableClickEffect.ClickedEventMsg:
-                SaveType<FilterType>.Delete(FilterTypes[int.Parse(text[0])].UID);
-                break;
+                SaveType<FilterType>.Delete(FilterTypes[int.Parse(text[0])].UID); break;
         }
     }
-    
+
     public override void OnVariantMetaClicked(Variant meta)
     {
         if (meta.VariantType is not Variant.Type.PackedInt32Array) return;
@@ -76,15 +75,9 @@ public partial class ItemFilterDisplay : TextTable
         var filter = FilterTypes[arr[0]];
         switch (arr[1])
         {
-            case 0:
-                filter.ShowInItemLog = !filter.ShowInItemLog;
-                break;
-            case 1:
-                filter.ShowInHintsTable = !filter.ShowInHintsTable;
-                break;
-            case 2:
-                filter.IsSpecial = !filter.IsSpecial;
-                break;
+            case 0: filter.ShowInItemLog = !filter.ShowInItemLog; break;
+            case 1: filter.ShowInHintsTable = !filter.ShowInHintsTable; break;
+            case 2: filter.IsSpecial = !filter.IsSpecial; break;
         }
         SaveType<FilterType>.Save(filter.UID, filter, true);
     }

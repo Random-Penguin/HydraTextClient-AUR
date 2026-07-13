@@ -61,6 +61,36 @@ public static class Extensions
         public string GetItemEffectText() => $"{{{{item;{hint.ItemGame};{hint.ItemName};{(int)hint.ItemFlags}}}}}";
     }
 
+    extension(HintPrintJsonPacket packet)
+    {
+        public int FindingPlayer => packet.Item.Player;
+        public bool FinderIsReceiver => packet.FindingPlayer == packet.ReceivingPlayer;
+
+        public string ItemGame => ConnectionController.HasLeaderClient
+            ? ConnectionController.LeaderClient!.PlayerGames[packet.ReceivingPlayer] : "Unknown";
+
+        public string ItemName => ConnectionController.HasLeaderClient
+            ? ConnectionController.LeaderClient!.ItemIdToItemName(packet.Item.Item, packet.ReceivingPlayer) : "Unknown";
+
+        public string UID
+        {
+            get
+            {
+                var leader = ConnectionController.LeaderClient!;
+                var receiver = packet.ReceivingPlayer;
+                return FilterType.MakeUID(
+                    leader.ItemIdToItemName(packet.Item.Item, receiver), leader.PlayerGames[receiver], packet.Item.Flags
+                );
+            }
+        }
+
+        public string GetItemEffectText()
+            => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
+
+        public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
+        public string GetFoundEffectText() => $"{{{{{(packet.Found ?? false ? "found" : "notfound")}}}}}";
+    }
+
     extension(ItemFlags flags)
     {
 
@@ -97,6 +127,35 @@ public static class Extensions
         public string GetEffectText() => $"{{{{item;{item.ItemGame};{item.ItemName};{(int)item.Flags}}}}}";
     }
 
+    extension(ItemCheatPrintJsonPacket packet)
+    {
+        public int FindingPlayer => packet.Item.Player;
+        public bool FinderIsReceiver => packet.FindingPlayer == packet.ReceivingPlayer;
+
+        public string ItemGame => ConnectionController.HasLeaderClient
+            ? ConnectionController.LeaderClient!.PlayerGames[packet.ReceivingPlayer] : "Unknown";
+
+        public string ItemName => ConnectionController.HasLeaderClient
+            ? ConnectionController.LeaderClient!.ItemIdToItemName(packet.Item.Item, packet.ReceivingPlayer) : "Unknown";
+
+        public string UID
+        {
+            get
+            {
+                var leader = ConnectionController.LeaderClient!;
+                var receiver = packet.ReceivingPlayer;
+                return FilterType.MakeUID(
+                    leader.ItemIdToItemName(packet.Item.Item, receiver), leader.PlayerGames[receiver], packet.Item.Flags
+                );
+            }
+        }
+
+        public string GetItemEffectText()
+            => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
+
+        public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
+    }
+
     extension(ItemPrintJsonPacket packet)
     {
         public int FindingPlayer => packet.Item.Player;
@@ -122,6 +181,8 @@ public static class Extensions
 
         public string GetItemEffectText()
             => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
+
+        public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
     }
 
     extension(LineEdit edit)
@@ -147,7 +208,8 @@ public static class Extensions
     {
         public Color Color() => IdToConstant.GetValueOrDefault(str, Unknown).Color();
 
-        public IPrintableObj[] CompileRichText(Dictionary<string, Action<RichTextLabel, string[]>> effects, bool appendRawTextAsBBCode)
+        public IPrintableObj[] CompileRichText(Dictionary<string, Action<RichTextLabel, string[]>> effects,
+            bool appendRawTextAsBBCode)
         {
             if (!str.Contains("{{")) return [new TextPrintObj(str, appendRawTextAsBBCode)];
             List<IPrintableObj> objs = [];

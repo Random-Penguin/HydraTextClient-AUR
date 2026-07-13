@@ -18,17 +18,11 @@ public partial class HintMessage : MessageScene
         if (packetBase.GetPacket() is not HintPrintJsonPacket hint) return;
         if (!ConnectionController.HasLeaderClient) return;
 
-        var leader = ConnectionController.LeaderClient!;
-        var finder = hint.Item.Player;
-        var receiver = hint.ReceivingPlayer;
-        var itemName = leader.ItemIdToItemName(hint.Item.Item, receiver);
-
         CachedReplacement = new Dictionary<string, string>
         {
-            ["finder"] = $"{{{{player;{finder}}}}}", ["receiver"] = $"{{{{player;{receiver}}}}}",
-            ["loc"] = $"{{{{loc;{hint.Item.Location};{finder}}}}}",
-            ["item"] = $"{{{{item;{leader.PlayerGames[receiver]};{itemName};{(int)hint.Item.Flags}}}}}",
-            ["found"] = $"{{{{{(hint.Found ?? false ? "found" : "notfound")}}}}}",
+            ["finder"] = $"{{{{player;{hint.FindingPlayer}}}}}", ["item"] = hint.GetItemEffectText(),
+            ["receiver"] = $"{{{{player;{hint.ReceivingPlayer}}}}}", ["loc"] = hint.GetLocationEffectText(),
+            ["found"] = hint.GetFoundEffectText(),
         };
 
         Reload();

@@ -17,16 +17,10 @@ public partial class ItemCheatMessage : MessageScene
     {
         if (packetBase.GetPacket() is not ItemCheatPrintJsonPacket item) return;
 
-        var leader = ConnectionController.LeaderClient!;
-        var finder = item.Item.Player;
-        var receiver = item.ReceivingPlayer;
-        var itemName = leader.ItemIdToItemName(item.Item.Item, receiver);
-
         CachedReplacement = new Dictionary<string, string>
         {
-            ["player"] = $"{{{{player;{finder}}}}}", ["server"] = "{{player;0}}",
-            ["loc"] = $"{{{{loc;{item.Item.Location};{finder}}}}}",
-            ["item"] = $"{{{{item;{leader.PlayerGames[receiver]};{itemName};{(int)item.Item.Flags}}}}}",
+            ["player"] = $"{{{{player;{item.FindingPlayer}}}}}", ["server"] = "{{player;0}}",
+            ["loc"] = item.GetLocationEffectText(), ["item"] = item.GetItemEffectText(),
         };
 
         Reload();

@@ -17,11 +17,13 @@ public partial class WindowSetter : Window
         MaximizeDisabled = DisableMinMax;
         ForceNative = true;
         InitialPosition = WindowInitialPosition.CenterMainWindowScreen;
-        CloseRequested += () =>
-        {
-            Hide();
-            GetParent().RemoveChild(this);
-            QueueFree();
-        };
+        CloseRequested += Close;
+    }
+
+    public void Close()
+    {
+        CallDeferred("hide");
+        GetParent().CallDeferred("remove_child", this);
+        CallDeferred("queue_free");
     }
 }

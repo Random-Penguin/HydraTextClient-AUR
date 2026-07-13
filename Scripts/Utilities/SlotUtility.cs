@@ -2,19 +2,23 @@ using System.Linq;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Utilities.Popups;
 using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Utilities;
 
 public partial class SlotUtility : HSplitContainer
 {
+    [Export] private PackedScene HintPopup;
     [Export] private PlayerInventory Inventory;
     [Export] private SearchingList ItemList;
     [Export] private SearchingList LocationList;
     private bool ShowUnobtainedItems;
+    private ApClient Client;
 
     public void SetupPlayer(ApClient client)
     {
+        Client = client;
         var fontSize = (int)SaveType<double>.Load(GlobalThemeSettings.GlobalFontSize, 20d);
         SaveType<double>.OnSaveEvent += (s, d) =>
         {
@@ -49,7 +53,6 @@ public partial class SlotUtility : HSplitContainer
             return results.Contains(item) && (!ShowUnobtainedItems || !Inventory.RawItemNames.Contains(item));
         };
         var game = client.PlayerGames[client.PlayerSlot];
-        ItemList.OnItemPressed += s => GD.Print($"clicked: [{s}]");
         ItemList.OnItemCreated += (list, index, item) => CustomAssets.ItemImage(
             game, item, game, asset =>
             {
@@ -59,9 +62,20 @@ public partial class SlotUtility : HSplitContainer
         ItemList.SetItems(client.Items.Select(kv => kv.Key).ToArray());
         ItemList.List.FixedIconSize = new Vector2I(fontSize, fontSize);
 
-        LocationList.OnItemPressed += s => GD.Print($"clicked: [{s}]");
         LocationList.SetItems(
             client.Locations.Select(kv => kv.Key).Where(loc => client.MissingLocations.Contains(loc)).ToArray()
         );
+        
+        
+        ItemList.OnItemPressed += s => CallDeferred("CreateDialog", "Hint Item", $"Hint fo\n{s}?", $"!hint {s}");
+        LocationList.OnItemPressed += s => CallDeferred("CreateDialog", "Hint Location", $"Hint for whats at\n{s}?", $"!hint_location {s}");
+    }
+
+    public void CreateDialog(string title, string text, string command)
+    {
+        var popup = HintPopup.Instantiate<HintPopup>();
+        popup.Set(Client, title, text,command);
+        AddChild(popup);
+        popup.Show();
     }
 }

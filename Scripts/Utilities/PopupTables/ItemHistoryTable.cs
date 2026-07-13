@@ -34,7 +34,6 @@ public partial class ItemHistoryTable : TextTable
 
             if (last.From == current.From && last.Flags == current.Flags)
             {
-                GD.Print($"{(int)last.Flags} == {(int)current.Flags}; [{last.ItemsText}] + [{current.ItemsText}]");
                 if (last.Flags.HasFlag(ItemFlags.Advancement) && last.Items.First() != current.Items.First())
                 {
                     itemHistory.Add(current);

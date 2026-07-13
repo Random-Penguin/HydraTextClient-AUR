@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://bvm64478byib1" path="res://Scenes/Hints/hints.tscn" id="11_wplvb"]
 [ext_resource type="PackedScene" uid="uid://cthu6oe5kiqrr" path="res://Scenes/PlayerList/PlayerList.tscn" id="12_w1qgd"]
 [ext_resource type="PackedScene" uid="uid://ddrns4ebu48n3" path="res://Scenes/Utilities/utilities.tscn" id="14_i5ty2"]
+[ext_resource type="PackedScene" uid="uid://c42p18np8uupv" path="res://Scenes/Credits/credits.tscn" id="17_d5x8p"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yd0xa"]
 content_margin_left = 0.0
@@ -73,7 +74,7 @@ layout_mode = 2
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 5
+current_tab = 7
 
 [node name="Connection" type="TabContainer" parent="Main Container" unique_id=2072097402]
 visible = false
@@ -131,6 +132,7 @@ layout_mode = 2
 metadata/_tab_index = 4
 
 [node name="Settings" type="TabContainer" parent="Main Container" unique_id=1972428991]
+visible = false
 layout_mode = 2
 current_tab = 0
 script = ExtResource("11_uq7wj")
@@ -145,10 +147,8 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 6
 
-[node name="Credits" type="MarginContainer" parent="Main Container" unique_id=1460897819]
-visible = false
+[node name="Credits" parent="Main Container" unique_id=386809006 instance=ExtResource("17_d5x8p")]
 layout_mode = 2
-metadata/_tab_index = 7
 
 [node name="UpperLayer" type="VBoxContainer" parent="." unique_id=958285575]
 layout_mode = 2

@@ -6,7 +6,6 @@ using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utilities.Popups;
-using HydraTextClient.Scripts.Utilities.PopupTables;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using HydraTextClient.Scripts.Utility.UtilityEffects;
@@ -26,6 +25,7 @@ public partial class PlayerInventory : TextTable
     private ApClient Client;
     public string[] RawItemNames;
     public bool OpenNewWindow;
+    public bool HasOpenedNewWindow = false;
 
     public void SetupInventory(ApClient client)
     {
@@ -39,7 +39,7 @@ public partial class PlayerInventory : TextTable
         QueueUiRefresh(true);
     }
 
-    public override void _PhysicsProcess(double delta) { Client?.UpdateItemHandler(); }
+    public override void _PhysicsProcess(double delta) => Client?.UpdateItemHandler();
 
     public override void RefreshUi(bool recompile)
     {
@@ -54,19 +54,21 @@ public partial class PlayerInventory : TextTable
                         .Select(kv => kv.Key).ToArray();
         RawItemNames = Inventory.Values.Select(arr => arr[0].ItemName).Distinct().ToArray();
         
-        if (!OpenNewWindow) return;
         var mw = ConnectionController.GetCurrentMultiworld;
         
         if (mw is null) return;
         var starting = mw.ItemHistory.GetOrAdd(Client.PlayerName, 0);
         var newItems = items.Skip(starting).ToArray();
-        
-        if (newItems.Length == 0) return;
-        var popup = ItemCountPopup.Instantiate<InventoryCounter>();
-        popup.SetItems(newItems);
-        AddChild(popup);
-        popup.Show();
-        
+
+        if (newItems.Length != 0 && OpenNewWindow && !HasOpenedNewWindow)
+        {
+            var popup = ItemCountPopup.Instantiate<InventoryCounter>();
+            popup.SetItems(newItems);
+            AddChild(popup);
+            HasOpenedNewWindow = true;
+            popup.Show();
+        }
+
         mw.ItemHistory[Client.PlayerName] = Client.ItemHandler.ItemIndex;   
         OpenNewWindow = false;
     }

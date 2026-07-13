@@ -16,6 +16,7 @@ public partial class SearchingList : Control
     public Func<string[], string, bool> VisibilitySetter = (searchRes, item) => searchRes.Contains(item);
 
     [Signal] public delegate void OnItemPressedEventHandler(string item);
+
     [Signal] public delegate void OnItemCreatedEventHandler(ItemList list, int index, string item);
 
     public override void _Ready()
@@ -53,13 +54,8 @@ public partial class SearchingList : Control
 
     public void UpdateSearch(string text)
     {
-        if (text.Trim() == "")
-        {
-            for (var i = 0; i < List.ItemCount; i++) List.SetItemDisabled(i, false);
-            return;
-        }
-
-        var results = Search.SearchAll(text, Items.ToArray()).Select(res => res.Target).ToArray();
+        var results = text.Trim() is "" ? Items.ToArray()
+            : Search.SearchAll(text, Items.ToArray()).Select(res => res.Target).ToArray();
         for (var i = 0; i < List.ItemCount; i++) List.SetItemDisabled(i, !VisibilitySetter(results, Items[i]));
     }
 

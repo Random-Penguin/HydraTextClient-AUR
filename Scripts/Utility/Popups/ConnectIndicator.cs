@@ -9,7 +9,8 @@ public partial class ConnectIndicator : PanelContainer
 
     public override void _Process(double delta)
     {
-        if (!(Visible = IsConnecting && GetConnectionCooldown <= 0)) return;
-        Label.Text = $" Connecting, timer: [{GetConnectionCooldown:0.00}s]";
+        if (!(Visible = IsConnecting || GetConnectionCooldown > 0)) return;
+        Label.Text = GetConnectionCooldown <= 0 ? "Finalizing Connection"
+            : $" Connecting, timer: [{GetConnectionCooldown:0.00}s]";
     }
 }

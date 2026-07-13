@@ -2,7 +2,7 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
 
 if you want to try:
 - download repo as a zip
-- download the .NET version of [godot 4.7.1](https://godotengine.org/download/archive/4.7.1-rc1/)
+- download the .NET version of [godot 4.8.dev1](https://godotengine.org/article/dev-snapshot-godot-4-8-dev-1/)
 - (might need) [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
-- unzip repo, open project with godot 4.7.1
+- unzip repo, open project with godot 4.8.dev1
 - run project (play button top right)

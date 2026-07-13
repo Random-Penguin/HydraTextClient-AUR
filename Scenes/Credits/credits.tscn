@@ -41,7 +41,7 @@ Link = "https://github.com/SWCreeperKing/HydraTextClient_Rewrite"
 [node name="Bugs" type="Button" parent="ScrollContainer/VBoxContainer" unique_id=23537448]
 modulate = Color(1, 0.48000002, 0.48000002, 1)
 layout_mode = 2
-text = "Bug Reports"
+text = "Bug Reports / Suggestions"
 script = ExtResource("2_22rij")
 Link = "https://github.com/SWCreeperKing/HydraTextClient_Rewrite/issues"
 

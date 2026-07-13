@@ -15,7 +15,7 @@ public partial class PlayerList : MarginContainer
     [Export] private PackedScene PlayerItem;
     [Export] private VBoxContainer ItemContainer;
 
-    private PlayerItem[] Items;
+    private PlayerItem[]? Items;
     private Action<string, int, int>[]? CheckFunctions = null;
 
     public override void _Ready()
@@ -132,6 +132,7 @@ public partial class PlayerList : MarginContainer
 
     public void RefreshPlayerText()
     {
+        if (Items is null) return;
         foreach (var item in Items) item.CallDeferred("UpdatePlayerText");
     }
 
@@ -139,7 +140,11 @@ public partial class PlayerList : MarginContainer
     {
         if (Items is null || Items.Length == 0) return;
         foreach (var item in Items) ItemContainer.RemoveChild(item);
-        foreach (var action in CheckFunctions) ConnectionController.OnCheckCountUpdated -= action;
+        if (CheckFunctions is not null)
+        {
+            foreach (var action in CheckFunctions) ConnectionController.OnCheckCountUpdated -= action;
+        }
+        
         Items = null;
         CheckFunctions = null;
     }

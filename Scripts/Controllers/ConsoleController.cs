@@ -1,0 +1,56 @@
+using Godot;
+using System;
+using System.Collections.Generic;
+using HydraTextClient.Scripts.Consoles;
+using HydraTextClient.Scripts.Controllers;
+
+public partial class ConsoleController : TabContainer
+{
+	[Export] private PackedScene NormalConsoleLabel;
+	private static ConsoleController Singleton;
+	private Dictionary<string, NormalConsole> Consoles = [];
+	
+	public override void _Ready()
+	{
+		Singleton = this;
+		ConnectionController.OnClientConnection += (name, _, _) =>
+		{
+			GD.Print($"Adding Console: [{name}]");
+			if (Consoles.ContainsKey(name)) return;
+			var cons = NormalConsoleLabel.Instantiate<NormalConsole>();
+			cons.Name = $"Slot {name}";
+			Consoles[name] = cons;
+			GD.Print($"Added Console: [{name}]");
+			CallDeferred("add_child", cons);
+			WriteLine(name, "Opened Console");
+		};
+
+		ConnectionController.OnClientRemoved += (name, _, _) =>
+		{
+			if (!Consoles.Remove(name, out var cons)) return;
+			CallDeferred("remove_child", cons);
+		};
+	}
+	
+	private void WriteLineLocal(string console, string text)
+	{
+		if (!Consoles.TryGetValue(console, out var cons)) return;
+		cons.WriteLine(text);
+	}
+	
+	private void WriteErrorLocal(string console, string text)
+	{
+		if (!Consoles.TryGetValue(console, out var cons)) return;
+		cons.WriteError(text);
+	}
+	
+	private void WriteErrorLocal(string console, Exception text)
+	{
+		if (!Consoles.TryGetValue(console, out var cons)) return;
+		cons.WriteError(text);
+	}
+	
+	public static void WriteLine(string console, string text) => Singleton.WriteLineLocal(console, text);
+	public static void WriteError(string console, string text) => Singleton.WriteErrorLocal(console, text);
+	public static void WriteError(string console, Exception text) => Singleton.WriteErrorLocal(console, text);
+}

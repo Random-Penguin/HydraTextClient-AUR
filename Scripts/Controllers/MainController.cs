@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using HydraTextClient.Scripts.Consoles.Godot;
 using HydraTextClient.Scripts.Discord;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -14,6 +15,7 @@ public partial class MainController : Control
     [Export] private PackedScene ErrorWindow;
     [Export] private PackedScene ItemFilterWindow;
     [Export] private PackedScene ItemFilterDisplay;
+    [Export] private LoggerLabel GDLogger;
 
     private ErrorDialog ErrorDialog;
 
@@ -25,6 +27,9 @@ public partial class MainController : Control
 
     public override void _EnterTree()
     {
+        GDLogger.Init();
+        OS.AddLogger(GDLogger.Logger);
+        
         var window = GetWindow();
         window.Size = SaveType<Vector2I>.Load($"{WindowSaveId}_size", window.Size);
         window.Position = SaveType<Vector2I>.Load($"{WindowSaveId}_pos", window.Position);

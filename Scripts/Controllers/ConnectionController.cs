@@ -113,27 +113,31 @@ public partial class ConnectionController : Control
 
             Task.Run(() =>
                 {
-                    var error = client.TryConnect(
-                        new LoginInfo(
-                            int.Parse(mw.Port), name!, mw.Address, GetMultiworldPassword(originalName, false)
-                        ),
-                        "", ItemsHandlingFlags.AllItems, tags: tags.ToArray()
-                    );
-
-                    if (error is not null && error.Length > 0)
+                    try
                     {
-                        client.TryDisconnect();
-                        MainController.ShowError(error);
-                        ClientTryConnecting = false;
-                        SlotView.SetPortraitStatus(originalName, ConnectionStatus.Error);
-                        return;
-                    }
+                        var error = client.TryConnect(
+                            new LoginInfo(
+                                int.Parse(mw.Port), name!, mw.Address, GetMultiworldPassword(originalName, false)
+                            ),
+                            "", ItemsHandlingFlags.AllItems, tags: tags.ToArray()
+                        );
 
-                    Clients.Add(name);
-                    NamedClients[name] = client;
-                    OnClientConnection?.Invoke(name, client, isLeader);
-                    if (Clients.Count == 0) OnClientLeaderChanged?.Invoke(null, client);
-                    SetConnectionCooldown();
+                        if (error is not null && error.Length > 0)
+                        {
+                            client.TryDisconnect();
+                            MainController.ShowError(error);
+                            ClientTryConnecting = false;
+                            SlotView.SetPortraitStatus(originalName, ConnectionStatus.Error);
+                            return;
+                        }
+
+                        Clients.Add(name);
+                        NamedClients[name] = client;
+                        OnClientConnection?.Invoke(name, client, isLeader);
+                        if (Clients.Count == 0) OnClientLeaderChanged?.Invoke(null, client);
+                        SetConnectionCooldown();
+                    }
+                    catch (Exception e) { GD.PrintErr(e); }
                 }
             );
         }

@@ -45,10 +45,21 @@ public partial class SlotPortrait : TextureRect
         {
             var mw = ConnectionController.GetCurrentMultiworld;
             if (mw is null) return;
-            if (slot != mw.GetSlotName(slot)) return;
+            var player = mw.GetSlotName(slot);
+            var thisPlayer = mw.GetSlotName(SlotName);
+            if (thisPlayer != player)
+            {
+                if (mw.CheckCounts.TryGetValue(thisPlayer, out max)
+                    && mw.CheckCountsChecked.TryGetValue(thisPlayer, out amount))
+                {
+                    CallDeferred("UpdateCheckCount", amount, max);
+                }
+
+                return;
+            }
             CallDeferred("UpdateCheckCount", amount, max);
         };
-        
+
         ClearCheckCountOnDisconnect = () => CheckCountPanel.Visible = false;
 
         CheckCountPanel.Visible = false;

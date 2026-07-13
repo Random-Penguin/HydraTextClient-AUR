@@ -37,27 +37,35 @@ public partial class CustomAssets : Control
 
     private static Texture2D ItemImage(AssetItem location, string selfGame, Action<Texture2D> callback)
     {
-        if (ItemSprites.TryGetValue(location.Uid, out var sprite)) return sprite;
-        Task.Run(() =>
-            {
-                try
+        try
+        {
+            if (ItemSprites.TryGetValue(location.Uid, out var sprite)) return sprite;
+            Task.Run(() =>
                 {
-                    var res = ItemSpritesManager.TryGetCustomAsset(
-                        location, selfGame, false, true,
-                        out var spriteData
-                    );
+                    try
+                    {
+                        var res = ItemSpritesManager.TryGetCustomAsset(
+                            location, selfGame, false, true,
+                            out var spriteData
+                        );
 
-                    if (!res || spriteData is null) return Task.FromResult(Task.FromResult(Singleton.Fallback));
-                    var file = spriteData.FilePath;
-                    ItemSprites[location.Uid] = sprite = CreateSprite(file);
-                    callback(sprite);
+                        if (!res || spriteData is null) return Task.FromResult(Task.FromResult(Singleton.Fallback));
+                        var file = spriteData.FilePath;
+                        ItemSprites[location.Uid] = sprite = CreateSprite(file);
+                        callback(sprite);
+                    }
+                    catch (Exception e) { GD.PrintErr(e); }
+                    return Task.CompletedTask;
                 }
-                catch (Exception e) { GD.PrintErr(e); }
-                return Task.CompletedTask;
-            }
-        );
+            );
 
-        return Singleton.Fallback;
+            return Singleton.Fallback;
+        }
+        catch (Exception e)
+        {
+            GD.Print("Custom Assets: Race Condition? Defaulting on Fallback");
+            return GetFallback;
+        }
     }
 }
 

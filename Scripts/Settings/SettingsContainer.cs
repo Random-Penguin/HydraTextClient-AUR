@@ -11,14 +11,32 @@ public partial class SettingsContainer : HSplitContainer
     private List<VBoxContainer> Columns = [];
 
     public SettingsContainer AddSetting(SettingType type, string name, string saveId = "", object? def = null,
-        int columnIndex = 0, Action<Control> extraConfig = null)
+        int columnIndex = 0, Action<Node[]> extraConfig = null)
     {
         var column = this[columnIndex];
         switch (type)
         {
+            case SettingType.BrowsFile:
+                Button button = new();
+                button.Text = name;
+
+                FileDialog fileDialog = new();
+                fileDialog.Visible = false;
+                fileDialog.FileMode = FileDialog.FileModeEnum.OpenDir;
+                fileDialog.Access = FileDialog.AccessEnum.Filesystem;
+                fileDialog.ShowHiddenFiles = true;
+                fileDialog.UseNativeDialog = true;
+                extraConfig?.Invoke([fileDialog, button]);
+
+                button.Pressed += fileDialog.Show;
+                
+                column.AddChild(button);
+                column.AddChild(fileDialog);
+                break;
+            
             case SettingType.SpinNumber:
                 SpinBox box = new();
-                extraConfig?.Invoke(box);
+                extraConfig?.Invoke([box]);
 
                 box.Value = SaveType<double>.Load(saveId, def is null ? 0d : (double)def);
                 box.ValueChanged += v => SaveType<double>.Save(saveId, v, true);
@@ -29,10 +47,11 @@ public partial class SettingsContainer : HSplitContainer
             case SettingType.Input_Submitted or SettingType.Input_TextChange:
                 LineEdit edit = new();
                 edit.ExpandToTextLength = true;
-                extraConfig?.Invoke(edit);
+                extraConfig?.Invoke([edit]);
 
                 edit.Text = SaveType<string>.Load(saveId, (string)def ?? "");
-                if (type is SettingType.Input_Submitted) edit.TextSubmitted += s => SaveType<string>.Save(saveId, s, true);
+                if (type is SettingType.Input_Submitted)
+                    edit.TextSubmitted += s => SaveType<string>.Save(saveId, s, true);
                 else edit.TextChanged += s => SaveType<string>.Save(saveId, s, true);
 
                 column.AddChild(CreateBoxWithLabel(edit, name, false));
@@ -47,7 +66,7 @@ public partial class SettingsContainer : HSplitContainer
 
                 ColorPickerButton colorPicker = new();
                 colorPicker.Text = "Color Picker Setting";
-                extraConfig?.Invoke(colorPicker);
+                extraConfig?.Invoke([colorPicker]);
 
                 colorPicker.Color = colorConstant.Color();
                 colorPicker.PopupClosed += () => colorConstant.Save(colorPicker.Color);
@@ -108,4 +127,8 @@ public partial class SettingsContainer : HSplitContainer
     }
 }
 
-public enum SettingType { HexColor, Input_Submitted, Input_TextChange, SpinNumber }
+public enum SettingType
+{
+    HexColor, Input_Submitted, Input_TextChange,
+    SpinNumber, BrowsFile
+}

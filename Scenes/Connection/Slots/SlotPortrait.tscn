@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://fopjjxgkvyiv" path="res://Assets/Images/UI/UnknownGame.png" id="1_nokb1"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_x5rjo"]
 [ext_resource type="Script" uid="uid://dm20krbjbxm4g" path="res://Scripts/Connection/Slots/SlotPortrait.cs" id="3_364q8"]
+[ext_resource type="PackedScene" uid="uid://bfofk1gwunv27" path="res://Scenes/Utility/Popups/RunOnConnectPopup.tscn" id="4_e8rt3"]
 [ext_resource type="PackedScene" uid="uid://ept1ew3d5xe3" path="res://Scenes/Utility/Highlighter.tscn" id="4_hrh00"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x5rjo"]
@@ -42,6 +43,7 @@ script = ExtResource("3_364q8")
 UnknownPortrait = ExtResource("1_nokb1")
 Portrait = NodePath(".")
 SlotNameLabel = NodePath("MarginContainer/VBoxContainer/PanelContainer/Label")
+RunOnCommandPopup = ExtResource("4_e8rt3")
 CheckCountPanel = NodePath("MarginContainer/VBoxContainer/PanelContainer2")
 CheckCountLabel = NodePath("MarginContainer/VBoxContainer/PanelContainer2/Label")
 CheckProgressBar = NodePath("MarginContainer/VBoxContainer/PanelContainer2/ProgressBar")

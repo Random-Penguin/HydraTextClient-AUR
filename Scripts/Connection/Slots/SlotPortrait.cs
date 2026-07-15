@@ -1,8 +1,14 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.Popups;
 
 namespace HydraTextClient.Scripts.Connection.Slots;
 
@@ -11,6 +17,7 @@ public partial class SlotPortrait : TextureRect
     [ExportGroup("Internal"), Export] private Texture2D UnknownPortrait;
     [Export] private TextureRect Portrait;
     [Export] private Label SlotNameLabel;
+    [Export] private PackedScene RunOnCommandPopup;
 
     [ExportGroup("Internal - CheckCount"), Export]
     private PanelContainer CheckCountPanel;
@@ -35,9 +42,12 @@ public partial class SlotPortrait : TextureRect
     private Vector2 PortraitSize = new(150, 225);
     private Action<string, int, int> CheckAction;
     private Action ClearCheckCountOnDisconnect;
+    private Action<string, ApClient, bool> RunOnConnectAction;
+    private Action<string, ApClient, bool> OnDisconnect;
     private Tween ColorTween;
     private Tween FontSizeTween;
     private Tween ScaleTween;
+    private ConcurrentBag<int> ProcessIds = [];
 
     public override void _Ready()
     {
@@ -61,13 +71,52 @@ public partial class SlotPortrait : TextureRect
         };
 
         ClearCheckCountOnDisconnect = () => CheckCountPanel.Visible = false;
+        RunOnConnectAction = (slot, _, _) =>
+        {
+            var mw = ConnectionController.GetCurrentMultiworld;
+            if (mw is null) return;
+            var data = SaveType<SlotGameData>.Load(SlotName, null, false);
+            if (data is null) return;
+            var commands = data.ProcessCommands.Select(command => command.Trim()).Where(command => command is not "")
+                               .Select(command => command.Replace("{{port}}", mw.Port).Replace("{{add}}", mw.Address)
+                                                         .Replace(
+                                                              "{{ap}}",
+                                                              SaveType<string>.Load(
+                                                                  GlobalThemeSettings.ApDir, "", false
+                                                              )
+                                                          ).Replace("{{slot}}", slot)
+                                                         .Replace("{{pass}}", mw.GetPassword(slot)).Split(' ')
+                                ).Where(args => args.Length > 0).Select(args => new ReadOnlyEntry(
+                                        args[0], string.Join(' ', args.Length > 1 ? args[1..] : [])
+                                    )
+                                ).ToArray();
+            if (commands.Length == 0) return;
 
+            var popup = RunOnCommandPopup.Instantiate<RunOnConnect>();
+            popup.SetupEntries(commands, toRun =>
+            {
+                foreach (var entry in toRun)
+                {
+                    SaveType<string>.Save($"PROG:HASH/{entry.Executable}", entry.Hash, false);
+                    var id = ExternalAppController.StartProcess(slot, entry);
+                    ProcessIds.Add(id);
+                }
+            });
+        };
+
+        OnDisconnect = (_, _, _) =>
+        {
+            if (ProcessIds.IsEmpty) return;
+            foreach (var id in ProcessIds) ExternalAppController.EndProcess(id);
+        };
+        
         CheckCountPanel.Visible = false;
         SetFontSize((int)SaveType<double>.Load("Connection/SlotsMenu/PortraitFontSize", 14));
         SetScale((float)SaveType<double>.Load("Connection/SlotsMenu/PortraitScale", 1f));
         ConnectionController.OnCheckCountUpdated += CheckAction;
         ConnectionController.OnFullDisconnection += ClearCheckCountOnDisconnect;
-
+        ConnectionController.OnClientConnection += RunOnConnectAction;
+        ConnectionController.OnClientRemoved += OnDisconnect;
         Reload();
     }
 
@@ -163,6 +212,8 @@ public partial class SlotPortrait : TextureRect
     {
         ConnectionController.OnCheckCountUpdated -= CheckAction;
         ConnectionController.OnFullDisconnection -= ClearCheckCountOnDisconnect;
+        ConnectionController.OnClientConnection -= RunOnConnectAction;
+        ConnectionController.OnClientRemoved -= OnDisconnect;
     }
 }
 

@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://bfofk1gwunv27"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_kufrg"]
+[ext_resource type="Script" uid="uid://dy46bpoes25f1" path="res://Scripts/Utility/Popups/RunOnConnect.cs" id="2_1fyyr"]
+
+[node name="RunOnConnectPopup" type="Window" unique_id=1218589099 node_paths=PackedStringArray("Container", "RunAll", "RunSelected")]
+oversampling_override = 1.0
+size = Vector2i(450, 200)
+theme = ExtResource("1_kufrg")
+script = ExtResource("2_1fyyr")
+Container = NodePath("Panel/MarginContainer/ScrollContainer/VBoxContainer")
+RunAll = NodePath("Panel/MarginContainer/ScrollContainer/VBoxContainer/Button")
+RunSelected = NodePath("Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Button2")
+
+[node name="Panel" type="Panel" parent="." unique_id=2050311449]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1958184134]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer" unique_id=876404988]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer" unique_id=181593458]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1108241910]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=669971667]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=588768425]
+layout_mode = 2
+text = "Run All"
+
+[node name="HSeparator3" type="HSeparator" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1586492766]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1392137194]
+layout_mode = 2
+
+[node name="Button2" type="Button" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=1153754099]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Run Selected"
+
+[node name="Button3" type="Button" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=1429828637]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Close"
+
+[connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Button3" to="." method="Close"]

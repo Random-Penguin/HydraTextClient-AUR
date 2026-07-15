@@ -63,6 +63,8 @@ public partial class DeathLinkMessage : MessageScene
         CachedReplacement["cause"] = SaveType<string>.Load(SaveIdUnknown, DefaultUnknown)
                                                      .CompileSimpleText(CachedReplacement);
 
+        UpdateFontSize(Message);
+
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(
             SaveType<string>.Load(SaveIdMessage, DefaultMessage).CompileSimpleText(CachedReplacement)

@@ -71,6 +71,8 @@ fit_content = true
 autowrap_mode = 0
 script = ExtResource("2_ks14s")
 HintChangePopup = NodePath("../../../PopupMenu")
+FontSizeOverrideName = "Hint Table Font Size"
+FontSizeOverrideId = "HintTable"
 
 [node name="UISaver" type="Control" parent="." unique_id=206399141 node_paths=PackedStringArray("Controls")]
 visible = false

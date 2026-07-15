@@ -20,17 +20,20 @@ public static class ColorIdConstants
         [NormalItemBackgroundColor] = Colors.Transparent, [NotFoundColor] = Colors.Red, [FoundColor] = Colors.LimeGreen,
         [Unknown] = Colors.White, [Avoid] = Colors.OrangeRed, [Priority] = Colors.BlueViolet,
         [Unspecified] = Colors.NavajoWhite, [NoPriority] = Colors.CornflowerBlue, [EntranceColor] = Colors.Cyan,
+        [UiBackground] = new Color("#2a2a2a"), [PopupBackground] = new Color("#2a2a2a"),
+        [TooltipColor] = new Color("#2a2a2a"),
     };
 
     public static Dictionary<ColorConstant, string> ConstantToId = new()
     {
         [ServerColor] = "Theme/Ap/Colors/Server", [PlayerNonConnected] = "Theme/Ap/Colors/PlayerNonConnected",
-        [PlayerConnected] = "Theme/Ap/Colors/PlayerConnected",
+        [PlayerConnected] = "Theme/Ap/Colors/PlayerConnected", [TooltipColor] = "Theme/Ap/Colors/Tooltip",
+        [PopupBackground] = "Theme/Ap/Colors/PopupBackground",
         [PlayerListedNonConnected] = "Theme/Ap/Colors/PlayerListedNonConnected",
         [LocationColor] = "Theme/Ap/Colors/LocationColor", [SpecialItemColor] = "Theme/Ap/Colors/SpecialItemColor",
         [ProgressiveItemColor] = "Theme/Ap/Colors/ProgressiveItemColor",
         [UsefulItemColor] = "Theme/Ap/Colors/UsefulItemColor", [TrapItemColor] = "Theme/Ap/Colors/TrapItemColor",
-        [NormalItemColor] = "Theme/Ap/Colors/NormalItemColor",
+        [NormalItemColor] = "Theme/Ap/Colors/NormalItemColor", [UiBackground] = "Theme/Ap/Colors/UIBackground",
         [SpecialItemBackgroundColor] = "Theme/Ap/Colors/SpecialItemBackgroundColor",
         [ProgressiveItemBackgroundColor] = "Theme/Ap/Colors/ProgressiveItemBackgroundColor",
         [UsefulItemBackgroundColor] = "Theme/Ap/Colors/UsefulItemBackgroundColor",
@@ -49,12 +52,12 @@ public static class ColorIdConstants
     public static Dictionary<ColorConstant, string> SettingNames = new()
     {
         [ServerColor] = "Server Color", [PlayerNonConnected] = "Player (Generic)",
-        [PlayerConnected] = "Player (Connected To)", [PlayerListedNonConnected] = "Player (Not Connected To)",
-        [LocationColor] = "Location", [SpecialItemColor] = "Item (Special)",
-        [ProgressiveItemColor] = "Item (Progressive)", [UsefulItemColor] = "Item (Useful)",
-        [TrapItemColor] = "Item (Trap)", [NormalItemColor] = "Item (Normal)",
-        [SpecialItemBackgroundColor] = "Background Item (Special)",
-        [ProgressiveItemBackgroundColor] = "Background Item (Progressive)",
+        [PopupBackground] = "Popup Background Color", [PlayerConnected] = "Player (Connected To)",
+        [PlayerListedNonConnected] = "Player (Not Connected To)", [LocationColor] = "Location",
+        [SpecialItemColor] = "Item (Special)", [ProgressiveItemColor] = "Item (Progressive)",
+        [UsefulItemColor] = "Item (Useful)", [TrapItemColor] = "Item (Trap)", [NormalItemColor] = "Item (Normal)",
+        [SpecialItemBackgroundColor] = "Background Item (Special)", [UiBackground] = "UI Background Color",
+        [ProgressiveItemBackgroundColor] = "Background Item (Progressive)", [TooltipColor] = "Tooltip Color",
         [UsefulItemBackgroundColor] = "Background Item (Useful)", [TrapItemBackgroundColor] = "Background Item (Trap)",
         [NormalItemBackgroundColor] = "Background Item (Normal)", [NotFoundColor] = "Hint 'Not Found'",
         [FoundColor] = "Hint 'Found'", [Unknown] = "???", [Avoid] = "Hint 'Avoid'", [Priority] = "Hint 'Priority'",
@@ -80,13 +83,14 @@ public static class ColorIdConstants
 
     public enum ColorConstant
     {
-        Unknown, ServerColor, PlayerNonConnected,
-        PlayerConnected, PlayerListedNonConnected, SpecialItemColor,
-        ProgressiveItemColor, UsefulItemColor, TrapItemColor,
-        NormalItemColor, SpecialItemBackgroundColor, ProgressiveItemBackgroundColor,
-        UsefulItemBackgroundColor, TrapItemBackgroundColor, NormalItemBackgroundColor,
-        LocationColor, EntranceColor, NotFoundColor,
-        FoundColor, Priority, Unspecified,
-        NoPriority, Avoid,
+        Unknown, UiBackground, PopupBackground, TooltipColor,
+        ServerColor, PlayerNonConnected, PlayerConnected,
+        PlayerListedNonConnected, SpecialItemColor, ProgressiveItemColor,
+        UsefulItemColor, TrapItemColor, NormalItemColor,
+        SpecialItemBackgroundColor, ProgressiveItemBackgroundColor, UsefulItemBackgroundColor,
+        TrapItemBackgroundColor, NormalItemBackgroundColor, LocationColor,
+        EntranceColor, NotFoundColor, FoundColor,
+        Priority, Unspecified, NoPriority,
+        Avoid,
     }
 }

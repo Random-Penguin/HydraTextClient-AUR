@@ -39,6 +39,8 @@ public partial class ItemMessage : MessageScene
             FinderIsReceiver ? DefaultSamePerson : DefaultDifferentPerson
         ).CompileSimpleText(CachedReplacement);
 
+        UpdateFontSize(Message);
+        
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }

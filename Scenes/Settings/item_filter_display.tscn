@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://utog84qrsmp8"]
 
 [ext_resource type="Script" uid="uid://ckcool0286m1w" path="res://Scripts/Settings/ItemFilter/ItemFilterDisplay.cs" id="1_2hoc3"]
+[ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="1_luaa6"]
 
 [node name="ItemFilterDisplay" type="Control" unique_id=1407271342]
 layout_mode = 3
@@ -29,10 +30,13 @@ theme_override_constants/separation = 7
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1299473288]
 layout_mode = 2
 text = " Add Filter "
+script = ExtResource("1_luaa6")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer" unique_id=500699236]
 layout_mode = 2
 fit_content = true
 script = ExtResource("1_2hoc3")
+FontSizeOverrideName = "Item Filter Font Size"
+FontSizeOverrideId = "ItemFilter"
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="VBoxContainer/RichTextLabel" method="OpenEmptyFilter"]

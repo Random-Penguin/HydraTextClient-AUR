@@ -5,7 +5,7 @@ using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Utility.Popups;
 
-public partial class ItemFilter : Window
+public partial class ItemFilter : WindowSetter
 {
     [Export] private LineEdit GameName;
     [Export] private LineEdit ItemName;

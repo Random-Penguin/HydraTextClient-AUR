@@ -20,6 +20,9 @@ theme = ExtResource("1_qm8it")
 script = ExtResource("2_qm8it")
 Search = NodePath("Panel/MarginContainer/VBoxContainer/LineEdit")
 Container = NodePath("Panel/MarginContainer/VBoxContainer/ScrollContainer/HFlowContainer")
+OnTop = true
+ToQueueFree = false
+ClickAnywhereToClose = true
 
 [node name="Panel" type="Panel" parent="." unique_id=620912998]
 anchors_preset = 15

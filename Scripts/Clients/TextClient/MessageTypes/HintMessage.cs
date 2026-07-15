@@ -32,6 +32,8 @@ public partial class HintMessage : MessageScene
     {
         var final = SaveType<string>.Load(SaveId, Default).CompileSimpleText(CachedReplacement);
 
+        UpdateFontSize(Message);
+        
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }

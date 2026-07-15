@@ -81,6 +81,18 @@ thickness = 5
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m80vl"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.16470589, 0.16470589, 0.16470589, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v0hgf"]
 content_margin_left = 2.0
 content_margin_top = 2.0
@@ -186,6 +198,7 @@ MarginContainer/constants/margin_left = 7
 MarginContainer/constants/margin_right = 7
 MarginContainer/constants/margin_top = 7
 OptionButton/constants/icon_max_width = 20
+Panel/styles/panel = SubResource("StyleBoxFlat_m80vl")
 ProgressBar/font_sizes/font_size = 14
 ProgressBar/fonts/font = ExtResource("1_7h0ys")
 ProgressBar/styles/background = SubResource("StyleBoxFlat_v0hgf")

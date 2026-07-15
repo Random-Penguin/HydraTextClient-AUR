@@ -13,6 +13,11 @@ public partial class CommandMessage : MessageScene
         Reload();
     }
 
-    public override void Reload() => Message.Text = Text;
+    public override void Reload()
+    {
+        UpdateFontSize(Message);
+        Message.Text = Text;
+    }
+
     public override bool CanReload(string saveId) => false;
 }

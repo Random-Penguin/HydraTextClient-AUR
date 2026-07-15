@@ -60,5 +60,4 @@ Controls = {
 "error_dialog": NodePath("..")
 }
 
-[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/Button" to="." method="hide"]
-[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/Button" to="." method="queue_free"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/Button" to="." method="Close"]

@@ -17,8 +17,7 @@ public partial class SettingsCreator : TabContainer
         {
             var tab = TabCreationPriority.Dequeue();
             var tabContainer = this[tab];
-            if (!TabCreateCallback.TryGetValue(tab, out var actions)) continue;
-            if (actions.Count == 0) continue;
+            if (!TabCreateCallback.Remove(tab, out var actions) || actions is null || actions.Count == 0) continue;
             foreach (var action in actions) action?.Invoke(tabContainer);
         }
     }
@@ -38,7 +37,7 @@ public partial class SettingsCreator : TabContainer
 
     public static void Tab(string tabName, Action<SettingsContainer>? callback = null, int priority = 1000000)
     {
-        if (TabsNames.Add(tabName)) TabCreationPriority.Enqueue(tabName, priority);
+        TabCreationPriority.Enqueue(tabName, priority);
         if (callback is null) return;
         if (TabCreateCallback.TryGetValue(tabName, out var value)) value.Add(callback);
         else TabCreateCallback[tabName] = [callback];

@@ -33,6 +33,9 @@ public partial class ClientMessage : AnimatedMessageScene
     {
         if (GamePortraitLoader.TryGet(GameName, out var gameImage)) GamePortrait.Texture = gameImage;
         
+        UpdateFontSize(Message);
+        UpdateFontSize(PlayerName);
+        
         Message.Clear();
         PlayerName.Clear();
         

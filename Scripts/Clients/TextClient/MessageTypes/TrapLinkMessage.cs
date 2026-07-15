@@ -47,6 +47,7 @@ public partial class TrapLinkMessage : MessageScene
 
     public override void Reload()
     {
+        UpdateFontSize(Message);
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(
             SaveType<string>.Load(SaveIdMessage, Default).CompileSimpleText(CachedReplacement)

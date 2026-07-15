@@ -17,6 +17,7 @@ namespace HydraTextClient.Scripts.Clients.TextClient;
 
 public partial class TextClient : Control
 {
+    public const string FontSizeId = "TextClient/FontSize";
     [Export] private Dictionary<MessageType, ChildLimiter> Containers = [];
     [Export] private Dictionary<MessageType, PackedScene> MessageScenes = [];
     [Export] private Array<ScrollFix> ScrollFixes = [];
@@ -33,7 +34,6 @@ public partial class TextClient : Control
         ConnectionController.OnClientPrepareConnection += (_, client, _, _) =>
         {
             client.ExcludeBouncedPacketsFromSelf = false;
-
             client.OnChatPrintPacketReceived += packet => Enqueue(MessageType.ClientMessage, packet);
             client.OnItemLogPacketReceived += packet => Enqueue(MessageType.ItemLog, packet);
             client.OnItemCheatLogPacketReceived += packet => Enqueue(MessageType.ItemCheatLog, packet);
@@ -106,6 +106,7 @@ public partial class TextClient : Control
 
         SaveType<HexColor>.OnSaveEvent += (id, _) => ReloadUi(id);
         SaveType<string>.OnSaveEvent += (id, _) => ReloadUi(id);
+        SaveType<double>.OnSaveEvent += (id, _) => ReloadUi(id);
 
         ConnectionController.OnClientConnection += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);
         ConnectionController.OnClientRemoved += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);

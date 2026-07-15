@@ -2,7 +2,7 @@ using Godot;
 
 namespace HydraTextClient.Scripts.Utility.Popups;
 
-public partial class ErrorDialog : Window
+public partial class ErrorDialog : WindowSetter
 {
 	[Export] private RichTextLabel Msg;
 

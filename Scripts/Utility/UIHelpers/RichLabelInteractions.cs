@@ -40,6 +40,10 @@ public abstract partial class RichLabelInteractions : RichTextLabel
         if (text == "") return null;
 
         PanelContainer container = new();
+        container.AddThemeStyleboxOverride(
+            "panel", new StyleBoxFlat { BgColor = ColorIdConstants.ColorConstant.TooltipColor.Color() }
+        );
+
         MarginContainer margin = new();
         margin.AddThemeConstantOverride("margin_left", 3);
         margin.AddThemeConstantOverride("margin_top", 3);
@@ -73,7 +77,7 @@ public abstract partial class RichLabelInteractions : RichTextLabel
     {
         Label tooltip = new();
         tooltip.Theme = MainController.GlobalTheme;
-        tooltip.AddThemeFontSizeOverride("font_size", 18);
+        // tooltip.AddThemeFontSizeOverride("font_size", 18);
         tooltip.Text = text;
         return tooltip;
     }
@@ -82,9 +86,7 @@ public abstract partial class RichLabelInteractions : RichTextLabel
     {
         switch (key)
         {
-            case "itemfilter":
-                MainController.ShowItemFilter(text);
-                break;
+            case "itemfilter": MainController.ShowItemFilter(text); break;
             default: OnMetaClicked(key, text); break;
         }
     }

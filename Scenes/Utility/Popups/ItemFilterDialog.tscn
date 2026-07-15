@@ -23,6 +23,7 @@ ItemType = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/HBoxConta
 ShowInTextClient = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/CheckBox")
 ShowInHintTable = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/CheckBox2")
 MarkAsSpecial = NodePath("Panel/ScrollContainer/VBoxContainer/VBoxContainer/CheckBox3")
+BlockParent = false
 
 [node name="Panel" type="Panel" parent="." unique_id=620912998]
 anchors_preset = 15
@@ -135,8 +136,6 @@ Controls = {
 "item_filter_dialog": NodePath("..")
 }
 
-[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="hide"]
-[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="queue_free"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="Close"]
 [connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="CreateFilter"]
-[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button2" to="." method="hide"]
-[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button2" to="." method="queue_free"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button2" to="." method="Close"]

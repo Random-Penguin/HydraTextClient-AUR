@@ -1,8 +1,11 @@
 using System;
+using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Consoles.Godot;
 using HydraTextClient.Scripts.Discord;
 using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.Popups;
 
@@ -29,18 +32,38 @@ public partial class MainController : Control
     {
         GDLogger.Init();
         OS.AddLogger(GDLogger.Logger);
+        GlobalTheme = Theme;
         
         var window = GetWindow();
         window.Size = SaveType<Vector2I>.Load($"{WindowSaveId}_size", window.Size);
         window.Position = SaveType<Vector2I>.Load($"{WindowSaveId}_pos", window.Position);
         window.SizeChanged += () => SaveType<Vector2I>.Save($"{WindowSaveId}_size", window.Size, true);
         OnSave += () => SaveType<Vector2I>.Save($"{WindowSaveId}_pos", window.Position, true);
+
+        var mainBackgroundBox = (StyleBoxFlat)GetThemeStylebox("panel");
+        mainBackgroundBox.BgColor = ColorIdConstants.ColorConstant.UiBackground.Load();
+        
+        var mainPopupBox = (StyleBoxFlat)GlobalTheme.GetStylebox("panel", "Panel");
+        mainPopupBox.BgColor = ColorIdConstants.ColorConstant.PopupBackground.Load();
+        
+        SaveType<HexColor>.OnSaveEvent += (id, val) =>
+        {
+            if (!ColorIdConstants.IdToConstant.TryGetValue(id, out var constant)) return;
+            switch (constant)
+            {
+                case ColorIdConstants.ColorConstant.UiBackground:
+                    mainBackgroundBox.BgColor = val;
+                    break;
+                case ColorIdConstants.ColorConstant.PopupBackground:
+                    mainPopupBox.BgColor = val;
+                    break;
+            }
+        };
     }
 
     public override void _Ready()
     {
         DRPC.Init();
-        GlobalTheme = Theme;
         GlobalThemeSettings.Init();
         Singleton = this;
     }

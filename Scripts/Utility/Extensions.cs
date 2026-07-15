@@ -27,7 +27,10 @@ public static class Extensions // sorted alphabetically for the memes
 
         public void Save(Color color, bool broadcast = true)
             => SaveType<HexColor>.Save(ConstantToId[constant], color, broadcast);
-
+        
+        public HexColor Load(bool broadcast = false)
+            => SaveType<HexColor>.Load(ConstantToId[constant], ConstantToDefaultColor[constant], broadcast);
+        
         public bool IsPlayerColor()
             => constant is PlayerConnected or PlayerListedNonConnected or PlayerNonConnected or ServerColor;
 
@@ -196,6 +199,21 @@ public static class Extensions // sorted alphabetically for the memes
         public void ApplyCompiledPrintableObjs(IPrintableObj[] objs)
         {
             foreach (var printableObj in objs) printableObj.AddText(label);
+        }
+        
+        public void SetFontSizeOverride(double val)
+        {
+            label.SetFontSizeOverride("bold_italic_font_size", val);
+            label.SetFontSizeOverride("italics_font_size", val);
+            label.SetFontSizeOverride("mono_font_size", val);
+            label.SetFontSizeOverride("normal_font_size", val);
+            label.SetFontSizeOverride("bold_font_size", val);
+        }
+
+        public void SetFontSizeOverride(string name, double value)
+        {
+            if (label.HasThemeFontSizeOverride(name)) label.RemoveThemeFontSizeOverride(name);
+            label.AddThemeFontSizeOverride(name, (int)value);
         }
     }
 

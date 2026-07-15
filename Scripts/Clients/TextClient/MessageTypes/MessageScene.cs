@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 
@@ -27,7 +29,7 @@ public abstract partial class MessageScene : PanelContainer
         if (ConnectionController.CurrentMultiworld != MultiWorld) return;
         if (!ConnectionController.HasLeaderClient) return;
         
-        if (saveId.StartsWith("Clients/TextClient/TextEffects/") || saveId is PlayerConnect)
+        if (saveId.StartsWith("Clients/TextClient/TextEffects/") || saveId is PlayerConnect or TextClient.FontSizeId)
         {
             CallReload();
             return;
@@ -52,4 +54,6 @@ public abstract partial class MessageScene : PanelContainer
         if (CompileEffects is not null) return CompileEffects;
         return CompileEffects = MessageParser.CreateEffects(() => CallDeferred("Reload"));
     }
+
+    public void UpdateFontSize(RichTextLabel label) => label.SetFontSizeOverride(SaveType<double>.Load(TextClient.FontSizeId, 20d));
 }

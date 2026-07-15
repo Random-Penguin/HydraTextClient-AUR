@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Settings;
@@ -33,7 +34,12 @@ public partial class SettingsContainer : HSplitContainer
                 column.AddChild(button);
                 column.AddChild(fileDialog);
                 break;
-            
+            case SettingType.ButtonAction:
+                Button buttonAction = new();
+                buttonAction.Text = name;
+                extraConfig?.Invoke([buttonAction]);
+                column.AddChild(buttonAction);
+                break;
             case SettingType.SpinNumber:
                 SpinBox box = new();
                 extraConfig?.Invoke([box]);
@@ -63,7 +69,7 @@ public partial class SettingsContainer : HSplitContainer
                     GD.PushWarning($"Save Id [{saveId}] has no color constant");
                     return this;
                 }
-
+                
                 ColorPickerButton colorPicker = new();
                 colorPicker.Text = "Color Picker Setting";
                 extraConfig?.Invoke([colorPicker]);
@@ -71,7 +77,18 @@ public partial class SettingsContainer : HSplitContainer
                 colorPicker.Color = colorConstant.Color();
                 colorPicker.PopupClosed += () => colorConstant.Save(colorPicker.Color);
 
+                SaveType<HexColor>.OnSaveEvent += (id, color) =>
+                {
+                    if (id != ColorIdConstants.ConstantToId[colorConstant]) return;
+                    colorPicker.Color = color;
+                };
+                
                 column.AddChild(CreateBoxWithLabel(colorPicker, name, true));
+                break;
+            case SettingType.Text:
+                Label label = new();
+                label.Text = name;
+                column.AddChild(label);
                 break;
         }
         return this;
@@ -130,5 +147,5 @@ public partial class SettingsContainer : HSplitContainer
 public enum SettingType
 {
     HexColor, Input_Submitted, Input_TextChange,
-    SpinNumber, BrowsFile
+    SpinNumber, BrowsFile, ButtonAction, Text
 }

@@ -23,6 +23,9 @@ public partial class ServerMessage : AnimatedMessageScene
 
     public override void Reload()
     {
+        UpdateFontSize(Message);
+        UpdateFontSize(PlayerName);
+        
         Message.Clear();
         PlayerName.Clear();
         

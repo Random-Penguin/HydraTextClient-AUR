@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.Popups;
 
 namespace HydraTextClient.Scripts.Clients.TextClient;
 
-public partial class EmotePicker : Window
+public partial class EmotePicker : WindowSetter
 {
 	[Export] private LineEdit Search;
 	[Export] private Container Container;
@@ -16,8 +17,6 @@ public partial class EmotePicker : Window
 	
 	public override void _Ready()
 	{
-		CloseRequested += Hide;
-		
 		var emotes = EmoteLoader.GetImages();
 		foreach (var emote in emotes.Keys.Order())
 		{

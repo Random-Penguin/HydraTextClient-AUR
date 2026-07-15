@@ -5,14 +5,17 @@ using System.Linq;
 using System.Text;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
+using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
 public abstract partial class TextTable : RichLabelInteractions
 {
+    private const string SaveId = "Theme/Ap/FontSize/";
+    [Export] private string FontSizeOverrideName = "";
+    [Export] private string FontSizeOverrideId = "";
     private ConcurrentBag<bool> QueueRefreshUi = [];
-    public static readonly Rect2 Zero = new(0, 0, 0, 0);
-
     public virtual string[] EffectGroups => ["default"];
     public abstract string[] Columns { get; }
     public abstract long DataSize { get; }
@@ -23,6 +26,7 @@ public abstract partial class TextTable : RichLabelInteractions
     public Color EvenBgColor = new("#00000000");
     private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects;
     public IPrintableObj[] CompiledMessage;
+    private bool HasInit;
 
     protected TextTable()
     {
@@ -33,13 +37,37 @@ public abstract partial class TextTable : RichLabelInteractions
 
     public override void _Process(double delta)
     {
+        if (!HasInit) Init();
         if (QueueRefreshUi.IsEmpty) return;
         var recompile = QueueRefreshUi.Contains(true);
         RefreshUi(recompile);
         UpdateData(recompile);
         QueueRefreshUi.Clear();
     }
-    
+
+    private void Init()
+    {
+        HasInit = true;
+        if (FontSizeOverrideId is "" || FontSizeOverrideName is "") return;
+        var id = $"{SaveId}{FontSizeOverrideId}";
+        SettingsCreator.Tab(
+            "Theme",
+            tab => tab.AddSetting(
+                SettingType.SpinNumber, FontSizeOverrideName, id, 20d, 1, c =>
+                {
+                    ((SpinBox)c[0]).MinValue = 1;
+                }
+            )
+        );
+
+        SaveType<double>.OnSaveEvent += (newId, val) =>
+        {
+            if (newId != id) return;
+            this.SetFontSizeOverride(val);
+        };
+        this.SetFontSizeOverride(SaveType<double>.Load(id, 20));
+    }
+
     public void UpdateData(bool recompile)
     {
         Clear();

@@ -23,6 +23,7 @@ namespace HydraTextClient.Scripts.Hints;
 
 public partial class HintTable : TextTable
 {
+    public const string SortOrderSaveId = "hint_table_sort";
     public override string[] EffectGroups => ["default", "hinttable"];
     public const string GlobalCopyFormatProgressive = "Theme/HintTable/CopyFormat/Progressive";
     public const string GlobalCopyFormat = "Theme/HintTable/CopyFormat";
@@ -36,7 +37,7 @@ public partial class HintTable : TextTable
     private Hint CurrentlySelectedHint;
     private Hint[] SortedHints = [];
 
-    public List<SortObject> SortOrder => SaveType<List<SortObject>>.Load("hint_table_sort", []);
+    public static List<SortObject> SortOrder => SaveType<List<SortObject>>.Load(SortOrderSaveId, []);
 
     public static Dictionary<HintStatus, int> HintStatusNumber = new()
     {
@@ -256,7 +257,7 @@ public partial class HintTable : TextTable
                     }
                 }
                 else order.Add(new SortObject(text[0]));
-                SaveType<List<SortObject>>.Save("hint_table_sort", order, true);
+                SaveType<List<SortObject>>.Save(SortOrderSaveId, order, true);
                 QueueUiRefresh(true);
                 break;
             case "change":

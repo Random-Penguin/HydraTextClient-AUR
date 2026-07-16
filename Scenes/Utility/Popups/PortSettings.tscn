@@ -3,12 +3,17 @@
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_p35q8"]
 [ext_resource type="Script" uid="uid://dkihy27kuwppx" path="res://Scripts/Utility/Popups/SettingsPorter.cs" id="2_rn0pg"]
 
-[node name="Port Settings" type="Window" unique_id=1869394352]
+[node name="Port Settings" type="Window" unique_id=1869394352 node_paths=PackedStringArray("Colors", "Font", "Other", "Slots", "ItemFilters")]
 oversampling_override = 1.0
 title = "What do you want to Import?"
-size = Vector2i(369, 220)
+size = Vector2i(462, 335)
 theme = ExtResource("1_p35q8")
 script = ExtResource("2_rn0pg")
+Colors = NodePath("Panel/ScrollContainer/VBoxContainer/CheckBox")
+Font = NodePath("Panel/ScrollContainer/VBoxContainer/CheckBox2")
+Other = NodePath("Panel/ScrollContainer/VBoxContainer/CheckBox3")
+Slots = NodePath("Panel/ScrollContainer/VBoxContainer/CheckBox4")
+ItemFilters = NodePath("Panel/ScrollContainer/VBoxContainer/CheckBox5")
 OnTop = true
 
 [node name="Panel" type="Panel" parent="." unique_id=461202095]
@@ -18,7 +23,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=1292358515]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel" unique_id=508495456]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,36 +31,52 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CheckBox" type="CheckBox" parent="Panel/VBoxContainer" unique_id=571480274]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer" unique_id=1292358515]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1954360902]
+layout_mode = 2
+text = "Old Hydra Save Data Detected
+Choose what settings you want to Import"
+
+[node name="HSeparator3" type="HSeparator" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1605745829]
+layout_mode = 2
+
+[node name="CheckBox" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer" unique_id=571480274]
 layout_mode = 2
 button_pressed = true
 text = "Theme Colors"
 
-[node name="CheckBox2" type="CheckBox" parent="Panel/VBoxContainer" unique_id=1131906557]
+[node name="CheckBox2" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1131906557]
 layout_mode = 2
 button_pressed = true
 text = "Font Sizes"
 
-[node name="CheckBox3" type="CheckBox" parent="Panel/VBoxContainer" unique_id=1195348968]
-layout_mode = 2
-button_pressed = true
-text = "Other settings"
-
-[node name="CheckBox4" type="CheckBox" parent="Panel/VBoxContainer" unique_id=1945726630]
+[node name="CheckBox4" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1945726630]
 layout_mode = 2
 button_pressed = true
 text = "Slots"
 
-[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer" unique_id=824517005]
+[node name="CheckBox5" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer" unique_id=537724357]
+layout_mode = 2
+button_pressed = true
+text = "Item Filter"
+
+[node name="CheckBox3" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1195348968]
+layout_mode = 2
+button_pressed = true
+text = "Misc Settings"
+
+[node name="HSeparator" type="HSeparator" parent="Panel/ScrollContainer/VBoxContainer" unique_id=824517005]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/VBoxContainer" unique_id=372787142]
+[node name="HSeparator2" type="HSeparator" parent="Panel/ScrollContainer/VBoxContainer" unique_id=372787142]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="Panel/VBoxContainer" unique_id=114016093]
+[node name="Button" type="Button" parent="Panel/ScrollContainer/VBoxContainer" unique_id=114016093]
 layout_mode = 2
 text = "Finish"
 
-[connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="Apply"]
+[connection signal="pressed" from="Panel/ScrollContainer/VBoxContainer/Button" to="." method="Apply"]

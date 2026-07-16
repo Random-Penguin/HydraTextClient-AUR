@@ -10,7 +10,7 @@ namespace HydraTextClient.Scripts.Utility;
 
 public class LegacyUserData
 {
-    private static Dictionary<string, ColorConstant> LegacyColorIdToNewIds = new()
+    public static Dictionary<string, ColorConstant> LegacyColorIdToNewIds = new()
     {
         ["background_color"] = UiBackground, ["player_server"] = ServerColor, ["player_generic"] = PlayerNonConnected,
         ["player_color"] = PlayerConnected, ["player_color_offline"] = PlayerListedNonConnected,
@@ -23,7 +23,7 @@ public class LegacyUserData
         ["hint_no_priority"] = NoPriority, ["hint_avoid"] = Avoid, ["tooltip_bgcolor"] = TooltipColor,
     };
 
-    private Dictionary<string, LegacyColorSetting> UiColorSettings = [];
+    public Dictionary<string, LegacyColorSetting> UiColorSettings = [];
     public Dictionary<string, LegacyGameData> GameData = [];
     public Dictionary<string, LegacyItemFilter> ItemFilters = [];
     public Dictionary<string, int> FontSizes = [];

@@ -82,7 +82,8 @@ public partial class MainController : Control
         DRPC.Init();
         GlobalThemeSettings.Init();
         
-        if (!SaveType<bool>.Load("Main/HasPorted", !File.Exists(Directories.LegacyData))) return;
+        if (SaveType<bool>.Load("Main/HasPorted", !File.Exists(Directories.LegacyData))) return;
+        Porter.Startup();
         Porter.Show();
     }
 

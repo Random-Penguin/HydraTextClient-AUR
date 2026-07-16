@@ -34,7 +34,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[node name="Main" type="PanelContainer" unique_id=880516871 node_paths=PackedStringArray("GDLogger")]
+[node name="Main" type="PanelContainer" unique_id=880516871 node_paths=PackedStringArray("GDLogger", "BackgroundImage")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -50,6 +50,7 @@ ErrorWindow = ExtResource("8_uwgue")
 ItemFilterWindow = ExtResource("4_p6tld")
 ItemFilterDisplay = ExtResource("5_dc4qw")
 GDLogger = NodePath("Main Container/Consoles/Godot")
+BackgroundImage = NodePath("BackgroundImage")
 
 [node name="CustomAssets" type="Control" parent="." unique_id=1782125956]
 visible = false
@@ -74,6 +75,8 @@ script = ExtResource("3_b5wqe")
 
 [node name="BackgroundImage" type="TextureRect" parent="." unique_id=1366911435]
 layout_mode = 2
+expand_mode = 2
+stretch_mode = 5
 
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2
@@ -134,11 +137,12 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="Settings" type="TabContainer" parent="Main Container" unique_id=1972428991]
+[node name="Settings" type="TabContainer" parent="Main Container" unique_id=1972428991 node_paths=PackedStringArray("Saver")]
 visible = false
 layout_mode = 2
 current_tab = 0
 script = ExtResource("11_uq7wj")
+Saver = NodePath("../../UISaver")
 metadata/_tab_index = 5
 
 [node name="Item Filter" parent="Main Container/Settings" unique_id=1407271342 instance=ExtResource("5_dc4qw")]

@@ -1,12 +1,13 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utilities.Popups;
 using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using HydraTextClient.Scripts.Utility.UtilityEffects;
 
@@ -48,28 +49,31 @@ public partial class PlayerInventory : TextTable
         CheatCounter.Visible = cheatedCount > 0;
         if (cheatedCount > 0) CheatCounter.Text = $"Cheated Items: [{cheatedCount:###,##0}]";
 
-        var items = Client.ItemHandler.Items; 
+        var items = Client.ItemHandler.Items;
         Inventory = items.GroupBy(item => item.UID).ToDictionary(g => g.Key, g => g.ToArray());
         Keys = Inventory.OrderBy(kv => kv.Value[0].Flags.SortNumber()).ThenByDescending(kv => kv.Value.Length)
                         .Select(kv => kv.Key).ToArray();
         RawItemNames = Inventory.Values.Select(arr => arr[0].ItemName).Distinct().ToArray();
-        
+
         var mw = ConnectionController.GetCurrentMultiworld;
-        
+
         if (mw is null) return;
         var starting = mw.ItemHistory.GetOrAdd(Client.PlayerName, 0);
         var newItems = items.Skip(starting).ToArray();
 
         if (newItems.Length != 0 && OpenNewWindow && !HasOpenedNewWindow)
         {
-            var popup = ItemCountPopup.Instantiate<InventoryCounter>();
-            popup.SetItems(newItems);
-            AddChild(popup);
+            if (SaveType<bool>.Load(GlobalThemeSettings.DisplayNewItemsPopup, true))
+            {
+                var popup = ItemCountPopup.Instantiate<InventoryCounter>();
+                popup.SetItems(newItems);
+                AddChild(popup);
+                popup.Show();
+            }
             HasOpenedNewWindow = true;
-            popup.Show();
         }
 
-        mw.ItemHistory[Client.PlayerName] = Client.ItemHandler.ItemIndex;   
+        mw.ItemHistory[Client.PlayerName] = Client.ItemHandler.ItemIndex;
         OpenNewWindow = false;
     }
 

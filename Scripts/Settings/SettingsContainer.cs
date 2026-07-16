@@ -17,20 +17,27 @@ public partial class SettingsContainer : HSplitContainer
         var column = this[columnIndex];
         switch (type)
         {
+            case SettingType.CheckBox:
+                CheckBox checkBox = new();
+                checkBox.Text = name;
+                extraConfig?.Invoke([checkBox]);
+                checkBox.ButtonPressed = SaveType<bool>.Load(saveId, def is not null && (bool)def);
+                checkBox.Toggled += b => SaveType<bool>.Save(saveId, b, true);  
+                column.AddChild(checkBox);
+                break;
             case SettingType.BrowsFile:
                 Button button = new();
                 button.Text = name;
 
                 FileDialog fileDialog = new();
                 fileDialog.Visible = false;
-                fileDialog.FileMode = FileDialog.FileModeEnum.OpenDir;
                 fileDialog.Access = FileDialog.AccessEnum.Filesystem;
                 fileDialog.ShowHiddenFiles = true;
                 fileDialog.UseNativeDialog = true;
                 extraConfig?.Invoke([fileDialog, button]);
 
                 button.Pressed += fileDialog.Show;
-                
+
                 column.AddChild(button);
                 column.AddChild(fileDialog);
                 break;
@@ -44,7 +51,7 @@ public partial class SettingsContainer : HSplitContainer
                 SpinBox box = new();
                 extraConfig?.Invoke([box]);
 
-                box.Value = SaveType<double>.Load(saveId, def is null ? 0d : (double)def);
+                box.Value = SaveType<double>.Load(saveId, def is null ? box.MinValue : (double)def);
                 box.ValueChanged += v => SaveType<double>.Save(saveId, v, true);
 
                 column.AddChild(CreateBoxWithLabel(box, name, true));
@@ -69,7 +76,7 @@ public partial class SettingsContainer : HSplitContainer
                     GD.PushWarning($"Save Id [{saveId}] has no color constant");
                     return this;
                 }
-                
+
                 ColorPickerButton colorPicker = new();
                 colorPicker.Text = "Color Picker Setting";
                 extraConfig?.Invoke([colorPicker]);
@@ -82,7 +89,7 @@ public partial class SettingsContainer : HSplitContainer
                     if (id != ColorIdConstants.ConstantToId[colorConstant]) return;
                     colorPicker.Color = color;
                 };
-                
+
                 column.AddChild(CreateBoxWithLabel(colorPicker, name, true));
                 break;
             case SettingType.Text:
@@ -147,5 +154,6 @@ public partial class SettingsContainer : HSplitContainer
 public enum SettingType
 {
     HexColor, Input_Submitted, Input_TextChange,
-    SpinNumber, BrowsFile, ButtonAction, Text
+    SpinNumber, BrowsFile, ButtonAction,
+    Text, CheckBox
 }

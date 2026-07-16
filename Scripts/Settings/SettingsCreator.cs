@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Settings;
 
 public partial class SettingsCreator : TabContainer
 {
+    [Export] private UISaver Saver;
     private static HashSet<string> TabsNames = [];
     private static PriorityQueue<string, int> TabCreationPriority = new();
     private static Dictionary<string, List<Action<SettingsContainer>>> TabCreateCallback = [];
@@ -31,6 +33,7 @@ public partial class SettingsCreator : TabContainer
             tab.SetAnchorsPreset(LayoutPreset.FullRect);
             tab.SetName(tabName);
             AddChild(tab);
+            Saver.CallDeferred("BuildSavable", tab, $"{tabName}/MainContainer");
             return tab;
         }
     }

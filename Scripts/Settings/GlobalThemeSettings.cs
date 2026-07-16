@@ -6,6 +6,7 @@ using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using static HydraTextClient.Scripts.Controllers.MainController;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Settings;
@@ -14,9 +15,12 @@ public static class GlobalThemeSettings
 {
     public const string GlobalFontSize = "Theme/Global/FontSize";
     public const string ApDir = "Main/ArchipelagoFolder";
+    public const string AlwaysOnTop = "Main/AlwaysOnTop";
+    public const string DisplayNewItemsPopup = "Main/NewItemsPopupDisplay";
 
     public static void Init()
     {
+        SetAlwaysOnTop(SaveType<bool>.Load(AlwaysOnTop, false));
         SaveType<double>.OnSaveEvent += (s, d) =>
         {
             if (s is GlobalFontSize) LoadGlobalFont(d);
@@ -28,8 +32,14 @@ public static class GlobalThemeSettings
             "Theme",
             tab => tab
                   .AddSetting(
+                       SettingType.CheckBox, "Always on top", AlwaysOnTop, false, 1,
+                       b => ((CheckBox)b[0]).Toggled += SetAlwaysOnTop
+                   )
+                  .AddSetting(SettingType.CheckBox, "Show new Items on Connect", DisplayNewItemsPopup, true, 1)
+                  .AddSeparator(columnIndex: 1)
+                  .AddSetting(
                        SettingType.ButtonAction, "Force (Safety) Save", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += MainController.Save
+                       extraConfig: b => ((Button)b[0]).Pressed += Save
                    )
                   .AddSetting(
                        SettingType.ButtonAction, "Open Save Directory", columnIndex: 2,
@@ -64,8 +74,8 @@ public static class GlobalThemeSettings
                        SettingType.ButtonAction, "Open Portrait Directory", columnIndex: 2,
                        extraConfig: b => ((Button)b[0]).Pressed += () => OS.ShellOpen(Directories.GamePortraits)
                    )
-                  .AddSeparator(columnIndex:2)
-                  .AddSetting(SettingType.Text, "Sites to download portraits", columnIndex:2)
+                  .AddSeparator(columnIndex: 2)
+                  .AddSetting(SettingType.Text, "Sites to download portraits", columnIndex: 2)
                   .AddSetting(
                        SettingType.ButtonAction, "SteamGridDB.com", columnIndex: 2,
                        extraConfig: b => ((Button)b[0]).Pressed += () => OS.ShellOpen("https://www.steamgriddb.com/")
@@ -74,6 +84,34 @@ public static class GlobalThemeSettings
                        SettingType.ButtonAction, "IDGB.com", columnIndex: 2,
                        extraConfig: b => ((Button)b[0]).Pressed += () => OS.ShellOpen("https://www.igdb.com/")
                    )
+                  .AddSetting(
+                       SettingType.BrowsFile, "Set Background Image", WindowBackGroundImage, columnIndex: 1,
+                       extraConfig:
+                       f =>
+                       {
+                           var dialog = (FileDialog)f[0];
+                           var button = (Button)f[1];
+                           button.Pressed += () =>
+                           {
+                               var curSaved = SaveType<string>.Load(WindowBackGroundImage, "");
+                               if (curSaved is not "") dialog.CurrentPath = curSaved;
+                           };
+
+                           dialog.FileMode = FileDialog.FileModeEnum.OpenFile;
+                           dialog.Filters = ["*.png", "*.jpeg"];
+                           dialog.FileNameFilter = "";
+                           dialog.FileSelected += dir => SaveType<string>.Save(WindowBackGroundImage, dir, true);
+                       }
+                   )
+                  .AddSetting(
+                       SettingType.SpinNumber, "Background Image Alpha", WindowBackGroundImageAlpha, 255d, 1, s =>
+                       {
+                           var box = (SpinBox)s[0];
+                           box.MaxValue = 255;
+                           box.MinValue = 0;
+                       }
+                   )
+                  .AddSeparator(columnIndex: 1)
                   .AddSetting(
                        SettingType.BrowsFile, "Set Archipelago Folder", ApDir, columnIndex: 1, extraConfig:
                        f =>
@@ -86,9 +124,13 @@ public static class GlobalThemeSettings
                                if (curSaved is not "") dialog.CurrentPath = curSaved;
                            };
 
+                           dialog.FileMode = FileDialog.FileModeEnum.OpenDir;
+                           dialog.Filters = [];
+                           dialog.FileNameFilter = "";
                            dialog.DirSelected += dir => SaveType<string>.Save(ApDir, dir, true);
                        }
                    )
+                  .AddSeparator(columnIndex: 1)
                   .AddSetting(
                        SettingType.SpinNumber, "Global Font Size", GlobalFontSize, 20d, 1,
                        c => ((SpinBox)c[0]).MinValue = 1
@@ -101,5 +143,5 @@ public static class GlobalThemeSettings
 
     public static void LoadTheme() { LoadGlobalFont(SaveType<double>.Load(GlobalFontSize, 20)); }
 
-    public static void LoadGlobalFont(double d) => MainController.GlobalTheme.DefaultFontSize = (int)Math.Round(d);
+    public static void LoadGlobalFont(double d) => GlobalTheme.DefaultFontSize = (int)Math.Round(d);
 }

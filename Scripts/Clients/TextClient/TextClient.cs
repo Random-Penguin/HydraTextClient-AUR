@@ -54,60 +54,48 @@ public partial class TextClient : Control
             "Text Client",
             tab =>
             {
-                tab.AddSetting(SettingType.Input_Submitted, "Join Message", JoinMessage.SaveId, JoinMessage.Default)
+                tab.AddLineEdit("Join Message", JoinMessage.SaveId, true, JoinMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Leave Message", LeaveMessage.SaveId, LeaveMessage.Default)
+                   .AddLineEdit("Leave Message", LeaveMessage.SaveId, true, LeaveMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Tags Changed", TagsChanged.SaveId, TagsChanged.Default)
+                   .AddLineEdit("Tags Changed", TagsChanged.SaveId, true, TagsChanged.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Goal Message", GoalMessage.SaveId, GoalMessage.Default)
+                   .AddLineEdit("Goal Message", GoalMessage.SaveId, true, GoalMessage.Default)
                    .AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Hint Message", HintMessage.SaveId, HintMessage.Default)
+                   .AddLineEdit("Hint Message", HintMessage.SaveId, true, HintMessage.Default)
                    .AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Trap Message", TrapLinkMessage.SaveIdMessage,
-                        TrapLinkMessage.Default
-                    )
+                   .AddLineEdit("Trap Message", TrapLinkMessage.SaveIdMessage, true, TrapLinkMessage.Default)
                    .AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Death Message", DeathLinkMessage.SaveIdMessage,
-                        DeathLinkMessage.DefaultMessage
-                    )
+                   .AddLineEdit("Death Message", DeathLinkMessage.SaveIdMessage, true, DeathLinkMessage.DefaultMessage)
                    .AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Unknown Death Cause", DeathLinkMessage.SaveIdUnknown,
-                        DeathLinkMessage.DefaultUnknown
-                    )
-                   .AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Item Message (Same Person)", ItemMessage.SaveIdSamePerson,
-                        ItemMessage.DefaultSamePerson
+                   .AddLineEdit(
+                        "Unknown Death Cause", DeathLinkMessage.SaveIdUnknown, true, DeathLinkMessage.DefaultUnknown
                     ).AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Item Message (Different Person)",
-                        ItemMessage.SaveIdDifferentPerson, ItemMessage.DefaultDifferentPerson
+                   .AddLineEdit(
+                        "Item Message (Same Person)", ItemMessage.SaveIdSamePerson, true, ItemMessage.DefaultSamePerson
                     ).AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Item Message (Cheated)", ItemCheatMessage.SaveId,
-                        ItemCheatMessage.Default
+                   .AddLineEdit(
+                        "Item Message (Different Person)", ItemMessage.SaveIdDifferentPerson, true,
+                        ItemMessage.DefaultDifferentPerson
                     ).AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Player Text (Without Alias)", PlayerEffect.SaveIdNoAlias,
-                        PlayerEffect.DefaultNoAlias
+                   .AddLineEdit("Item Message (Cheated)", ItemCheatMessage.SaveId, true, ItemCheatMessage.Default)
+                   .AddSeparator()
+                   .AddLineEdit(
+                        "Player Text (Without Alias)", PlayerEffect.SaveIdNoAlias, true, PlayerEffect.DefaultNoAlias
                     ).AddSeparator()
-                   .AddSetting(
-                        SettingType.Input_Submitted, "Player Text (With Alias)", PlayerEffect.SaveIdWithAlias,
-                        PlayerEffect.DefaultWithAlias
+                   .AddLineEdit(
+                        "Player Text (With Alias)", PlayerEffect.SaveIdWithAlias, true, PlayerEffect.DefaultWithAlias
                     ).AddSeparator()
-                   .AddSetting(SettingType.Input_Submitted, "Item Text", ItemEffect.SaveId, ItemEffect.Default)
+                   .AddLineEdit("Item Text", ItemEffect.SaveId, true, ItemEffect.Default)
                    .AddText("Item Log Filter Options\n(Deletes Item Log Messages)", 1)
-                   .AddSetting(SettingType.CheckBox, "Show Progressive Items", "TextClient/show_progressive", true, 1)
-                   .AddSetting(SettingType.CheckBox, "Show Useful Items", "TextClient/show_useful", true, 1)
-                   .AddSetting(SettingType.CheckBox, "Show Useful Items", "TextClient/show_normal", true, 1)
-                   .AddSetting(SettingType.CheckBox, "Show Trap Items", "TextClient/show_trap", true, 1)
-                   .AddSetting(SettingType.CheckBox, "Show Only Related to You", "TextClient/show_only_you", true, 1)
+                   .AddCheckBox("Show Progressive Items", "TextClient/show_progressive", true, 1)
+                   .AddCheckBox("Show Useful Items", "TextClient/show_useful", true, 1)
+                   .AddCheckBox("Show Useful Items", "TextClient/show_normal", true, 1)
+                   .AddCheckBox("Show Trap Items", "TextClient/show_trap", true, 1)
+                   .AddCheckBox("Show Only Related to You", "TextClient/show_only_you", true, 1)
+                   .AddSeparator(1)
                    .AddText("Hint Log Options", 1)
-                   .AddSetting(SettingType.CheckBox, "Show Found Hints", "TextClient/show_found_hints", true, 1);
+                   .AddCheckBox("Show Found Hints", "TextClient/show_found_hints", true, 1);
             }
         );
 
@@ -134,7 +122,7 @@ public partial class TextClient : Control
             && messagePacket.GetPacket() is ItemPrintJsonPacket itemPacket)
         {
             if (SaveType<FilterType>.TryGet(itemPacket.UID, out var filter) && !filter.ShowInItemLog) return;
-            
+
         }
 
         if (!MessageScenes.TryGetValue(messagePacket.GetMsgType(), out var scene)) return;

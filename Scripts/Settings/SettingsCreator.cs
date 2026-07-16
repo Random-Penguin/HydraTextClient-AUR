@@ -32,6 +32,7 @@ public partial class SettingsCreator : TabContainer
             tab = Tabs[tabName] = new SettingsContainer();
             tab.SetAnchorsPreset(LayoutPreset.FullRect);
             tab.SetName(tabName);
+            tab.Saver = Saver;
             AddChild(tab);
             Saver.CallDeferred("BuildSavable", tab, $"{tabName}/MainContainer");
             return tab;

@@ -72,10 +72,7 @@ public static class ColorIdConstants
                 foreach (var constant in Enum.GetValues<ColorConstant>())
                 {
                     if (constant is Unknown) continue;
-                    tab.AddSetting(
-                        SettingType.HexColor, SettingNames[constant], ConstantToId[constant],
-                        ConstantToDefaultColor[constant]
-                    );
+                    tab.AddColorChanger(ConstantToId[constant], SettingNames[constant]);
                 }
             }, int.MinValue
         );
@@ -83,14 +80,14 @@ public static class ColorIdConstants
 
     public enum ColorConstant
     {
-        Unknown, UiBackground, PopupBackground, TooltipColor,
-        ServerColor, PlayerNonConnected, PlayerConnected,
-        PlayerListedNonConnected, SpecialItemColor, ProgressiveItemColor,
-        UsefulItemColor, TrapItemColor, NormalItemColor,
-        SpecialItemBackgroundColor, ProgressiveItemBackgroundColor, UsefulItemBackgroundColor,
-        TrapItemBackgroundColor, NormalItemBackgroundColor, LocationColor,
-        EntranceColor, NotFoundColor, FoundColor,
-        Priority, Unspecified, NoPriority,
-        Avoid,
+        Unknown, UiBackground, PopupBackground,
+        TooltipColor, ServerColor, PlayerNonConnected,
+        PlayerConnected, PlayerListedNonConnected, SpecialItemColor,
+        ProgressiveItemColor, UsefulItemColor, TrapItemColor,
+        NormalItemColor, SpecialItemBackgroundColor, ProgressiveItemBackgroundColor,
+        UsefulItemBackgroundColor, TrapItemBackgroundColor, NormalItemBackgroundColor,
+        LocationColor, EntranceColor, NotFoundColor,
+        FoundColor, Priority, Unspecified,
+        NoPriority, Avoid,
     }
 }

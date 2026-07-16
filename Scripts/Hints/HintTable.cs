@@ -61,19 +61,18 @@ public partial class HintTable : TextTable
             QueueUiRefresh(false);
         };
 
-        SaveType<FilterType>.OnSaveEvent += (_, _) =>QueueUiRefresh(true);
+        SaveType<FilterType>.OnSaveEvent += (_, _) => QueueUiRefresh(true);
         SaveType<FilterType>.OnDeleteEvent += (_, _) => QueueUiRefresh(true);
 
         SettingsCreator.Tab(
             "Hints",
             tab =>
             {
-                tab.AddSetting(
-                    SettingType.Input_TextChange, "Copy Hint Text Format (Progressive Items)",
-                    GlobalCopyFormatProgressive,
+                tab.AddLineEdit(
+                    "Copy Hint Text Format (Progressive Items)", GlobalCopyFormatProgressive, false,
                     "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
-                ).AddSetting(
-                    SettingType.Input_TextChange, "Copy Hint Text Format", GlobalCopyFormat,
+                ).AddLineEdit(
+                    "Copy Hint Text Format", GlobalCopyFormat, false,
                     "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
                 );
             }

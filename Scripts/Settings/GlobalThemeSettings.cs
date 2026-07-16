@@ -31,29 +31,20 @@ public static class GlobalThemeSettings
         SettingsCreator.Tab(
             "Theme",
             tab => tab
-                  .AddSetting(
-                       SettingType.CheckBox, "Always on top", AlwaysOnTop, false, 1,
-                       b => ((CheckBox)b[0]).Toggled += SetAlwaysOnTop
-                   )
-                  .AddSetting(SettingType.CheckBox, "Show new Items on Connect", DisplayNewItemsPopup, true, 1)
-                  .AddSeparator(columnIndex: 1)
-                  .AddSetting(
-                       SettingType.ButtonAction, "Force (Safety) Save", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += Save
-                   )
-                  .AddSetting(
-                       SettingType.ButtonAction, "Open Save Directory", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += () => OS.ShellOpen(Directories.MainDirectory)
-                   ).AddSeparator(columnIndex: 2)
-                  .AddSetting(
-                       SettingType.ButtonAction, "Export Colors to Clipboard", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += () => DisplayServer.ClipboardSet(
+                  .AddCheckBox("Always on top", AlwaysOnTop, false, 1, b => b.Toggled += SetAlwaysOnTop)
+                  .AddCheckBox("Show new Items on Connect", DisplayNewItemsPopup, true, 1)
+                  .AddSeparator(1)
+                  .AddButton("Force (Safety) Save", Save, 2)
+                  .AddButton("Open Save Directory", () => OS.ShellOpen(Directories.MainDirectory), 2)
+                  .AddSeparator(2)
+                  .AddButton(
+                       "Export Colors to Clipboard",
+                       () => DisplayServer.ClipboardSet(
                            string.Join('|', ConstantToId.Select(kv => $"{kv.Value}={kv.Key.Color().ToHtml()}"))
-                       )
-                   )
-                  .AddSetting(
-                       SettingType.ButtonAction, "Import Colors from Clipboard", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += () =>
+                       ), 2
+                   ).AddButton(
+                       "Import Colors from Clipboard"
+                       , () =>
                        {
                            var colors = DisplayServer.ClipboardGet().Split('|');
                            if (colors.Length < 1) return;
@@ -64,78 +55,48 @@ public static class GlobalThemeSettings
                                if (split.Length is not 2 || !SaveType<HexColor>.ContainsKey(id)) continue;
                                SaveType<HexColor>.Save(id, new HexColor(new Color(split[1]).ToRgba64()), true);
                            }
-                       }
-                   ).AddSeparator(columnIndex: 2)
-                  .AddSetting(
-                       SettingType.ButtonAction, "Open Emotes Directory", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += () => OS.ShellOpen(Directories.Emotes)
-                   )
-                  .AddSetting(
-                       SettingType.ButtonAction, "Open Portrait Directory", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += () => OS.ShellOpen(Directories.GamePortraits)
-                   )
-                  .AddSeparator(columnIndex: 2)
-                  .AddSetting(SettingType.Text, "Sites to download portraits", columnIndex: 2)
-                  .AddSetting(
-                       SettingType.ButtonAction, "SteamGridDB.com", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += () => OS.ShellOpen("https://www.steamgriddb.com/")
-                   )
-                  .AddSetting(
-                       SettingType.ButtonAction, "IDGB.com", columnIndex: 2,
-                       extraConfig: b => ((Button)b[0]).Pressed += () => OS.ShellOpen("https://www.igdb.com/")
-                   )
-                  .AddSetting(
-                       SettingType.BrowsFile, "Set Background Image", WindowBackGroundImage, columnIndex: 1,
-                       extraConfig:
-                       f =>
+                       }, 2
+                   ).AddSeparator(2)
+                  .AddButton("Open Emotes Directory", () => OS.ShellOpen(Directories.Emotes), 2)
+                  .AddButton("Open Portrait Directory", () => OS.ShellOpen(Directories.GamePortraits), 2)
+                  .AddSeparator(2)
+                  .AddText("Sites to download portraits", 2)
+                  .AddButton("SteamGridDB.com", () => OS.ShellOpen("https://www.steamgriddb.com/"), 2)
+                  .AddButton("IDGB.com", () => OS.ShellOpen("https://www.igdb.com/"), 2)
+                  .AddBrowseFile(
+                       "Set Background Image", FileDialog.FileModeEnum.OpenFile, ["*.png", "*.jpeg"], col: 1,
+                       extraConfig: (button, dialog) =>
                        {
-                           var dialog = (FileDialog)f[0];
-                           var button = (Button)f[1];
                            button.Pressed += () =>
                            {
                                var curSaved = SaveType<string>.Load(WindowBackGroundImage, "");
                                if (curSaved is not "") dialog.CurrentPath = curSaved;
                            };
-
-                           dialog.FileMode = FileDialog.FileModeEnum.OpenFile;
-                           dialog.Filters = ["*.png", "*.jpeg"];
-                           dialog.FileNameFilter = "";
                            dialog.FileSelected += dir => SaveType<string>.Save(WindowBackGroundImage, dir, true);
                        }
-                   )
-                  .AddSetting(
-                       SettingType.SpinNumber, "Background Image Alpha", WindowBackGroundImageAlpha, 255d, 1, s =>
+                   ).AddSpinBox(
+                       "Background Image Alpha", WindowBackGroundImageAlpha, 255d, 1, box =>
                        {
-                           var box = (SpinBox)s[0];
                            box.MaxValue = 255;
                            box.MinValue = 0;
                        }
                    )
-                  .AddSeparator(columnIndex: 1)
-                  .AddSetting(
-                       SettingType.BrowsFile, "Set Archipelago Folder", ApDir, columnIndex: 1, extraConfig:
-                       f =>
+                  .AddSeparator(1)
+                  .AddBrowseFile(
+                       "Set Archipelago Folder", FileDialog.FileModeEnum.OpenFile, [], col: 1,
+                       extraConfig: (button, dialog) =>
                        {
-                           var dialog = (FileDialog)f[0];
-                           var button = (Button)f[1];
                            button.Pressed += () =>
                            {
                                var curSaved = SaveType<string>.Load(ApDir, "");
                                if (curSaved is not "") dialog.CurrentPath = curSaved;
                            };
-
-                           dialog.FileMode = FileDialog.FileModeEnum.OpenDir;
-                           dialog.Filters = [];
-                           dialog.FileNameFilter = "";
                            dialog.DirSelected += dir => SaveType<string>.Save(ApDir, dir, true);
                        }
                    )
-                  .AddSeparator(columnIndex: 1)
-                  .AddSetting(
-                       SettingType.SpinNumber, "Global Font Size", GlobalFontSize, 20d, 1,
-                       c => ((SpinBox)c[0]).MinValue = 1
-                   )
-                  .AddSetting(SettingType.SpinNumber, "Text Client Font Size", TextClient.FontSizeId, 20d, 1)
+                  .AddSeparator(1)
+                  .AddSpinBox("Global Font Size", GlobalFontSize, 20d, 1, c => c.MinValue = 1)
+                  .AddSpinBox("Text Client Font Size", TextClient.FontSizeId, 20d, 1)
         );
 
         LoadTheme();

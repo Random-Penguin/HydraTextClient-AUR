@@ -50,15 +50,7 @@ public abstract partial class TextTable : RichLabelInteractions
         HasInit = true;
         if (FontSizeOverrideId is "" || FontSizeOverrideName is "") return;
         var id = $"{SaveId}{FontSizeOverrideId}";
-        SettingsCreator.Tab(
-            "Theme",
-            tab => tab.AddSetting(
-                SettingType.SpinNumber, FontSizeOverrideName, id, 20d, 1, c =>
-                {
-                    ((SpinBox)c[0]).MinValue = 1;
-                }
-            )
-        );
+        SettingsCreator.Tab("Theme", tab => tab.AddSpinBox(FontSizeOverrideName, id, 20d, 1, c => c.MinValue = 1));
 
         SaveType<double>.OnSaveEvent += (newId, val) =>
         {

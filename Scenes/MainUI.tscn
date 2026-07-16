@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://cnoe8nx10kvwi" path="res://Scripts/Controllers/ConsoleController.cs" id="17_es56x"]
 [ext_resource type="PackedScene" uid="uid://nheywstd8qsg" path="res://Scenes/Consoles/Console.tscn" id="18_t8puo"]
 [ext_resource type="Script" uid="uid://cbjgujffa32pl" path="res://Scripts/Consoles/Godot/LoggerLabel.cs" id="18_y7llr"]
+[ext_resource type="PackedScene" uid="uid://b57ci707f3gsq" path="res://Scenes/Utility/Popups/PortSettings.tscn" id="22_0oxgv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yd0xa"]
 content_margin_left = 0.0
@@ -34,7 +35,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[node name="Main" type="PanelContainer" unique_id=880516871 node_paths=PackedStringArray("GDLogger", "BackgroundImage")]
+[node name="Main" type="PanelContainer" unique_id=880516871 node_paths=PackedStringArray("GDLogger", "BackgroundImage", "Porter")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -51,6 +52,7 @@ ItemFilterWindow = ExtResource("4_p6tld")
 ItemFilterDisplay = ExtResource("5_dc4qw")
 GDLogger = NodePath("Main Container/Consoles/Godot")
 BackgroundImage = NodePath("BackgroundImage")
+Porter = NodePath("Port Settings")
 
 [node name="CustomAssets" type="Control" parent="." unique_id=1782125956]
 visible = false
@@ -186,5 +188,8 @@ file_mode = 0
 access = 2
 show_hidden_files = true
 use_native_dialog = true
+
+[node name="Port Settings" parent="." unique_id=1869394352 instance=ExtResource("22_0oxgv")]
+visible = false
 
 [connection signal="timeout" from="Timer" to="." method="UpdateDiscord"]

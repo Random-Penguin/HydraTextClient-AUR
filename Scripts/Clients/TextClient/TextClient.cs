@@ -100,7 +100,14 @@ public partial class TextClient : Control
                         PlayerEffect.DefaultWithAlias
                     ).AddSeparator()
                    .AddSetting(SettingType.Input_Submitted, "Item Text", ItemEffect.SaveId, ItemEffect.Default)
-                    ;
+                   .AddText("Item Log Filter Options\n(Deletes Item Log Messages)", 1)
+                   .AddSetting(SettingType.CheckBox, "Show Progressive Items", "TextClient/show_progressive", true, 1)
+                   .AddSetting(SettingType.CheckBox, "Show Useful Items", "TextClient/show_useful", true, 1)
+                   .AddSetting(SettingType.CheckBox, "Show Useful Items", "TextClient/show_normal", true, 1)
+                   .AddSetting(SettingType.CheckBox, "Show Trap Items", "TextClient/show_trap", true, 1)
+                   .AddSetting(SettingType.CheckBox, "Show Only Related to You", "TextClient/show_only_you", true, 1)
+                   .AddText("Hint Log Options", 1)
+                   .AddSetting(SettingType.CheckBox, "Show Found Hints", "TextClient/show_found_hints", true, 1);
             }
         );
 
@@ -124,8 +131,11 @@ public partial class TextClient : Control
 
         if (!MessageQueue.TryDequeue(out var messagePacket)) return;
         if (messagePacket.GetMsgType() is MessageType.ItemLog
-            && messagePacket.GetPacket() is ItemPrintJsonPacket itemPacket
-            && SaveType<FilterType>.TryGet(itemPacket.UID, out var filter) && !filter.ShowInItemLog) return;
+            && messagePacket.GetPacket() is ItemPrintJsonPacket itemPacket)
+        {
+            if (SaveType<FilterType>.TryGet(itemPacket.UID, out var filter) && !filter.ShowInItemLog) return;
+            
+        }
 
         if (!MessageScenes.TryGetValue(messagePacket.GetMsgType(), out var scene)) return;
 

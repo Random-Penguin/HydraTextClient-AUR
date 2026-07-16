@@ -49,7 +49,7 @@ public static class SaveType<T>
     public static bool TryGet(string id, out T val) => SaveItems.TryGetValue(id, out val);
     
     private static void SaveToFile()
-        => File.WriteAllText(SaveFile, JsonConvert.SerializeObject(SaveItems, Formatting.Indented));
+        => File.WriteAllText(SaveFile, JsonConvert.SerializeObject(SaveItems/*, Formatting.Indented*/));
 
     private static void LoadFromFile()
     {

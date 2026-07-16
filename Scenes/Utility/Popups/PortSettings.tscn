@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://b57ci707f3gsq"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_p35q8"]
+[ext_resource type="Script" uid="uid://dkihy27kuwppx" path="res://Scripts/Utility/Popups/SettingsPorter.cs" id="2_rn0pg"]
+
+[node name="Port Settings" type="Window" unique_id=1869394352]
+oversampling_override = 1.0
+title = "What do you want to Import?"
+size = Vector2i(369, 220)
+theme = ExtResource("1_p35q8")
+script = ExtResource("2_rn0pg")
+OnTop = true
+
+[node name="Panel" type="Panel" parent="." unique_id=461202095]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=1292358515]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CheckBox" type="CheckBox" parent="Panel/VBoxContainer" unique_id=571480274]
+layout_mode = 2
+button_pressed = true
+text = "Theme Colors"
+
+[node name="CheckBox2" type="CheckBox" parent="Panel/VBoxContainer" unique_id=1131906557]
+layout_mode = 2
+button_pressed = true
+text = "Font Sizes"
+
+[node name="CheckBox3" type="CheckBox" parent="Panel/VBoxContainer" unique_id=1195348968]
+layout_mode = 2
+button_pressed = true
+text = "Other settings"
+
+[node name="CheckBox4" type="CheckBox" parent="Panel/VBoxContainer" unique_id=1945726630]
+layout_mode = 2
+button_pressed = true
+text = "Slots"
+
+[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer" unique_id=824517005]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/VBoxContainer" unique_id=372787142]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer" unique_id=114016093]
+layout_mode = 2
+text = "Finish"
+
+[connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="Apply"]

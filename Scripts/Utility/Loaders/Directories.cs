@@ -9,4 +9,5 @@ public static class Directories
 
     public static string GamePortraits = $"{MainDirectory}/Game Portraits";
     public static string Emotes = $"{MainDirectory}/Emotes";
+    public static string LegacyData = $"{MainDirectory}/data.json";
 }

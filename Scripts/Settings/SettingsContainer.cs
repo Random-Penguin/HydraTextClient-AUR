@@ -107,6 +107,11 @@ public partial class SettingsContainer : HSplitContainer
         column.AddChild(isHorizontal ? new HSeparator() : new VSeparator());
         return this;
     }
+    
+    public SettingsContainer AddText(string text, int columnIndex = 0)
+    {
+        return AddSetting(SettingType.Text, text, columnIndex:columnIndex);
+    }
 
     public BoxContainer CreateBoxWithLabel(Control obj, string text, bool isHorizontal)
     {

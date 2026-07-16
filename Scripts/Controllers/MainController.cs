@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
-using System.Net;
 using Godot;
 using HydraTextClient.Scripts.Consoles.Godot;
 using HydraTextClient.Scripts.Discord;
@@ -24,6 +22,7 @@ public partial class MainController : Control
     [Export] private PackedScene ItemFilterDisplay;
     [Export] private LoggerLabel GDLogger;
     [Export] private TextureRect BackgroundImage;
+    [Export] private SettingsPorter Porter;
 
     private ErrorDialog ErrorDialog;
 
@@ -82,6 +81,9 @@ public partial class MainController : Control
     {
         DRPC.Init();
         GlobalThemeSettings.Init();
+        
+        if (!SaveType<bool>.Load("Main/HasPorted", !File.Exists(Directories.LegacyData))) return;
+        Porter.Show();
     }
 
     public override void _Notification(int what)

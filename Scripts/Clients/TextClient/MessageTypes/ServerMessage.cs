@@ -8,13 +8,14 @@ namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 public partial class ServerMessage : AnimatedMessageScene
 {
     [Export] private RichTextLabel PlayerName;
-    
+    public string Text;
+
     public override void SetPacket(IMessagePacket packetBase)
     {
         if (packetBase.GetPacket() is not ServerChatPrintJsonPacket packet) return;
         if (!ConnectionController.HasLeaderClient) return;
 
-        CompiledMessage = packet.Message.Sanitize().CompileRichText(GetCompileEffects(), false);
+        CompiledMessage = (Text = packet.Message).Sanitize().CompileRichText(GetCompileEffects(), false);
         CompiledNameMessage = "{{player;0}}".CompileRichText(GetCompileEffects(), false);
 
         Reload();
@@ -25,11 +26,13 @@ public partial class ServerMessage : AnimatedMessageScene
     {
         UpdateFontSize(Message);
         UpdateFontSize(PlayerName);
-        
+
         Message.Clear();
         PlayerName.Clear();
-        
+
         Message.ApplyCompiledPrintableObjs(CompiledMessage);
         PlayerName.ApplyCompiledPrintableObjs(CompiledNameMessage);
     }
+
+    public override string CopyText() => Text;
 }

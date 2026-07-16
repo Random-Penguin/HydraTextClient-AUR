@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
@@ -21,6 +22,10 @@ public partial class ItemMessage : MessageScene
     private ItemFlags Flags;
     private string FinderName;
     private string ReceiverName;
+    private int FinderSlot;
+    private int ReceiverSlot;
+    public string ItemName;
+    public string LocationName;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
@@ -30,8 +35,10 @@ public partial class ItemMessage : MessageScene
         var leader = ConnectionController.LeaderClient!;
         FinderIsReceiver = item.FinderIsReceiver;
         Flags = item.Item.Flags;
-        FinderName = leader.PlayerNames[item.FindingPlayer];
-        ReceiverName = leader.PlayerNames[item.ReceivingPlayer];
+        FinderName = leader.PlayerNames[FinderSlot = item.FindingPlayer];
+        ReceiverName = leader.PlayerNames[ReceiverSlot = item.ReceivingPlayer];
+        ItemName = item.ItemName;
+        LocationName = item.GetLocationName();
 
         CachedReplacement = new Dictionary<string, string>
         {
@@ -88,4 +95,13 @@ public partial class ItemMessage : MessageScene
 
         return false;
     }
+
+    public override string CopyText() => SaveType<string>.Load(
+        FinderIsReceiver ? SaveIdSamePerson : SaveIdDifferentPerson,
+        FinderIsReceiver ? DefaultSamePerson : DefaultDifferentPerson
+    ).CompileSimpleText(new Dictionary<string, string>
+    {
+        ["finder"] = PlayerEffect.PlayerName(FinderSlot, out _), ["item"] = ItemName,
+        ["receiver"] = PlayerEffect.PlayerName(ReceiverSlot, out _), ["loc"] = LocationName,
+    });
 }

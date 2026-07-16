@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -19,6 +20,7 @@ public partial class DeathLinkMessage : MessageScene
     public string? LastCause;
     public string Player;
     public int PlayerSlot;
+    public string Groups;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
@@ -43,7 +45,7 @@ public partial class DeathLinkMessage : MessageScene
         CachedReplacement = new Dictionary<string, string>
         {
             ["player"] = PlayerSlot is -1 ? $"[hint=?]{Player}[/hint]" : $"{{{{player;{PlayerSlot}}}}}",
-            ["groups"] = $"{string.Join(", ", dl.Groups.Select(g => $"DeathLink{g}").ToArray())}",
+            ["groups"] = Groups = $"{string.Join(", ", dl.Groups.Select(g => $"DeathLink{g}").ToArray())}",
         };
 
         if (LastCause is not null)
@@ -59,9 +61,11 @@ public partial class DeathLinkMessage : MessageScene
 
     public override void Reload()
     {
-        CachedReplacement.Remove("cause");
-        CachedReplacement["cause"] = SaveType<string>.Load(SaveIdUnknown, DefaultUnknown)
-                                                     .CompileSimpleText(CachedReplacement);
+        if (LastCause is null)
+        {
+            CachedReplacement["cause"] = SaveType<string>.Load(SaveIdUnknown, DefaultUnknown)
+                                                         .CompileSimpleText(CachedReplacement);
+        }
 
         UpdateFontSize(Message);
 
@@ -79,5 +83,20 @@ public partial class DeathLinkMessage : MessageScene
         if (IdToConstant.TryGetValue(saveId, out var constant)) return constant.IsPlayerColor();
 
         return saveId is SaveIdMessage or SaveIdUnknown;
+    }
+
+    public override string CopyText()
+    {
+        Dictionary<string, string> compile =
+            new()
+            {
+                ["groups"] = Groups, ["player"] = PlayerSlot is -1 ? $"[hint=?]{Player}[/hint]"
+                    : PlayerEffect.PlayerName(PlayerSlot, out _),
+            };
+
+        if (LastCause is null)
+            compile["cause"] = SaveType<string>.Load(SaveIdUnknown, DefaultUnknown).CompileSimpleText(compile);
+        else compile["cause"] = LastCause;
+        return SaveType<string>.Load(SaveIdMessage, DefaultMessage).CompileSimpleText(compile);
     }
 }

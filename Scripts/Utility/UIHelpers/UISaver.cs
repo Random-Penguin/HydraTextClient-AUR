@@ -17,24 +17,24 @@ public partial class UISaver : Node
 
     public void BuildSavable(Node node, string rawId)
     {
+        var id = $"{Prefix}/{rawId}";
         switch (node)
         {
-            case FoldableContainer fc: BuildSavable(fc, rawId, fc.Folded); break;
-            case SplitContainer sc: BuildSavable(sc, rawId, sc.SplitOffsets ?? []); break;
-            case TabContainer tc: BuildSavable(tc, rawId, tc.GetTabCount()); break;
-            case SpinBox sb: BuildSavable(sb, rawId, sb.Value); break;
-            case CheckButton cb: BuildSavable(cb, rawId, cb.ButtonPressed); break;
-            case OptionButton ob: BuildSavable(ob, rawId, ob.Selected); break;
-            case CheckBox cb: BuildSavable(cb, rawId, cb.ButtonPressed); break;
-            case Window win: BuildSavable(win, rawId, Vector2I.Zero); break;
+            case FoldableContainer fc: BuildSavable(fc, id, fc.Folded); break;
+            case SplitContainer sc: BuildSavable(sc, id, sc.SplitOffsets ?? []); break;
+            case TabContainer tc: BuildSavable(tc, id, tc.GetTabCount()); break;
+            case SpinBox sb: BuildSavable(sb, id, sb.Value); break;
+            case CheckButton cb: BuildSavable(cb, id, cb.ButtonPressed); break;
+            case OptionButton ob: BuildSavable(ob, id, ob.Selected); break;
+            case CheckBox cb: BuildSavable(cb, id, cb.ButtonPressed); break;
+            case Window win: BuildSavable(win, id, Vector2I.Zero); break;
             default: GD.Print($"{node.GetType()} is not configured UiSaver (can ignore if not dev)"); break;
         }
     }
 
-    public void BuildSavable(Node node, string rawId, object? def)
+    public void BuildSavable(Node node, string id, object? def)
     {
-        if (def is null) BuildSavable(node, rawId); // warning: CAN cause null ref if above build is incorrect
-        var id = $"{Prefix}/{rawId}";
+        if (def is null) BuildSavable(node, id); // warning: CAN cause null ref if above build is incorrect
         switch (node)
         {
             case FoldableContainer fc:

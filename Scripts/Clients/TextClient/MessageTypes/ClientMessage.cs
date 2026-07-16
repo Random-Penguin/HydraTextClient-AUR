@@ -1,5 +1,6 @@
 using Archipelago.MultiClient.Net.Packets;
 using Godot;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -14,6 +15,7 @@ public partial class ClientMessage : AnimatedMessageScene
     private string GameName;
     private string MessageText;
     private string Player;
+    private int PlayerSlot;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
@@ -23,7 +25,7 @@ public partial class ClientMessage : AnimatedMessageScene
 
         GameName = leader.PlayerGames[packet.Slot];
         MessageText = packet.Message.Sanitize();
-        Player = $"{{{{player;{packet.Slot}}}}}";
+        Player = $"{{{{player;{PlayerSlot = packet.Slot}}}}}";
         
         Reload();
         RunBounceAnimation();
@@ -42,4 +44,6 @@ public partial class ClientMessage : AnimatedMessageScene
         Message.ApplyCompiledPrintableObjs(MessageText.CompileRichText(GetCompileEffects(), false));
         PlayerName.ApplyCompiledPrintableObjs(Player.CompileRichText(GetCompileEffects(), false));
     }
+
+    public override string CopyText() => $"\"{MessageText}\"\n-# -{PlayerEffect.PlayerName(PlayerSlot, out _)}";
 }

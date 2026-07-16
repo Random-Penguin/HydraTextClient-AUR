@@ -6,6 +6,7 @@ using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility.DataTypes;
@@ -91,6 +92,7 @@ public static class Extensions // sorted alphabetically for the memes
             => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
 
         public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
+        public string GetLocationName() => LocationEffect.LocationName(packet.Item.Location, packet.FindingPlayer);
         public string GetFoundEffectText() => $"{{{{{(packet.Found ?? false ? "found" : "notfound")}}}}}";
     }
 
@@ -121,6 +123,7 @@ public static class Extensions // sorted alphabetically for the memes
             => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
 
         public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
+        public string GetLocationName() => LocationEffect.LocationName(packet.Item.Location, packet.FindingPlayer);
     }
 
     extension(ItemFlags flags)
@@ -187,6 +190,7 @@ public static class Extensions // sorted alphabetically for the memes
             => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
 
         public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
+        public string GetLocationName() => LocationEffect.LocationName(packet.Item.Location, packet.FindingPlayer);
     }
 
     extension(LineEdit edit)

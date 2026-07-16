@@ -14,8 +14,9 @@ script = ExtResource("2_od1j6")
 TimeStamp = NodePath("MarginContainer/HBoxContainer/HFlowContainer/Label2")
 Message = NodePath("MarginContainer/HBoxContainer/HFlowContainer/RichTextLabel")
 
-[node name="Highlighter" parent="." unique_id=902065195 instance=ExtResource("3_ftxmy")]
+[node name="Highlighter" parent="." unique_id=902065195 node_paths=PackedStringArray("HigherPower") instance=ExtResource("3_ftxmy")]
 layout_mode = 2
+HigherPower = NodePath("..")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1635397619]
 clip_contents = true

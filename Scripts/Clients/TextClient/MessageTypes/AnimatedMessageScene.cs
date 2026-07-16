@@ -34,6 +34,7 @@ public abstract partial class AnimatedMessageScene : MessageScene
         queueSelfForDelete = false;
         if (saveId is PlayerConnect) return true;
         if (IdToConstant.ContainsKey(saveId)) return true;
+        if (saveId is TextClient.FontSizeId) return true;
         return false;
     }
 }

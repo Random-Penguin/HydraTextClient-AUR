@@ -77,15 +77,17 @@ script = ExtResource("3_b5wqe")
 
 [node name="BackgroundImage" type="TextureRect" parent="." unique_id=1366911435]
 layout_mode = 2
+mouse_filter = 2
 expand_mode = 2
 stretch_mode = 5
 
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 0
+current_tab = 1
 
 [node name="Connection" type="TabContainer" parent="Main Container" unique_id=2072097402]
+visible = false
 layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 0
@@ -100,7 +102,6 @@ layout_mode = 2
 metadata/_tab_index = 1
 
 [node name="Clients" type="TabContainer" parent="Main Container" unique_id=1143605094]
-visible = false
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
 current_tab = 0

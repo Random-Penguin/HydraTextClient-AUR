@@ -6,25 +6,35 @@ public partial class Highlighter : ColorRect
 {
     [Export] public Color Idle = Colors.Transparent;
     [Export] public Color Hover = Colors.AliceBlue;
+    [Export] public Control? HigherPower;
     private double Timer;
     private Tween Tween;
 
     public override void _Ready()
     {
-        MouseEntered += () =>
+        if (HigherPower is not null)
         {
-            Tween?.Kill();
-            Tween = CreateTween();
-            Tween.SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
-            Tween.TweenProperty(this, "color", Hover, 1);
-        };
+            HigherPower.MouseEntered += Enter;
+            HigherPower.MouseExited += Exit;
+            return;
+        }
+        MouseEntered += Enter;
+        MouseExited += Exit;
+    }
 
-        MouseExited += () =>
-        {
-            Tween?.Kill();
-            Tween = CreateTween();
-            Tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
-            Tween.TweenProperty(this, "color", Idle, 1);
-        };
+    public void Enter()
+    {
+        Tween?.Kill();
+        Tween = CreateTween();
+        Tween.SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
+        Tween.TweenProperty(this, "color", Hover, 1);
+    }
+
+    public void Exit()
+    {
+        Tween?.Kill();
+        Tween = CreateTween();
+        Tween.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
+        Tween.TweenProperty(this, "color", Idle, 1);
     }
 }

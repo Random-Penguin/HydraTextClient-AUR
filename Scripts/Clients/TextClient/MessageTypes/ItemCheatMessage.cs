@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Packets;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -12,14 +13,19 @@ public partial class ItemCheatMessage : MessageScene
 {
     public const string SaveId = "Clients/TextClient/ItemCheatMessage";
     public const string Default = "{{player}} was given {{item}} from {{server}} {{loc}}";
+    public int PlayerSlot;
+    public string ItemName;
+    public string LocationName;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
         if (packetBase.GetPacket() is not ItemCheatPrintJsonPacket item) return;
+        ItemName = item.ItemName;
+        LocationName = item.GetLocationName();
 
         CachedReplacement = new Dictionary<string, string>
         {
-            ["player"] = $"{{{{player;{item.FindingPlayer}}}}}", ["server"] = "{{player;0}}",
+            ["player"] = $"{{{{player;{PlayerSlot = item.FindingPlayer}}}}}", ["server"] = "{{player;0}}",
             ["loc"] = item.GetLocationEffectText(), ["item"] = item.GetItemEffectText(),
         };
 
@@ -31,7 +37,7 @@ public partial class ItemCheatMessage : MessageScene
         var final = SaveType<string>.Load(SaveId, Default).CompileSimpleText(CachedReplacement);
 
         UpdateFontSize(Message);
-        
+
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
@@ -45,4 +51,12 @@ public partial class ItemCheatMessage : MessageScene
 
         return saveId is SaveId;
     }
+
+    public override string CopyText() => SaveType<string>.Load(SaveId, Default).CompileSimpleText(
+        new Dictionary<string, string>
+        {
+            ["player"] = PlayerEffect.PlayerName(PlayerSlot, out _), ["server"] = "Server", ["loc"] = LocationName,
+            ["item"] = ItemName,
+        }
+    );
 }

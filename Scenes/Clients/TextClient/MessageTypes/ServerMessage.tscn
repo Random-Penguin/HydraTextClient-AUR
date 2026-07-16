@@ -15,8 +15,9 @@ PlayerName = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer
 TimeStamp = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Label2")
 Message = NodePath("MarginContainer/HBoxContainer/VBoxContainer/PanelContainer/RichTextLabel")
 
-[node name="Highlighter" parent="." unique_id=902065195 instance=ExtResource("3_pl4q6")]
+[node name="Highlighter" parent="." unique_id=902065195 node_paths=PackedStringArray("HigherPower") instance=ExtResource("3_pl4q6")]
 layout_mode = 2
+HigherPower = NodePath("..")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1635397619]
 clip_contents = true

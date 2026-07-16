@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Packets;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
@@ -10,12 +11,16 @@ public partial class LeaveMessage : MessageScene
 {
     public const string SaveId = "Clients/TextClient/LeaveMessage";
     public const string Default = "{{player}} left";
+    public int PlayerSlot;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
         if (packetBase.GetPacket() is not LeavePrintJsonPacket packet) return;
 
-        CachedReplacement = new Dictionary<string, string> { ["player"] = $"{{{{player;{packet.Slot}}}}}" };
+        CachedReplacement = new Dictionary<string, string>
+        {
+            ["player"] = $"{{{{player;{PlayerSlot = packet.Slot}}}}}",
+        };
         Reload();
     }
 
@@ -36,4 +41,8 @@ public partial class LeaveMessage : MessageScene
         if (IdToConstant.TryGetValue(saveId, out var constant)) return constant.IsPlayerColor();
         return saveId is SaveId;
     }
+
+    public override string CopyText() => SaveType<string>.Load(SaveId, Default).CompileSimpleText(
+        new Dictionary<string, string> { ["player"] = PlayerEffect.PlayerName(PlayerSlot, out _) }
+    );
 }

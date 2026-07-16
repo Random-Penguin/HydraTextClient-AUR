@@ -10,6 +10,7 @@
 clip_contents = true
 offset_right = 253.0
 offset_bottom = 64.0
+mouse_filter = 1
 theme = ExtResource("1_st1kx")
 script = ExtResource("2_roi67")
 PlayerName = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Name")
@@ -17,8 +18,9 @@ GamePortrait = NodePath("MarginContainer/HBoxContainer/TextureRect")
 TimeStamp = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Label2")
 Message = NodePath("MarginContainer/HBoxContainer/VBoxContainer/PanelContainer/RichTextLabel")
 
-[node name="Highlighter" parent="." unique_id=902065195 instance=ExtResource("3_tryat")]
+[node name="Highlighter" parent="." unique_id=902065195 node_paths=PackedStringArray("HigherPower") instance=ExtResource("3_tryat")]
 layout_mode = 2
+HigherPower = NodePath("..")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1635397619]
 clip_contents = true
@@ -45,12 +47,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 offset_transform_enabled = true
+mouse_filter = 1
 bbcode_enabled = true
 fit_content = true
 script = ExtResource("5_uatwv")
 
 [node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1388370851]
 layout_mode = 2
+mouse_filter = 1
 theme_override_colors/font_color = Color(0.51718444, 0.5171845, 0.51718444, 1)
 theme_override_font_sizes/font_size = 15
 text = "[Time]"
@@ -61,11 +65,13 @@ self_modulate = Color(1, 1, 1, 0)
 clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 1
 
 [node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/VBoxContainer/PanelContainer" unique_id=1390733889]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 offset_transform_enabled = true
+mouse_filter = 1
 bbcode_enabled = true
 fit_content = true
 script = ExtResource("5_uatwv")

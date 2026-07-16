@@ -6,8 +6,13 @@ namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
 public abstract partial class RichLabelInteractions : RichTextLabel
 {
+    public bool MetaAdded;
+    
     public override void _EnterTree()
     {
+        if (MetaAdded) return;
+        MetaAdded = true;
+        MouseFilter = MouseFilterEnum.Pass;
         MetaClicked += meta =>
         {
             switch (meta.VariantType)

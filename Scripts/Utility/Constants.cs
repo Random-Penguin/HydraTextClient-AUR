@@ -21,7 +21,7 @@ public static class ColorIdConstants
         [Unknown] = Colors.White, [Avoid] = Colors.OrangeRed, [Priority] = Colors.BlueViolet,
         [Unspecified] = Colors.NavajoWhite, [NoPriority] = Colors.CornflowerBlue, [EntranceColor] = Colors.Cyan,
         [UiBackground] = new Color("#2a2a2a"), [PopupBackground] = new Color("#2a2a2a"),
-        [TooltipColor] = new Color("#2a2a2a"),
+        [TooltipColor] = Colors.Transparent,
     };
 
     public static Dictionary<ColorConstant, string> ConstantToId = new()

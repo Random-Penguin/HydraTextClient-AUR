@@ -24,11 +24,11 @@ public class LocationEffect : MessageParserEffect
             return;
         }
 
-        var loc = ConnectionController.LeaderClient!.LocationIdToLocationName(long.Parse(args[0]), int.Parse(args[1]));
-        
         label.PushContext();
         label.PushColor(ColorIdConstants.ColorConstant.LocationColor.Color());
-        label.AddText(loc);
+        label.AddText(LocationName(long.Parse(args[0]), int.Parse(args[1])));
         label.PopContext();
     }
+
+    public static string LocationName(long id, int slot) => ConnectionController.LeaderClient!.LocationIdToLocationName(id, slot);
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -15,6 +16,7 @@ public partial class TrapLinkMessage : MessageScene
     public string Trap;
     public string Player;
     public int PlayerSlot;
+    public string Copy;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
@@ -62,4 +64,12 @@ public partial class TrapLinkMessage : MessageScene
         if (IdToConstant.TryGetValue(saveId, out var constant)) return constant.IsPlayerColor();
         return saveId is SaveIdMessage;
     }
+
+    public override string CopyText() => SaveType<string>.Load(SaveIdMessage, Default).CompileSimpleText(
+        new Dictionary<string, string>
+        {
+            ["player"] = PlayerSlot is -1 ? $"[hint=?]{Player}[/hint]" : PlayerEffect.PlayerName(PlayerSlot, out _),
+            ["trap"] = Trap,
+        }
+    );
 }

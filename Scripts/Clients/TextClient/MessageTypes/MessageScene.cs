@@ -21,6 +21,7 @@ public abstract partial class MessageScene : PanelContainer
     public abstract void SetPacket(IMessagePacket packetBase);
     public abstract void Reload();
     public abstract bool CanReload(string saveId, out bool queueSelfForDelete);
+    public abstract string CopyText();
 
     public override void _Ready() => SetupMessage(false);
 
@@ -29,7 +30,7 @@ public abstract partial class MessageScene : PanelContainer
         queueSelfForDelete = false;
         if (ConnectionController.CurrentMultiworld != MultiWorld) return;
         if (!ConnectionController.HasLeaderClient) return;
-        
+
         if (saveId.StartsWith("Clients/TextClient/TextEffects/") || saveId is PlayerConnect or TextClient.FontSizeId)
         {
             CallReload();
@@ -57,4 +58,12 @@ public abstract partial class MessageScene : PanelContainer
     }
 
     public void UpdateFontSize(RichTextLabel label) => label.SetFontSizeOverride(SaveType<double>.Load(TextClient.FontSizeId, 20d));
+
+    public override void _GuiInput(InputEvent @event)
+    {
+        if (@event is not InputEventMouseButton button) return;
+        if (!button.Pressed) return;
+        if (button.ButtonIndex is not MouseButton.Left) return;
+        DisplayServer.ClipboardSet(CopyText());
+    }
 }

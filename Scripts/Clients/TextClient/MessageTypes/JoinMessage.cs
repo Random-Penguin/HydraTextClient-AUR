@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Packets;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
@@ -10,6 +11,8 @@ public partial class JoinMessage : MessageScene
 {
     public const string SaveId = "Clients/TextClient/JoinMessage";
     public const string Default = "{{player}} joined with [{{tags}}] tags";
+    public int PlayerSlot;
+    public string Tags;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
@@ -17,7 +20,8 @@ public partial class JoinMessage : MessageScene
 
         CachedReplacement = new Dictionary<string, string>
         {
-            ["player"] = $"{{{{player;{packet.Slot}}}}}", ["tags"] = string.Join(", ", packet.Tags),
+            ["player"] = $"{{{{player;{PlayerSlot = packet.Slot}}}}}",
+            ["tags"] = Tags = string.Join(", ", packet.Tags),
         };
 
         Reload();
@@ -26,9 +30,9 @@ public partial class JoinMessage : MessageScene
     public override void Reload()
     {
         var final = SaveType<string>.Load(SaveId, Default).CompileSimpleText(CachedReplacement);
-        
+
         UpdateFontSize(Message);
-        
+
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
@@ -40,4 +44,8 @@ public partial class JoinMessage : MessageScene
         if (IdToConstant.TryGetValue(saveId, out var constant)) return constant.IsPlayerColor();
         return saveId is SaveId;
     }
+
+    public override string CopyText() => SaveType<string>.Load(SaveId, Default).CompileSimpleText(
+        new Dictionary<string, string> { ["player"] = PlayerEffect.PlayerName(PlayerSlot, out _), ["tags"] = Tags, }
+    );
 }

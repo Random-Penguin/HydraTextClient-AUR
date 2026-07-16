@@ -19,5 +19,5 @@ public partial class CommandMessage : MessageScene
         Message.Text = Text;
     }
 
-    public override bool CanReload(string saveId) => false;
+    public override bool CanReload(string saveId, out bool queueSelfForDelete) => queueSelfForDelete = false;
 }

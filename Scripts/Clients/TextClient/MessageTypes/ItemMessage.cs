@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
+using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -16,13 +18,21 @@ public partial class ItemMessage : MessageScene
     public const string SaveIdDifferentPerson = "Clients/TextClient/ItemMessageDifferentPerson";
     public const string DefaultDifferentPerson = "{{finder}} found {{item}} for {{receiver}} at {{loc}}";
     private bool FinderIsReceiver;
+    private ItemFlags Flags;
+    private string FinderName;
+    private string ReceiverName;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
         if (packetBase.GetPacket() is not ItemPrintJsonPacket item) return;
         if (!ConnectionController.HasLeaderClient) return;
 
+        var leader = ConnectionController.LeaderClient!;
         FinderIsReceiver = item.FinderIsReceiver;
+        Flags = item.Item.Flags;
+        FinderName = leader.PlayerNames[item.FindingPlayer];
+        ReceiverName = leader.PlayerNames[item.ReceivingPlayer];
+
         CachedReplacement = new Dictionary<string, string>
         {
             ["finder"] = $"{{{{player;{item.FindingPlayer}}}}}", ["item"] = item.GetItemEffectText(),
@@ -40,17 +50,42 @@ public partial class ItemMessage : MessageScene
         ).CompileSimpleText(CachedReplacement);
 
         UpdateFontSize(Message);
-        
+
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
 
-    public override bool CanReload(string saveId)
+    public override bool CanReload(string saveId, out bool queueSelfForDelete)
     {
+        queueSelfForDelete = false;
         if (saveId is PlayerConnect) return true;
         if (IdToConstant.TryGetValue(saveId, out var constant))
             return constant.IsPlayerColor() || constant.IsItemColor() || constant is LocationColor;
 
-        return saveId is SaveIdDifferentPerson or SaveIdSamePerson;
+        switch (saveId)
+        {
+            case TextClient.ShowProgressive:
+                if (SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Advancement))
+                    queueSelfForDelete = true;
+                break;
+            case TextClient.ShowUseful:
+                if (SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.NeverExclude))
+                    queueSelfForDelete = true;
+                break;
+            case TextClient.ShowNormal:
+                if (SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.None)) queueSelfForDelete = true;
+                break;
+            case TextClient.ShowTrap:
+                if (SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Trap)) queueSelfForDelete = true;
+                break;
+            case TextClient.ShowOnlyYou:
+                if (SaveType<bool>.Load(saveId, false) && !SlotView.ContainsSlot(FinderName)
+                                                       && !SlotView.ContainsSlot(ReceiverName))
+                    queueSelfForDelete = true;
+                break;
+            case SaveIdDifferentPerson or SaveIdSamePerson: return true;
+        }
+
+        return false;
     }
 }

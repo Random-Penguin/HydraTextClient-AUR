@@ -20,12 +20,13 @@ public abstract partial class MessageScene : PanelContainer
 
     public abstract void SetPacket(IMessagePacket packetBase);
     public abstract void Reload();
-    public abstract bool CanReload(string saveId);
+    public abstract bool CanReload(string saveId, out bool queueSelfForDelete);
 
     public override void _Ready() => SetupMessage(false);
 
-    public void ReloadUi(string saveId)
+    public void ReloadUi(string saveId, out bool queueSelfForDelete)
     {
+        queueSelfForDelete = false;
         if (ConnectionController.CurrentMultiworld != MultiWorld) return;
         if (!ConnectionController.HasLeaderClient) return;
         
@@ -35,7 +36,7 @@ public abstract partial class MessageScene : PanelContainer
             return;
         }
 
-        if (!CanReload(saveId)) return;
+        if (!CanReload(saveId, out queueSelfForDelete)) return;
         CallReload();
     }
 

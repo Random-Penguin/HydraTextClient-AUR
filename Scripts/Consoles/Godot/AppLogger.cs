@@ -12,7 +12,7 @@ namespace HydraTextClient.Scripts.Consoles.Godot;
 public partial class AppLogger(LoggerLabel label) : Logger
 {
     private LoggerLabel _Label = label;
-    private LimitedQueue<string> _Messages = new((int)SaveType<double>.Load(ChildLimiter.QueueSaveId, 200));
+    private LimitedCollection<string> _Messages = new((int)SaveType<double>.Load(ChildLimiter.QueueSaveId, 200));
     private const string BLOCK = "          ";
 
     public override void _LogError(string function, string file, int line, string code, string rationale,
@@ -46,6 +46,6 @@ public partial class AppLogger(LoggerLabel label) : Logger
         _Label.RefreshUI = true;
     }
 
-    public string[] Messages => _Messages.GetQueue.ToArray();
+    public string[] Messages => _Messages.GetCollection;
     public void SetSize(int size) => _Messages.SetLimit(size);
 }

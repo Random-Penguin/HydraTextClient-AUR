@@ -8,11 +8,11 @@ namespace HydraTextClient.Scripts.Utility.UIHelpers;
 public partial class ChildLimiter : VBoxContainer
 {
     public const string QueueSaveId = "Main/QueueHistory";
-    private LimitedQueue<Control> Limiter;
+    private LimitedCollection<Control> Limiter;
 
     public override void _Ready()
     {
-        Limiter = new LimitedQueue<Control>((int)SaveType<double>.Load(QueueSaveId, 200));
+        Limiter = new LimitedCollection<Control>((int)SaveType<double>.Load(QueueSaveId, 200));
         SaveType<double>.OnSaveEvent += (s, d) =>
         {
             if (s is not QueueSaveId) return;
@@ -26,6 +26,7 @@ public partial class ChildLimiter : VBoxContainer
         CallDeferred("AddTheChild", child);
     }
 
+    public void RemoveFromLimiter(Control child) => Limiter.Remove(child, c => CallDeferred("RemoveTheChild", c));
     public void AddTheChild(Control child) => AddChild(child);
     public void RemoveTheChild(Control child) => RemoveChild(child);
     public void ForEach(Action<Control> action) => Limiter.ForEach(action);

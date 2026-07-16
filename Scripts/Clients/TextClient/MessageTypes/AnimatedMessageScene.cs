@@ -29,8 +29,9 @@ public abstract partial class AnimatedMessageScene : MessageScene
 
     public void RunBounceAnimation() => RunAnimation = true;
     
-    public override bool CanReload(string saveId)
+    public override bool CanReload(string saveId, out bool queueSelfForDelete)
     {
+        queueSelfForDelete = false;
         if (saveId is PlayerConnect) return true;
         if (IdToConstant.ContainsKey(saveId)) return true;
         return false;

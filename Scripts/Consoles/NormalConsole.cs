@@ -10,7 +10,7 @@ namespace HydraTextClient.Scripts.Consoles;
 
 public partial class NormalConsole : RichTextLabel
 {
-    private LimitedQueue<string> Messages = new((int)SaveType<double>.Load(ChildLimiter.QueueSaveId, 200));
+    private LimitedCollection<string> Messages = new((int)SaveType<double>.Load(ChildLimiter.QueueSaveId, 200));
     private const string BLOCK = "          ";
 
     public override void _Ready()
@@ -27,7 +27,7 @@ public partial class NormalConsole : RichTextLabel
     private void AddLine(string text)
     {
         Messages.Add(text);
-        Text = string.Join("\n", Messages.GetQueue);
+        Text = string.Join("\n", Messages.GetCollection);
     }
 
     public void WriteLine(string message, bool error = false)

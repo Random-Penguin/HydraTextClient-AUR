@@ -1,10 +1,12 @@
 using System.Collections.Concurrent;
 using Archipelago.MultiClient.Net;
+using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
 using Godot;
 using Godot.Collections;
 using HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
+using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Settings.ItemFilter;
@@ -18,6 +20,12 @@ namespace HydraTextClient.Scripts.Clients.TextClient;
 public partial class TextClient : Control
 {
     public const string FontSizeId = "TextClient/FontSize";
+    public const string ShowProgressive = "TextClient/show_progressive";
+    public const string ShowUseful = "TextClient/show_useful";
+    public const string ShowNormal = "TextClient/show_normal";
+    public const string ShowTrap = "TextClient/show_trap";
+    public const string ShowOnlyYou = "TextClient/show_only_you";
+    public const string ShowFoundHints = "TextClient/show_found_hints";
     [Export] private Dictionary<MessageType, ChildLimiter> Containers = [];
     [Export] private Dictionary<MessageType, PackedScene> MessageScenes = [];
     [Export] private Array<ScrollFix> ScrollFixes = [];
@@ -88,14 +96,14 @@ public partial class TextClient : Control
                     ).AddSeparator()
                    .AddLineEdit("Item Text", ItemEffect.SaveId, true, ItemEffect.Default)
                    .AddText("Item Log Filter Options\n(Deletes Item Log Messages)", 1)
-                   .AddCheckBox("Show Progressive Items", "TextClient/show_progressive", true, 1)
-                   .AddCheckBox("Show Useful Items", "TextClient/show_useful", true, 1)
-                   .AddCheckBox("Show Useful Items", "TextClient/show_normal", true, 1)
-                   .AddCheckBox("Show Trap Items", "TextClient/show_trap", true, 1)
-                   .AddCheckBox("Show Only Related to You", "TextClient/show_only_you", true, 1)
+                   .AddCheckBox("Show Progressive Items", ShowProgressive, true, 1)
+                   .AddCheckBox("Show Useful Items", ShowUseful, true, 1)
+                   .AddCheckBox("Show Normal Items", ShowNormal, true, 1)
+                   .AddCheckBox("Show Trap Items", ShowTrap, true, 1)
+                   .AddCheckBox("Show Only Related to You", ShowOnlyYou, false, 1)
                    .AddSeparator(1)
                    .AddText("Hint Log Options", 1)
-                   .AddCheckBox("Show Found Hints", "TextClient/show_found_hints", true, 1);
+                   .AddCheckBox("Show Found Hints", ShowFoundHints, true, 1);
             }
         );
 
@@ -123,7 +131,19 @@ public partial class TextClient : Control
             && messagePacket.GetPacket() is ItemPrintJsonPacket itemPacket)
         {
             if (SaveType<FilterType>.TryGet(itemPacket.UID, out var filter) && !filter.ShowInItemLog) return;
+            if (itemPacket.Item.Flags.HasFlag(ItemFlags.Advancement) && !SaveType<bool>.Load(ShowProgressive, true)) return;
+            if (itemPacket.Item.Flags.HasFlag(ItemFlags.NeverExclude) && !SaveType<bool>.Load(ShowUseful, true)) return;
+            if (itemPacket.Item.Flags.HasFlag(ItemFlags.None) && !SaveType<bool>.Load(ShowNormal, true)) return;
+            if (itemPacket.Item.Flags.HasFlag(ItemFlags.Trap) && !SaveType<bool>.Load(ShowTrap, true)) return;
+            var leader = ConnectionController.LeaderClient;
+            var receiver = leader.PlayerNames[itemPacket.ReceivingPlayer];
+            var finder = leader.PlayerNames[itemPacket.FindingPlayer];
+            if (SaveType<bool>.Load(ShowOnlyYou, false) && !SlotView.ContainsSlot(receiver) && !SlotView.ContainsSlot(finder)) return;
+        }
 
+        if (messagePacket.GetMsgType() is MessageType.HintMessage && messagePacket.GetPacket() is HintPrintJsonPacket hintPacket)
+        {
+            if (!SaveType<bool>.Load(ShowFoundHints, true) && hintPacket.Found!.Value) return;
         }
 
         if (!MessageScenes.TryGetValue(messagePacket.GetMsgType(), out var scene)) return;
@@ -162,7 +182,8 @@ public partial class TextClient : Control
             container.ForEach(control =>
                 {
                     if (control is not MessageScene msg) return;
-                    msg.ReloadUi(id);
+                    msg.ReloadUi(id, out var deleteEntry);
+                    if (deleteEntry) container.RemoveTheChild(msg);
                 }
             );
     }

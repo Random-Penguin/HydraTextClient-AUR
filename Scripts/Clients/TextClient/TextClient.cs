@@ -102,6 +102,7 @@ public partial class TextClient : Control
         SaveType<HexColor>.OnSaveEvent += (id, _) => ReloadUi(id);
         SaveType<string>.OnSaveEvent += (id, _) => ReloadUi(id);
         SaveType<double>.OnSaveEvent += (id, _) => ReloadUi(id);
+        SaveType<bool>.OnSaveEvent += (id, _) => ReloadUi(id);
 
         ConnectionController.OnClientConnection += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);
         ConnectionController.OnClientRemoved += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);

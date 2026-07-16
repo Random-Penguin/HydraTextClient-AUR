@@ -3,13 +3,16 @@ using System.Linq;
 using CreepyUtil.Archipelago;
 using Godot;
 using Godot.Collections;
+using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.UIHelpers;
+using Logger = Godot.Logger;
 
 namespace HydraTextClient.Scripts.Consoles.Godot;
 
 public partial class AppLogger(LoggerLabel label) : Logger
 {
     private LoggerLabel _Label = label;
-    private LimitedQueue<string> _Messages = new(200);
+    private LimitedQueue<string> _Messages = new((int)SaveType<double>.Load(ChildLimiter.QueueSaveId, 200));
     private const string BLOCK = "          ";
 
     public override void _LogError(string function, string file, int line, string code, string rationale,
@@ -44,4 +47,5 @@ public partial class AppLogger(LoggerLabel label) : Logger
     }
 
     public string[] Messages => _Messages.GetQueue.ToArray();
+    public void SetSize(int size) => _Messages.SetLimit(size);
 }

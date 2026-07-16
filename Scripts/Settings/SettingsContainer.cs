@@ -49,20 +49,20 @@ public partial class SettingsContainer : HSplitContainer
             GD.PushWarning($"Save Id [{saveId}] has no color constant");
             return this;
         }
-        
+
         ColorPickerButton colorPicker = new();
         colorPicker.Text = "Color Picker Setting";
         extraConfig?.Invoke(colorPicker);
-        
+
         colorPicker.Color = colorConstant.Color();
         colorPicker.PopupClosed += () => colorConstant.Save(colorPicker.Color);
-        
+
         SaveType<HexColor>.OnSaveEvent += (id, color) =>
         {
             if (id != ColorIdConstants.ConstantToId[colorConstant]) return;
             colorPicker.Color = color;
         };
-        
+
         this[col].AddChild(CreateBoxWithLabel(colorPicker, text, true));
         return this;
     }
@@ -86,6 +86,7 @@ public partial class SettingsContainer : HSplitContainer
         Action<SpinBox>? extraConfig = null)
     {
         SpinBox box = new();
+        box.AllowGreater = true;
         extraConfig?.Invoke(box);
         Saver.BuildSavable(box, saveId, def);
         this[col].AddChild(CreateBoxWithLabel(box, text, true));

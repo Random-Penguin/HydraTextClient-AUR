@@ -1,16 +1,24 @@
 using System;
 using CreepyUtil.Archipelago;
 using Godot;
+using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
 public partial class ChildLimiter : VBoxContainer
 {
-    [Export] private int Limit = 200;
-
+    public const string QueueSaveId = "Main/QueueHistory";
     private LimitedQueue<Control> Limiter;
 
-    public override void _Ready() => Limiter = new LimitedQueue<Control>(Limit);
+    public override void _Ready()
+    {
+        Limiter = new LimitedQueue<Control>((int)SaveType<double>.Load(QueueSaveId, 200));
+        SaveType<double>.OnSaveEvent += (s, d) =>
+        {
+            if (s is not QueueSaveId) return;
+            Limiter.SetLimit(Math.Max((int)d, 50));
+        };
+    }
 
     public void AddToLimiter(Control child)
     {

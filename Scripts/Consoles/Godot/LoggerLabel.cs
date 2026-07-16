@@ -1,4 +1,6 @@
 using Godot;
+using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Consoles.Godot;
 
@@ -11,6 +13,11 @@ public partial class LoggerLabel :RichTextLabel
     {
         Logger = new AppLogger(this);
         Logger._LogMessage("Logger Init", false);
+        SaveType<double>.OnSaveEvent += (s, d) =>
+        {
+            if (s is not ChildLimiter.QueueSaveId) return;
+            Logger.SetSize((int)d);
+        };
     }
 
     public override void _Process(double delta)

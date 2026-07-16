@@ -161,7 +161,10 @@ metadata/_tab_index = 6
 
 [node name="Godot" type="RichTextLabel" parent="Main Container/Consoles" unique_id=92993292]
 layout_mode = 2
+focus_mode = 2
 bbcode_enabled = true
+autowrap_mode = 0
+selection_enabled = true
 script = ExtResource("18_y7llr")
 metadata/_tab_index = 0
 

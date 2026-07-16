@@ -6,6 +6,7 @@ using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 using static HydraTextClient.Scripts.Controllers.MainController;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
@@ -31,6 +32,8 @@ public static class GlobalThemeSettings
         SettingsCreator.Tab(
             "Theme",
             tab => tab
+                  .AddSpinBox("Message History Limit", ChildLimiter.QueueSaveId, 200d, 1)
+                  .AddSeparator(1)
                   .AddCheckBox("Always on top", AlwaysOnTop, false, 1, b => b.Toggled += SetAlwaysOnTop)
                   .AddCheckBox("Show new Items on Connect", DisplayNewItemsPopup, true, 1)
                   .AddSeparator(1)
@@ -64,7 +67,7 @@ public static class GlobalThemeSettings
                   .AddButton("SteamGridDB.com", () => OS.ShellOpen("https://www.steamgriddb.com/"), 2)
                   .AddButton("IDGB.com", () => OS.ShellOpen("https://www.igdb.com/"), 2)
                   .AddBrowseFile(
-                       "Set Background Image", FileDialog.FileModeEnum.OpenFile, ["*.png", "*.jpeg"], col: 1,
+                       "Set Background Image", FileDialog.FileModeEnum.OpenFile, ["*.png", "*.jpg"], col: 1,
                        extraConfig: (button, dialog) =>
                        {
                            button.Pressed += () =>

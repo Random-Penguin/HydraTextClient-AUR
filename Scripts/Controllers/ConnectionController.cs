@@ -7,6 +7,7 @@ using CreepyUtil.Archipelago;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Connection.Slots;
+using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -37,6 +38,7 @@ public partial class ConnectionController : Control
     public static event Action<string, ApClient, bool>? OnClientRemoved;
     public static event Action? OnFullDisconnection;
     public static event Action<string, int, int>? OnCheckCountUpdated;
+    public static event Action? DataClearCall;
 
     /// <summary>
     /// old leader, new leader
@@ -150,7 +152,9 @@ public partial class ConnectionController : Control
         var client = NamedClients[name];
         RemoveClient(name);
         client.TryDisconnect();
-        if (Clients.Count == 0) OnFullDisconnection?.Invoke();
+        if (Clients.Count != 0) return;
+        OnFullDisconnection?.Invoke();
+        if (SaveType<bool>.Load(GlobalThemeSettings.ClearDataOnFullDisconnect, true)) DataClearCall?.Invoke();
     }
 
     private void RemoveClient(string name)

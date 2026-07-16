@@ -114,6 +114,7 @@ public partial class TextClient : Control
 
         ConnectionController.OnClientConnection += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);
         ConnectionController.OnClientRemoved += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);
+        ConnectionController.DataClearCall += () => CallDeferred("RemoveMessages");
     }
 
     public override void _Process(double delta)
@@ -186,6 +187,11 @@ public partial class TextClient : Control
                     if (deleteEntry) container.RemoveTheChild(msg);
                 }
             );
+    }
+
+    public void RemoveMessages()
+    {
+        foreach (var container in UniqueLimiters) container.EmptyLimiter();
     }
 }
 

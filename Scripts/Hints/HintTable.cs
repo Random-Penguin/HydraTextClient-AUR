@@ -93,6 +93,12 @@ public partial class HintTable : TextTable
             QueueUiRefresh(true);
         };
 
+        ConnectionController.DataClearCall += () =>
+        {
+            SortedHints = [];
+            CallDeferred("clear");
+        };
+
         SaveType<bool>.OnSaveEvent += (key, _) =>
         {
             if (!key.StartsWith("hint_table/show_")) return;

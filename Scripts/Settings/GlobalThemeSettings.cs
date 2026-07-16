@@ -18,6 +18,7 @@ public static class GlobalThemeSettings
     public const string ApDir = "Main/ArchipelagoFolder";
     public const string AlwaysOnTop = "Main/AlwaysOnTop";
     public const string DisplayNewItemsPopup = "Main/NewItemsPopupDisplay";
+    public const string ClearDataOnFullDisconnect = "Main/NewItemsPopupDisplay";
 
     public static void Init()
     {
@@ -32,6 +33,7 @@ public static class GlobalThemeSettings
         SettingsCreator.Tab(
             "Theme",
             tab => tab
+                  .AddCheckBox("Clear UI on Full Disconnection", ClearDataOnFullDisconnect, true, 1)
                   .AddSpinBox("Message History Limit", ChildLimiter.QueueSaveId, 200d, 1)
                   .AddSeparator(1)
                   .AddCheckBox("Always on top", AlwaysOnTop, false, 1, b => b.Toggled += SetAlwaysOnTop)

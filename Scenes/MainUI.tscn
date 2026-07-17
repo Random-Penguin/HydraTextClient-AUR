@@ -16,6 +16,7 @@
 [ext_resource type="Script" uid="uid://cruu5vtwkvyij" path="res://Scripts/Settings/SettingsCreator.cs" id="11_uq7wj"]
 [ext_resource type="PackedScene" uid="uid://bvm64478byib1" path="res://Scenes/Hints/hints.tscn" id="11_wplvb"]
 [ext_resource type="PackedScene" uid="uid://cthu6oe5kiqrr" path="res://Scenes/PlayerList/PlayerList.tscn" id="12_w1qgd"]
+[ext_resource type="PackedScene" uid="uid://bk22whgaywg21" path="res://Scenes/Clients/CircleTracker/CircleTracker.tscn" id="13_ncyvy"]
 [ext_resource type="PackedScene" uid="uid://ddrns4ebu48n3" path="res://Scenes/Utilities/utilities.tscn" id="14_i5ty2"]
 [ext_resource type="PackedScene" uid="uid://c42p18np8uupv" path="res://Scenes/Credits/credits.tscn" id="17_d5x8p"]
 [ext_resource type="Script" uid="uid://cnoe8nx10kvwi" path="res://Scripts/Controllers/ConsoleController.cs" id="17_es56x"]
@@ -50,7 +51,7 @@ script = ExtResource("1_8dqd8")
 ErrorWindow = ExtResource("8_uwgue")
 ItemFilterWindow = ExtResource("4_p6tld")
 ItemFilterDisplay = ExtResource("5_dc4qw")
-GDLogger = NodePath("Main Container/Consoles/Godot")
+GDLogger = NodePath("Main Container/Consoles/Godot/Godot")
 BackgroundImage = NodePath("BackgroundImage")
 Porter = NodePath("Port Settings")
 
@@ -104,10 +105,11 @@ metadata/_tab_index = 1
 [node name="Clients" type="TabContainer" parent="Main Container" unique_id=1143605094]
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 0
+current_tab = 1
 metadata/_tab_index = 1
 
 [node name="Text Client" parent="Main Container/Clients" unique_id=763075218 node_paths=PackedStringArray("Containers") instance=ExtResource("2_3ngb3")]
+visible = false
 layout_mode = 2
 Containers = {
 0: NodePath("TabContainer/All/AllScroll/MarginContainer/AllLimiter"),
@@ -125,6 +127,10 @@ Containers = {
 12: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
 }
 metadata/_tab_index = 0
+
+[node name="Circle Tracker" parent="Main Container/Clients" unique_id=1192745647 instance=ExtResource("13_ncyvy")]
+layout_mode = 2
+metadata/_tab_index = 1
 
 [node name="Hints" parent="Main Container" unique_id=664656044 instance=ExtResource("11_wplvb")]
 visible = false
@@ -160,14 +166,18 @@ script = ExtResource("17_es56x")
 NormalConsoleLabel = ExtResource("18_t8puo")
 metadata/_tab_index = 6
 
-[node name="Godot" type="RichTextLabel" parent="Main Container/Consoles" unique_id=92993292]
+[node name="Godot" type="ScrollContainer" parent="Main Container/Consoles" unique_id=1206962502]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Godot" type="RichTextLabel" parent="Main Container/Consoles/Godot" unique_id=92993292]
 layout_mode = 2
 focus_mode = 2
 bbcode_enabled = true
+fit_content = true
 autowrap_mode = 0
 selection_enabled = true
 script = ExtResource("18_y7llr")
-metadata/_tab_index = 0
 
 [node name="Credits" parent="Main Container" unique_id=386809006 instance=ExtResource("17_d5x8p")]
 visible = false

@@ -40,7 +40,7 @@ public partial class NormalConsole : RichTextLabel
         sb.Append(GetTimestamp()).Append("[color=").Append(error ? "red" : "white").Append(']').Append(split[0]);
         if (split.Length > 1) sb.Append('\n').Append(BLOCK).Append(string.Join($"\n{BLOCK}", split.Skip(1)));
 
-        AddLine(sb.ToString());
+        CallDeferred("AddLine", sb.ToString());
     }
 
     public void WriteError(Exception err) => WriteLine($"{err.Message}\n{err.StackTrace}", true);

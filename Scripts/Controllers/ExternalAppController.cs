@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Godot;
 
 namespace HydraTextClient.Scripts.Controllers;
 
@@ -21,7 +22,7 @@ public static class ExternalAppController
 
         if (!entry.FileExists()) return 404;
         if (fileHash is not "" && !entry.MatchHash(fileHash)) return -1;
-        
+
         TaskProcesses[appId] = Task.Run(async () =>
             {
                 try
@@ -66,12 +67,15 @@ public static class ExternalAppController
 
     public static void EndProcess(int appId)
     {
-        if (!Processes.ContainsKey(appId)) return;
-        Processes.Remove(appId, out var process);
-        process?.Kill();
-        process?.WaitForExit();
-        process?.Dispose();
-        TaskProcesses.Remove(appId);
+        try
+        {
+            if (!Processes.ContainsKey(appId)) return;
+            Processes.Remove(appId, out var process);
+            process?.Kill();
+            process?.Dispose();
+            TaskProcesses.Remove(appId);
+        }
+        catch (Exception e) { GD.PrintErr(e); }
     }
 
     public static string GetFileSha(string file)
@@ -89,7 +93,7 @@ public abstract class CoreAppEntry
     public virtual string Arguments { get; }
     public virtual string ShortName { get; }
     public virtual string Hash { get; }
-    
+
     protected CoreAppEntry(string exe, string args)
     {
         var fileToRun = exe.Replace(@"\\", "/");
@@ -103,10 +107,11 @@ public abstract class CoreAppEntry
             else if (File.Exists($"{exe}.sh")) fileToRun += ".sh";
             else fileToRun = "";
         }
-        
+
         Executable = fileToRun;
         Arguments = args;
-        ShortName = fileToRun.Split('/')[^1][..exe.LastIndexOf('.')];
+        var fileEnd = fileToRun.Split('/')[^1];
+        ShortName = fileToRun.Contains('.') ? fileEnd[..fileEnd.LastIndexOf('.')] : fileEnd;
         Hash = fileToRun is "" ? "" : ExternalAppController.GetFileSha(fileToRun);
     }
 
@@ -114,11 +119,20 @@ public abstract class CoreAppEntry
 
     public bool FileExists() => !(Executable is "" || !File.Exists(Executable));
     public bool MatchHash(string fileHash) => Hash == fileHash;
+
     public void WriteError(string console, Exception error)
     {
         ConsoleController.WriteError(console, $"[{ShortName}] Threw an error:");
         ConsoleController.WriteError(console, error);
     }
+
+    public void WriteError(string console, string message, Exception error)
+    {
+
+        ConsoleController.WriteError(console, $"[{ShortName}]: {message}");
+        WriteError(console, error);
+    }
+
 
     public void WriteError(string console, string error)
         => ConsoleController.WriteError(console, $"[{ShortName}] {error}");

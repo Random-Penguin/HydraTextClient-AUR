@@ -83,42 +83,86 @@ layout_mode = 2
 
 [node name="_Dev" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=1788011648]
 layout_mode = 2
-text = "Developer"
+text = "Developers/Contributors"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Me" type="Button" parent="ScrollContainer/VBoxContainer" unique_id=370036904]
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer/VBoxContainer" unique_id=318582705]
 layout_mode = 2
-text = "SW_CreeperKing"
+columns = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=2136240150]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hydra Developer: "
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Me" type="Button" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=370036904]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " SW_CreeperKing "
 script = ExtResource("2_22rij")
 Link = "https://linktr.ee/swcreeperking"
 
-[node name="_____" type="HSeparator" parent="ScrollContainer/VBoxContainer" unique_id=1810715852]
+[node name="_RPC Dev" type="Label" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=723952473]
 layout_mode = 2
-
-[node name="_RPC Dev" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=723952473]
-layout_mode = 2
-text = "Archipelago Rich Presence Developer"
-horizontal_alignment = 1
+text = " Archipelago Rich Presence Developer: "
+horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Serpent" type="Button" parent="ScrollContainer/VBoxContainer" unique_id=1039981938]
+[node name="Serpent" type="Button" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=1039981938]
 layout_mode = 2
-text = "Serpent"
+text = " Serpent "
 script = ExtResource("2_22rij")
 Link = "https://github.com/SerpentAI/Archipelago/releases"
 
-[node name="______" type="HSeparator" parent="ScrollContainer/VBoxContainer" unique_id=1152221656]
+[node name="Label2" type="Label" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=1510025182]
 layout_mode = 2
+text = "Custom Assets Developer: "
+horizontal_alignment = 2
 
-[node name="_Icon" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=259455173]
+[node name="kaito" type="Button" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=1141233851]
 layout_mode = 2
-text = "Archipelago Rich Presence Developer"
-horizontal_alignment = 1
+text = " Kaito Kid "
+script = ExtResource("2_22rij")
+Link = "https://ko-fi.com/kaitokidsvap"
+
+[node name="Label3" type="Label" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=643634109]
+layout_mode = 2
+text = "Universal Tracker Developer: "
+horizontal_alignment = 2
+
+[node name="faris" type="Button" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=938491524]
+layout_mode = 2
+text = " Faris "
+script = ExtResource("2_22rij")
+Link = "https://github.com/FarisTheAncient"
+
+[node name="_Icon" type="Label" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=259455173]
+layout_mode = 2
+text = "Icon Artist: "
+horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Raphael" type="Button" parent="ScrollContainer/VBoxContainer" unique_id=677955555]
+[node name="Raphael" type="Button" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=677955555]
 layout_mode = 2
-text = "Raphael2512"
+text = "Raphael2512: "
 script = ExtResource("2_22rij")
 Link = "https://linktr.ee/raphael2512"
+
+[node name="_____2" type="HSeparator" parent="ScrollContainer/VBoxContainer" unique_id=246061870]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="_____" type="HSeparator" parent="ScrollContainer/VBoxContainer" unique_id=1866625397]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=1346246498]
+self_modulate = Color(1, 1, 1, 0.47843137)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "We stand here, on the shoulders of giants"
+horizontal_alignment = 1
+vertical_alignment = 2

@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://bs22waygy08wk"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_ot20o"]
+[ext_resource type="Script" uid="uid://2ge3tplrfw3o" path="res://Scripts/Clients/CircleTracker/TrackerPage.cs" id="2_hagme"]
+[ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="2_iqac5"]
+[ext_resource type="PackedScene" uid="uid://bqisbomfxfu6r" path="res://Scenes/Utility/Popout.tscn" id="3_iqac5"]
+[ext_resource type="Script" uid="uid://bvk0i3283dwhs" path="res://Scripts/Utility/UIHelpers/EmptyRichLabelInteractor.cs" id="5_3kkys"]
+
+[node name="MarginContainer" type="MarginContainer" unique_id=1147147692 node_paths=PackedStringArray("PopoutWindow", "Label")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ot20o")
+script = ExtResource("2_hagme")
+PopoutWindow = NodePath("VBoxContainer/Popout")
+Label = NodePath("VBoxContainer/Popout/ScrollContainer/RichTextLabel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2017699683]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=431311922]
+layout_mode = 2
+alignment = 1
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1563149877]
+layout_mode = 2
+text = "Stop and Close"
+script = ExtResource("2_iqac5")
+
+[node name="Popout" parent="VBoxContainer" unique_id=763240208 node_paths=PackedStringArray("Child") instance=ExtResource("3_iqac5")]
+layout_mode = 2
+Title = "Tracker"
+Child = NodePath("ScrollContainer")
+RestoreSize = false
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Popout" unique_id=29724702]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Popout/ScrollContainer" unique_id=1972510381]
+layout_mode = 2
+size_flags_horizontal = 3
+fit_content = true
+autowrap_mode = 0
+script = ExtResource("5_3kkys")
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="Stop"]

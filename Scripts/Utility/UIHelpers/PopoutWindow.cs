@@ -5,7 +5,7 @@ namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
 public partial class PopoutWindow : Control
 {
-	[Export] private string Title;
+	[Export] public string Title;
 	[Export] private Control Child;
 	[Export] private bool RestoreSize = true;
 	

@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://fopjjxgkvyiv" path="res://Assets/Images/UI/UnknownGame.png" id="3_77wv5"]
 [ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="5_77wv5"]
 
-[node name="Create" type="MarginContainer" unique_id=40431195 node_paths=PackedStringArray("SlotName", "WorldSlotName", "GameImages", "SlotCommands")]
+[node name="Create" type="MarginContainer" unique_id=40431195 node_paths=PackedStringArray("SlotName", "WorldSlotName", "WorldPassword", "GameImages", "SlotCommands")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,6 +17,7 @@ theme = ExtResource("1_osnw7")
 script = ExtResource("2_ty5pc")
 SlotName = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/SlotNameEdit")
 WorldSlotName = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/WorldSlotNameEdit")
+WorldPassword = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/WorldSlotPass")
 GameImages = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/HBoxContainer/OptionButton")
 SlotCommands = NodePath("ScrollContainer/VBoxContainer2/VBoxContainer/TerminalCommands/CodeEdit")
 UnknownImage = ExtResource("3_77wv5")
@@ -74,9 +75,9 @@ layout_mode = 2
 placeholder_text = "Multiworld Slot Name"
 max_length = 16
 
-[node name="WorldSlotNameEdit2" type="LineEdit" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=103036335]
+[node name="WorldSlotPass" type="LineEdit" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=103036335]
 layout_mode = 2
-placeholder_text = "Multiworld Password"
+placeholder_text = "Multiworld Slot Password"
 max_length = 16
 
 [node name="HSeparator4" type="HSeparator" parent="ScrollContainer/VBoxContainer2/VBoxContainer" unique_id=1765980038]

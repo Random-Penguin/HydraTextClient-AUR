@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://bk22whgaywg21"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_eba6t"]
+[ext_resource type="Script" uid="uid://cq5dyb02udqyw" path="res://Scripts/Clients/CircleTracker/CircleTracker.cs" id="2_f8gus"]
+[ext_resource type="PackedScene" uid="uid://bs22waygy08wk" path="res://Scenes/Clients/CircleTracker/TrackerScene.tscn" id="3_tlowc"]
+
+[node name="Circle Tracker" type="HSplitContainer" unique_id=27001913 node_paths=PackedStringArray("ButtonContainer", "PageContainer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_eba6t")
+split_offsets = PackedInt32Array(400)
+split_offset = 400
+script = ExtResource("2_f8gus")
+TrackerScene = ExtResource("3_tlowc")
+ButtonContainer = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Container")
+PageContainer = NodePath("Circle Tracker")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1979525920]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=486641468]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=490710814]
+custom_minimum_size = Vector2(0.03, 0.035)
+layout_mode = 2
+text = "Make sure to set the ap dir in the settings, and to have the HydraUTBridge.apworld installed"
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1096340705]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=1897496186]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=93159591]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Circle Tracker" type="TabContainer" parent="." unique_id=1192745647]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_eba6t")
+metadata/_tab_index = 1

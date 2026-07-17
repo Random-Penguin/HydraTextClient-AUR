@@ -19,16 +19,21 @@ public partial class ConsoleController : TabContainer
 			if (Consoles.ContainsKey(name)) return;
 			var cons = NormalConsoleLabel.Instantiate<NormalConsole>();
 			cons.Name = $"Slot {name}";
+			cons.FitContent = true;
 			Consoles[name] = cons;
 			GD.Print($"Added Console: [{name}]");
-			CallDeferred("add_child", cons);
+
+			ScrollContainer container = new();
+			container.Name = name;
+			container.CallDeferred("add_child", cons);
+			CallDeferred("add_child", container);
 			WriteLine(name, "Opened Console");
 		};
 
 		ConnectionController.OnClientRemoved += (name, _, _) =>
 		{
 			if (!Consoles.Remove(name, out var cons)) return;
-			CallDeferred("remove_child", cons);
+			CallDeferred("remove_child", cons.GetParent());
 		};
 	}
 	

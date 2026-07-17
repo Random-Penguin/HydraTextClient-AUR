@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,43 +9,29 @@ using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Clients.CircleTracker;
 
-public class HydraBridgeEntry : CoreAppEntry
+public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page)
+    : CoreAppEntry($"{apDir}/ArchipelagoLauncherDebug", "HydraUTBridge")
 {
-    private readonly ApClient Client;
-    private readonly TrackerPage Page;
-    private readonly long[] StartingItems;
-    public readonly ConcurrentQueue<long> ItemsReceived = [];
-
-    public HydraBridgeEntry(string apDir, ApClient client, TrackerPage page) : base(
-        $"{apDir}/ArchipelagoLauncherDebug", "HydraUTBridge"
-    )
-    {
-        Client = client;
-        Page = page;
-        StartingItems = client.ItemHandler.Items
-                              .TakeWhile(item => item.Player.Name is "Server" && item.LocationName is "Server")
-                              .Select(item => item.ItemId).ToArray();
-    }
+    public readonly ConcurrentQueue<(int, long[])> ItemsQueued = [];
 
     public override void Interactor(string text, StreamWriter input, string console)
     {
-        WriteLine(console, $"Command: [{text}]");
+        // WriteLine(console, $"Command: [{text}]");
 
         try
         {
             switch (text)
             {
-                case "slot_name": input.WriteLine(Client.PlayerName); break;
-                case "game": input.WriteLine(Client.PlayerGames[Client.PlayerSlot]); break;
-                case "slot_data": input.WriteLine(JsonConvert.SerializeObject(Client.SlotData)); break;
+                case "slot_name": input.WriteLine(client.PlayerName); break;
+                case "game": input.WriteLine(client.PlayerGames[client.PlayerSlot]); break;
+                case "slot_data": input.WriteLine(JsonConvert.SerializeObject(client.SlotData)); break;
                 case "missing_locations":
-                    input.WriteLine(string.Join(',', Client.MissingLocations.Select(s => Client.Locations[s]))); break;
-                case "circle": input.WriteLine("1"); break;
-                case "starting_items": input.WriteLine(string.Join(',', StartingItems)); break;
+                    input.WriteLine(string.Join(',', client.Locations.Select(kv => kv.Value))); break;
                 case "next":
-                    while (ItemsReceived.IsEmpty) Task.Delay(20).Wait();
-                    ItemsReceived.TryDequeue(out var nextItem);
-                    input.WriteLine(nextItem);
+                    while (ItemsQueued.IsEmpty) Task.Delay(20).Wait();
+                    ItemsQueued.TryDequeue(out var next);
+                    // WriteLine(console, $"Response: [{next.Item1}],[{string.Join(',', next.Item2)}]");
+                    input.WriteLine($"{next.Item1}|{string.Join(',', next.Item2)}");
                     break;
 
                 default:
@@ -57,15 +42,16 @@ public class HydraBridgeEntry : CoreAppEntry
                         MainController.ShowError(text);
                         return;
                     }
+
                     if (text.StartsWith("Circle "))
                     {
                         var split = text.Split('|');
                         var circle = int.Parse(split[0].Replace("Circle ", ""));
-                        var remaining = split[1][1..^1]; 
+                        var remaining = split[1][1..^1];
                         if (remaining.Trim().Length is 0) return;
                         var ids = remaining.Split(',').Select(id => ulong.Parse(id.Trim())).ToArray();
-                        Page.Circles.TryAdd(circle, ids);
-                        Page.QueueUpdate();
+                        page.Circles.TryAdd(circle, ids);
+                        page.QueueUpdate();
                     }
                     break;
             }

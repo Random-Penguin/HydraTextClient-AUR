@@ -142,8 +142,5 @@ public abstract class CoreAppEntry
 
 public class ReadOnlyEntry(string exe, string args) : CoreAppEntry(exe, args)
 {
-    public override void Interactor(string text, StreamWriter input, string console)
-    {
-        // nothing ever happens
-    }
+    public override void Interactor(string text, StreamWriter input, string console) => WriteLine(console, text);
 }

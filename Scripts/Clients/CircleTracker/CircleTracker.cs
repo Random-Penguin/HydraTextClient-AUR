@@ -12,6 +12,7 @@ namespace HydraTextClient.Scripts.Clients.CircleTracker;
 
 public partial class CircleTracker : Control
 {
+    private const string HydraUTBridgeFileHash = "33CDB4DCBDD50C01173D10B3986A712ED00A2E3478E97E3AB5C28B59EB1AA118";
     [Export] private PackedScene TrackerScene;
     [Export] private VBoxContainer ButtonContainer;
     [Export] private TabContainer PageContainer;
@@ -63,8 +64,15 @@ public partial class CircleTracker : Control
             return;
         }
 
-        if (!DoesApWorldExist(apDir, "HydraUTBridge")) return;
-        if (!DoesApWorldExist(apDir, "tracker")) return;
+        if (!DoesApWorldExist(apDir, "HydraUTBridge", out var bridgeLoc)) return;
+        
+        if (ExternalAppController.GetFileSha(bridgeLoc) != HydraUTBridgeFileHash)
+        {
+            MainController.ShowError("HydraUTBridge.apworld version is not compatible with the current Hydra version");
+            return;
+        }
+        
+        if (!DoesApWorldExist(apDir, "tracker", out _)) return;
 
         var page = TrackerScene.Instantiate<TrackerPage>();
         HydraBridgeEntry entry;
@@ -90,19 +98,26 @@ public partial class CircleTracker : Control
             if (Pages.Remove(name, out var node)) PageContainer.CallDeferred("remove_child", node);
             Buttons[name].Disabled = false;
         };
-        page.Setup(name, Clients[name], entry);
         Pages.Add(name, page);
         PageContainer.CallDeferred("add_child", page);
+        page.Setup(name, Clients[name], entry);
     }
 
-    public bool DoesApWorldExist(string apDir, string world)
+    public bool DoesApWorldExist(string apDir, string world, out string path)
     {
-        var worldInWorlds = File.Exists($"{apDir}/custom_worlds/{world}.apworld");
-        var worldInLibWorlds = File.Exists($"{apDir}/lib/worlds/{world}.apworld");
-        if (worldInLibWorlds ^ worldInWorlds) return true;
+        var custom = $"{apDir}/custom_worlds/{world}.apworld";
+        var lib = $"{apDir}/lib/worlds/{world}.apworld";
+        var worldInWorlds = File.Exists(custom);
+        var worldInLibWorlds = File.Exists(lib);
+        if (worldInLibWorlds ^ worldInWorlds)
+        {
+            path = worldInLibWorlds ? lib : custom;
+            return true;
+        }
         MainController.ShowError(
             worldInWorlds ? "Duplicate ApWorld in ./custom_worlds and ./lib/worlds" : $"ApWorld [{world}] not found"
         );
+        path = "";
         return false;
     }
 }

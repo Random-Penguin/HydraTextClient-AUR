@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_eba6t"]
 [ext_resource type="Script" uid="uid://cq5dyb02udqyw" path="res://Scripts/Clients/CircleTracker/CircleTracker.cs" id="2_f8gus"]
 [ext_resource type="PackedScene" uid="uid://bs22waygy08wk" path="res://Scenes/Clients/CircleTracker/TrackerScene.tscn" id="3_tlowc"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="4_3f2w5"]
 
 [node name="Circle Tracker" type="HSplitContainer" unique_id=27001913 node_paths=PackedStringArray("ButtonContainer", "PageContainer")]
 anchors_preset = 15
@@ -30,6 +31,11 @@ layout_mode = 2
 text = "Make sure to set the ap dir in the settings, and to have the HydraUTBridge.apworld installed"
 autowrap_mode = 3
 
+[node name="CheckBox" type="CheckBox" parent="MarginContainer/VBoxContainer" unique_id=638039399]
+layout_mode = 2
+button_pressed = true
+text = "Show Empty Circles"
+
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1096340705]
 layout_mode = 2
 
@@ -46,3 +52,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_eba6t")
 metadata/_tab_index = 1
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("4_3f2w5")]
+layout_mode = 2
+Prefix = "circle_tracker"
+Controls = {
+"show_empty": NodePath("../MarginContainer/VBoxContainer/CheckBox")
+}

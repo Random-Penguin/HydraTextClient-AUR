@@ -43,7 +43,6 @@ public partial class MainController : Control
         window.Size = SaveType<Vector2I>.Load($"{WindowSaveId}_size", window.Size);
         window.Position = SaveType<Vector2I>.Load($"{WindowSaveId}_pos", window.Position);
         window.SizeChanged += () => SaveType<Vector2I>.Save($"{WindowSaveId}_size", window.Size, true);
-        OnSave += () => SaveType<Vector2I>.Save($"{WindowSaveId}_pos", window.Position, true);
 
         var mainBackgroundBox = (StyleBoxFlat)GetThemeStylebox("panel");
         mainBackgroundBox.BgColor = ColorIdConstants.ColorConstant.UiBackground.Load();
@@ -90,6 +89,7 @@ public partial class MainController : Control
     public override void _Notification(int what)
     {
         if (what != NotificationWMCloseRequest) return;
+        SaveType<Vector2I>.Save($"{WindowSaveId}_pos", GetWindow().Position, true);
         Save();
     }
 

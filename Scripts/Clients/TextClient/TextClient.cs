@@ -1,7 +1,9 @@
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
+using CreepyUtil.Archipelago;
 using Godot;
 using Godot.Collections;
 using HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
@@ -26,18 +28,71 @@ public partial class TextClient : Control
     public const string ShowTrap = "TextClient/show_trap";
     public const string ShowOnlyYou = "TextClient/show_only_you";
     public const string ShowFoundHints = "TextClient/show_found_hints";
-    [Export] private Dictionary<MessageType, ChildLimiter> Containers = [];
-    [Export] private Dictionary<MessageType, PackedScene> MessageScenes = [];
+    [Export] private Godot.Collections.Dictionary<MessageType, ChildLimiter> Containers = [];
+    [Export] private Godot.Collections.Dictionary<MessageType, PackedScene> MessageScenes = [];
     [Export] private Array<ScrollFix> ScrollFixes = [];
     [Export] private Array<ChildLimiter> UniqueLimiters = [];
     [Export] private LineEdit SendMessageEdit;
     [Export] private EmotePicker EmotePicker;
+    private int ScrollBackNum;
+    private bool ToScroll;
+    private double MessageCooldown;
+    private long LastSelected;
+    private bool WasLastMessageHintLocation = false;
+    private string HeldText;
 
     private static ConcurrentQueue<IMessagePacket> MessageQueue = [];
+    private LimitedCollection<string> SentMessageHistory = new(50);
 
     public override void _Ready()
     {
         EmotePicker.EmotePicked += SendMessageEdit.AppendText;
+        SendMessageEdit.GuiInput += input =>
+        {
+            if (SentMessageHistory.Count() is 0 || input is InputEventMouseMotion) return;
+            switch (input)
+            {
+                case InputEventMouseButton iemb when GetRect().HasPoint(iemb.Position):
+                case InputEventJoypadMotion:
+                case InputEventJoypadButton: return;
+            }
+            
+            if (input is not InputEventKey key)
+            {
+                if (ScrollBackNum != -1) return;
+                SendMessageEdit.Text = "";
+                HeldText = "";
+                ScrollBackNum = -1;
+                return;
+            }
+
+            if (!key.IsPressed()) return;
+
+            if (ScrollBackNum == -1 && SendMessageEdit.Text != "" && SendMessageEdit.Text != HeldText)
+                HeldText = SendMessageEdit.Text;
+
+            switch (key.Keycode)
+            {
+                case Key.Up: ScrollBackNum--; break;
+                case Key.Down: ScrollBackNum++; break;
+                default: return;
+            }
+
+            if (ScrollBackNum == -2) ScrollBackNum = SentMessageHistory.Count() - 1;
+            else if (ScrollBackNum > SentMessageHistory.Count() - 1) ScrollBackNum = -1;
+
+            SendMessageEdit.Text = ScrollBackNum == -1 ? HeldText : SentMessageHistory[ScrollBackNum];
+        };
+
+        SendMessageEdit.FocusExited += () =>
+        {
+            if (ScrollBackNum == -1) return;
+            SendMessageEdit.Text = "";
+            HeldText = "";
+            ScrollBackNum = -1;
+        };
+
+        SendMessageEdit.FocusEntered += () => ScrollBackNum = SentMessageHistory.Count() - 1;
 
         ConnectionController.OnClientPrepareConnection += (_, client, _, _) =>
         {
@@ -132,17 +187,20 @@ public partial class TextClient : Control
             && messagePacket.GetPacket() is ItemPrintJsonPacket itemPacket)
         {
             if (SaveType<FilterType>.TryGet(itemPacket.UID, out var filter) && !filter.ShowInItemLog) return;
-            if (itemPacket.Item.Flags.HasFlag(ItemFlags.Advancement) && !SaveType<bool>.Load(ShowProgressive, true)) return;
+            if (itemPacket.Item.Flags.HasFlag(ItemFlags.Advancement)
+                && !SaveType<bool>.Load(ShowProgressive, true)) return;
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.NeverExclude) && !SaveType<bool>.Load(ShowUseful, true)) return;
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.None) && !SaveType<bool>.Load(ShowNormal, true)) return;
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.Trap) && !SaveType<bool>.Load(ShowTrap, true)) return;
             var leader = ConnectionController.LeaderClient;
             var receiver = leader.PlayerNames[itemPacket.ReceivingPlayer];
             var finder = leader.PlayerNames[itemPacket.FindingPlayer];
-            if (SaveType<bool>.Load(ShowOnlyYou, false) && !SlotView.ContainsSlot(receiver) && !SlotView.ContainsSlot(finder)) return;
+            if (SaveType<bool>.Load(ShowOnlyYou, false) && !SlotView.ContainsSlot(receiver)
+                                                        && !SlotView.ContainsSlot(finder)) return;
         }
 
-        if (messagePacket.GetMsgType() is MessageType.HintMessage && messagePacket.GetPacket() is HintPrintJsonPacket hintPacket)
+        if (messagePacket.GetMsgType() is MessageType.HintMessage
+            && messagePacket.GetPacket() is HintPrintJsonPacket hintPacket)
         {
             if (!SaveType<bool>.Load(ShowFoundHints, true) && hintPacket.Found!.Value) return;
         }
@@ -169,7 +227,15 @@ public partial class TextClient : Control
         Clear("", SendMessageEdit);
     }
 
-    public void SendMessage(string message) => ConnectionController.LeaderClient?.Say(message);
+    public void SendMessage(string message)
+    {
+        if (!ConnectionController.HasLeaderClient) return;
+        SentMessageHistory.Enqueue(message);
+        ConnectionController.LeaderClient?.Say(message);
+        HeldText = "";
+        ScrollBackNum = -1;
+    }
+
     public void Clear(string _, LineEdit edit) => edit.Clear();
 
     public void ScrollToBottom()

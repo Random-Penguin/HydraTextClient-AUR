@@ -88,7 +88,7 @@ public static class GlobalThemeSettings
                    )
                   .AddSeparator(1)
                   .AddBrowseFile(
-                       "Set Archipelago Folder", FileDialog.FileModeEnum.OpenFile, [], col: 1,
+                       "Set Archipelago Folder", FileDialog.FileModeEnum.OpenDir, [], col: 1,
                        extraConfig: (button, dialog) =>
                        {
                            button.Pressed += () =>

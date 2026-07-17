@@ -147,7 +147,7 @@ vertical_alignment = 1
 
 [node name="Raphael" type="Button" parent="ScrollContainer/VBoxContainer/GridContainer" unique_id=677955555]
 layout_mode = 2
-text = "Raphael2512: "
+text = " Raphael2512 "
 script = ExtResource("2_22rij")
 Link = "https://linktr.ee/raphael2512"
 

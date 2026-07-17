@@ -103,6 +103,7 @@ public abstract class CoreAppEntry
             else if (File.Exists($"{exe}.appimage")) fileToRun += ".appimage";
             else if (File.Exists($"{exe}.x86_64")) fileToRun += ".x86_64";
             else if (File.Exists($"{exe}.app")) fileToRun += ".app";
+            else if (File.Exists($"{exe}.arm64")) fileToRun += ".arm64";
             else if (File.Exists($"{exe}.bat")) fileToRun += ".bat";
             else if (File.Exists($"{exe}.sh")) fileToRun += ".sh";
             else fileToRun = "";

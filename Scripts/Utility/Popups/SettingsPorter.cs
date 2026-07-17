@@ -77,11 +77,11 @@ public partial class SettingsPorter : WindowSetter
         if (Other.ButtonPressed)
         {
             SaveType<List<SortObject>>.Save(HintTable.SortOrderSaveId, OldUserData.HintSortOrder, true);
-            SaveType<bool>.Save("show_found", OldUserData.HintOptions[0], true);
-            SaveType<bool>.Save("show_priority", OldUserData.HintOptions[1], true);
-            SaveType<bool>.Save("show_unspecified", OldUserData.HintOptions[2], true);
-            SaveType<bool>.Save("show_nopriority", OldUserData.HintOptions[3], true);
-            SaveType<bool>.Save("show_avoid", OldUserData.HintOptions[4], true);
+            SaveType<bool>.Save("hint_table/show_found", OldUserData.HintOptions[0], true);
+            SaveType<bool>.Save("hint_table/show_priority", OldUserData.HintOptions[1], true);
+            SaveType<bool>.Save("hint_table/show_unspecified", OldUserData.HintOptions[2], true);
+            SaveType<bool>.Save("hint_table/show_nopriority", OldUserData.HintOptions[3], true);
+            SaveType<bool>.Save("hint_table/show_avoid", OldUserData.HintOptions[4], true);
             SaveType<bool>.Save(TextClient.ShowProgressive, OldUserData.ItemLogOptions[0], true);
             SaveType<bool>.Save(TextClient.ShowUseful, OldUserData.ItemLogOptions[1], true);
             SaveType<bool>.Save(TextClient.ShowNormal, OldUserData.ItemLogOptions[2], true);

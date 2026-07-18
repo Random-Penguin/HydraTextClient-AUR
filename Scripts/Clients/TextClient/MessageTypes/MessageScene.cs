@@ -64,6 +64,6 @@ public abstract partial class MessageScene : PanelContainer
         if (@event is not InputEventMouseButton button) return;
         if (!button.Pressed) return;
         if (button.ButtonIndex is not MouseButton.Left) return;
-        DisplayServer.ClipboardSet(CopyText());
+        DisplayServer.ClipboardSet(CopyText().Replace("\\n", "\n"));
     }
 }

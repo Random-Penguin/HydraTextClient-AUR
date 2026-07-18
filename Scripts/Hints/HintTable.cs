@@ -280,7 +280,7 @@ public partial class HintTable : TextTable
                             ["receiver"] = PlayerEffect.PlayerName(hint.ReceivingPlayer, out _),
                             ["loc"] = hint.LocationName, ["entrance"] = hint.EntranceName, ["item"] = hint.ItemName,
                         }
-                    )
+                    ).Replace("\\n", "\n")
                 );
                 break;
         }

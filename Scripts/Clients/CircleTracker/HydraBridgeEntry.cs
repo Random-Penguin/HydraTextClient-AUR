@@ -51,7 +51,7 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page)
                     {
                         while (ItemsQueued.IsEmpty) Task.Delay(20).Wait();
                         ItemsQueued.TryDequeue(out var next);
-                        WriteLine(console, $"Requesting Data for circle [{next.Item1}] with [{next.Item2}] total items");
+                        WriteLine(console, $"Requesting Data for circle [{next.Item1}] with [{next.Item2.Length}] total items");
                         input.WriteLine($"{next.Item1}|{string.Join(',', next.Item2)}");
                         return;
                     }

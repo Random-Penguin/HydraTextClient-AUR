@@ -22,7 +22,7 @@ public partial class NormalConsole : RichTextLabel
         if (!Has)
         {
             SlotLogs.AutoFlush = true;
-            MainController.OnSave += () => SlotLogs.Close();
+            MainController.OnExit += () => SlotLogs.Close();
             Has = true;
         }
 
@@ -48,7 +48,7 @@ public partial class NormalConsole : RichTextLabel
         if (split.Length == 0) return;
 
         StringBuilder sb = new();
-        SlotLogs.WriteLine($"{GetTimestamp()} [{(error ? "ERROR" : "Info")}] [{Name}] {split[0]}");
+        SlotLogs.WriteLine($"{DateTime.Now:[HH:mm:ss]} [{(error ? "ERROR" : "Info")}] [{Name}] {split[0]}");
         sb.Append(GetTimestamp()).Append("[color=").Append(error ? "red" : "white").Append(']').Append(split[0]);
         if (split.Length > 1)
         {

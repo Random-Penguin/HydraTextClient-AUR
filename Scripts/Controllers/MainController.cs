@@ -31,6 +31,7 @@ public partial class MainController : Control
     public static Theme GlobalTheme;
 
     public static event Action? OnSave;
+    public static event Action? OnExit;
 
     public override void _EnterTree()
     {
@@ -91,6 +92,7 @@ public partial class MainController : Control
         if (what != NotificationWMCloseRequest) return;
         SaveType<Vector2I>.Save($"{WindowSaveId}_pos", GetWindow().Position, true);
         Save();
+        OnExit?.Invoke();
     }
 
     public void LoadBackgroundImage(string path)

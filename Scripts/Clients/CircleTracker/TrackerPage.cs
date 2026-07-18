@@ -43,7 +43,7 @@ public partial class TrackerPage : Control
         Name = name;
         PopoutWindow.Title = name;
         Entry = entry;
-        
+
         ProcessId = ExternalAppController.StartProcess(name, entry);
 
         OnStopCalled += () => ExternalAppController.EndProcess(ProcessId);
@@ -146,4 +146,6 @@ public partial class TrackerPage : Control
         if (CompileEffects is not null) return CompileEffects;
         return CompileEffects = MessageParser.CreateEffects(() => CallDeferred("UpdateData", false));
     }
+
+    public void Failure(string text) => Label.Text = $"[color=red]{text}[/color]";
 }

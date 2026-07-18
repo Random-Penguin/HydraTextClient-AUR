@@ -20,8 +20,13 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page)
         {
             switch (text)
             {
-                case "READY": WriteLine(console, "UT line of communication ready and established"); break; 
-                case "slot_name": input.WriteLine(client.PlayerName); break;
+                case "": break;
+                case "Player YAML not installed or Generator failed": page.CallDeferred("Failure", text); break;
+                case "READY": WriteLine(console, "UT line of communication ready and established"); break;
+                case "slot_name":
+                    WriteLine(console, $"Sending Slot Name: [{client.PlayerName}]");
+                    input.WriteLine(client.PlayerName);
+                    break;
                 case "game": input.WriteLine(client.PlayerGames[client.PlayerSlot]); break;
                 case "slot_data": input.WriteLine(JsonConvert.SerializeObject(client.SlotData)); break;
                 case "missing_locations":
@@ -51,11 +56,13 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page)
                     {
                         while (ItemsQueued.IsEmpty) Task.Delay(20).Wait();
                         ItemsQueued.TryDequeue(out var next);
-                        WriteLine(console, $"Requesting Data for circle [{next.Item1}] with [{next.Item2.Length}] total items");
+                        WriteLine(
+                            console, $"Requesting Data for circle [{next.Item1}] with [{next.Item2.Length}] total items"
+                        );
                         input.WriteLine($"{next.Item1}|{string.Join(',', next.Item2)}");
                         return;
                     }
-                    
+
                     WriteLine(console, $"Command: [{text}]");
                     break;
             }

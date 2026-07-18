@@ -122,6 +122,7 @@ public partial class MainController : Control
         }
         else ErrorDialog.AddText("\n\nExtra Error:\n");
         ErrorDialog.AddText(error);
+        GD.PrintErr(error);
     }
 
     public static void ShowItemFilter() => Singleton.CallDeferred("CreateItemFilterDialogue", (string[])["", "", "0"]);

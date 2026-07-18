@@ -24,7 +24,7 @@ public partial class ConsoleController : TabContainer
 			GD.Print($"Added Console: [{name}]");
 
 			ScrollContainer container = new();
-			container.Name = name;
+			container.Name = $"Slot {name}";
 			container.CallDeferred("add_child", cons);
 			CallDeferred("add_child", container);
 			WriteLine(name, "Opened Console");

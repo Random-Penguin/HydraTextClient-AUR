@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using CreepyUtil.Archipelago;
 using Godot;
+using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 
@@ -10,11 +12,23 @@ namespace HydraTextClient.Scripts.Consoles;
 
 public partial class NormalConsole : RichTextLabel
 {
+    private static StreamWriter SlotLogs = File.CreateText($"{Directories.MainDirectory}/SlotLogs.log");
+    private static bool Has = false;
     private LimitedCollection<string> Messages = new((int)SaveType<double>.Load(ChildLimiter.QueueSaveId, 200));
     private const string BLOCK = "          ";
 
     public override void _Ready()
     {
+        if (!Has)
+        {
+            MainController.OnSave += () =>
+            {
+                SlotLogs.Flush();
+                SlotLogs.Close();
+            };
+            Has = true;
+        }
+
         AutowrapMode = TextServer.AutowrapMode.Off;
         SelectionEnabled = true;
         SaveType<double>.OnSaveEvent += (s, d) =>
@@ -37,8 +51,13 @@ public partial class NormalConsole : RichTextLabel
         if (split.Length == 0) return;
 
         StringBuilder sb = new();
+        SlotLogs.WriteLine($"{GetTimestamp()} [{(error ? "ERROR" : "Info")}] [{Name}] {split[0]}");
         sb.Append(GetTimestamp()).Append("[color=").Append(error ? "red" : "white").Append(']').Append(split[0]);
-        if (split.Length > 1) sb.Append('\n').Append(BLOCK).Append(string.Join($"\n{BLOCK}", split.Skip(1)));
+        if (split.Length > 1)
+        {
+            sb.Append('\n').Append(BLOCK).Append(string.Join($"\n{BLOCK}", split.Skip(1)));
+            SlotLogs.WriteLine($"\n{BLOCK}{string.Join($"\n{BLOCK}", split.Skip(1))}");
+        }
 
         CallDeferred("AddLine", sb.ToString());
     }

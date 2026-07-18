@@ -19,13 +19,15 @@ public partial class AppLogger(LoggerLabel label) : Logger
         bool editorNotify, int errorType,
         Array<ScriptBacktrace> scriptBacktraces)
     {
-        _LogMessage($"""
-                     file [{file}] in func [{function}] on line [{line}], [{errorType}]
-                     |{code}|
-                     ={rationale}=
-                     STACK TRACE
-                     {string.Join("\n", scriptBacktraces.Select((s, i) => $"[{i}]: [{s.Format()}]"))}
-                     """, true);
+        _LogMessage(
+            $"""
+             file [{file}] in func [{function}] on line [{line}], [{errorType}]
+             |{code}|
+             ={rationale}=
+             STACK TRACE
+             {string.Join("\n", scriptBacktraces.Select((s, i) => $"[{i}]: [{s.Format()}]"))}
+             """, true
+        );
     }
 
     public override void _LogMessage(string message, bool error)
@@ -34,15 +36,18 @@ public partial class AppLogger(LoggerLabel label) : Logger
         var timeStamp = DateTime.Now.ToString("[HH:mm:ss]");
         var split = message.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         if (split.Length == 0) return;
+
+        _Label.LoggerWriter.WriteLine($"{timeStamp} [{(error ? "ERROR" : "Info")}] {split[0]}");
         var text = $"[color=darkgray]{timeStamp}[/color] [color={(error ? "red" : "white")}]{split[0]}";
 
         if (split.Length > 1)
         {
-            text += $"\n{BLOCK}{string.Join($"\n{BLOCK} ", split.Skip(1))}";
+            text += $"\n{BLOCK}{string.Join($"\n{BLOCK} ", split.Skip(1))}"; 
+            _Label.LoggerWriter.WriteLine($"\n{BLOCK}{string.Join($"\n{BLOCK} ", split.Skip(1))}");
         }
-        
+
         _Messages.Add($"{text}[/color]");
- 
+
         _Label.RefreshUI = true;
     }
 

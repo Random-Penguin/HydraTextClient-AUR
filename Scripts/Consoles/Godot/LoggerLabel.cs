@@ -1,4 +1,6 @@
+using System.IO;
 using Godot;
+using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 
@@ -8,9 +10,16 @@ public partial class LoggerLabel :RichTextLabel
 {
     [Export] public bool RefreshUI;
     public AppLogger Logger;
+    public StreamWriter LoggerWriter= File.CreateText($"{Directories.MainDirectory}/GodotLog.log");
 
     public void Init()
     {
+        MainController.OnSave += () =>
+        {
+            LoggerWriter.Flush();
+            LoggerWriter.Close();
+        };
+        
         Logger = new AppLogger(this);
         Logger._LogMessage("Logger Init", false);
         SaveType<double>.OnSaveEvent += (s, d) =>

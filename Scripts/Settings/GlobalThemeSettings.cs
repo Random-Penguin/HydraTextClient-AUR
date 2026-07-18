@@ -64,6 +64,11 @@ public static class GlobalThemeSettings
                    ).AddSeparator(2)
                   .AddButton("Open Emotes Directory", () => OS.ShellOpen(Directories.Emotes), 2)
                   .AddButton("Open Portrait Directory", () => OS.ShellOpen(Directories.GamePortraits), 2)
+                  .AddButton("Reload Emotes and Portraits", () =>
+                   {
+                       EmoteLoader.ReloadImages();
+                       GamePortraitLoader.ReloadImages();
+                   }, 2)
                   .AddSeparator(2)
                   .AddText("Sites to download portraits", 2)
                   .AddButton("SteamGridDB.com", () => OS.ShellOpen("https://www.steamgriddb.com/"), 2)

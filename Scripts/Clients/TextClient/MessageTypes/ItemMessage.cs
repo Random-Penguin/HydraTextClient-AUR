@@ -4,6 +4,7 @@ using Archipelago.MultiClient.Net.Packets;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
@@ -26,6 +27,7 @@ public partial class ItemMessage : MessageScene
     private int ReceiverSlot;
     public string ItemName;
     public string LocationName;
+    private FilterType ThisFilter;
 
     public override void SetPacket(IMessagePacket packetBase)
     {
@@ -39,6 +41,7 @@ public partial class ItemMessage : MessageScene
         ReceiverName = leader.PlayerNames[ReceiverSlot = item.ReceivingPlayer];
         ItemName = item.ItemName;
         LocationName = item.GetLocationName();
+        ThisFilter = new FilterType(item.ItemName, ItemName, Flags);
 
         CachedReplacement = new Dictionary<string, string>
         {
@@ -93,6 +96,12 @@ public partial class ItemMessage : MessageScene
             case SaveIdDifferentPerson or SaveIdSamePerson: return true;
         }
 
+        if (saveId == ThisFilter.UID && SaveType<FilterType>.TryGet(saveId, out var filter))
+        {
+            queueSelfForDelete = !filter.ShowInItemLog;
+            return true;
+        }
+        
         return false;
     }
 

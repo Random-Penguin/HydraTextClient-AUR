@@ -16,23 +16,16 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page)
 
     public override void Interactor(string text, StreamWriter input, string console)
     {
-        // WriteLine(console, $"Command: [{text}]");
-
         try
         {
             switch (text)
             {
+                case "READY": WriteLine(console, "UT line of communication ready and established"); break; 
                 case "slot_name": input.WriteLine(client.PlayerName); break;
                 case "game": input.WriteLine(client.PlayerGames[client.PlayerSlot]); break;
                 case "slot_data": input.WriteLine(JsonConvert.SerializeObject(client.SlotData)); break;
                 case "missing_locations":
                     input.WriteLine(string.Join(',', client.Locations.Select(kv => kv.Value))); break;
-                case "next":
-                    while (ItemsQueued.IsEmpty) Task.Delay(20).Wait();
-                    ItemsQueued.TryDequeue(out var next);
-                    // WriteLine(console, $"Response: [{next.Item1}],[{string.Join(',', next.Item2)}]");
-                    input.WriteLine($"{next.Item1}|{string.Join(',', next.Item2)}");
-                    break;
 
                 default:
                     if (text.StartsWith("exit")) return;
@@ -53,6 +46,17 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page)
                         page.Circles.TryAdd(circle, ids);
                         page.QueueUpdate();
                     }
+
+                    if (text.StartsWith("Circle ") || text is "start")
+                    {
+                        while (ItemsQueued.IsEmpty) Task.Delay(20).Wait();
+                        ItemsQueued.TryDequeue(out var next);
+                        WriteLine(console, $"Requesting Data for circle [{next.Item1}] with [{next.Item2}] total items");
+                        input.WriteLine($"{next.Item1}|{string.Join(',', next.Item2)}");
+                        return;
+                    }
+                    
+                    WriteLine(console, $"Command: [{text}]");
                     break;
             }
         }

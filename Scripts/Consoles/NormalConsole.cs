@@ -13,7 +13,7 @@ namespace HydraTextClient.Scripts.Consoles;
 public partial class NormalConsole : RichTextLabel
 {
     private static StreamWriter SlotLogs = File.CreateText($"{Directories.MainDirectory}/SlotLogs.log");
-    private static bool Has = false;
+    private static bool Has;
     private LimitedCollection<string> Messages = new((int)SaveType<double>.Load(ChildLimiter.QueueSaveId, 200));
     private const string BLOCK = "          ";
 
@@ -21,11 +21,8 @@ public partial class NormalConsole : RichTextLabel
     {
         if (!Has)
         {
-            MainController.OnSave += () =>
-            {
-                SlotLogs.Flush();
-                SlotLogs.Close();
-            };
+            SlotLogs.AutoFlush = true;
+            MainController.OnSave += () => SlotLogs.Close();
             Has = true;
         }
 

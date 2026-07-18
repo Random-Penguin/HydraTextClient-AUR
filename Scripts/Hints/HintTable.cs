@@ -70,10 +70,10 @@ public partial class HintTable : TextTable
             tab =>
             {
                 tab.AddLineEdit(
-                    "Copy Hint Text Format (Progressive Items)", GlobalCopyFormatProgressive, false,
+                    "Copy Hint Text Format (Progressive Items)", GlobalCopyFormatProgressive,
                     "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
                 ).AddLineEdit(
-                    "Copy Hint Text Format", GlobalCopyFormat, false,
+                    "Copy Hint Text Format", GlobalCopyFormat,
                     "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
                 );
             }

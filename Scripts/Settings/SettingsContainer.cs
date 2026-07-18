@@ -67,7 +67,7 @@ public partial class SettingsContainer : HSplitContainer
         return this;
     }
 
-    public SettingsContainer AddLineEdit(string text, string saveId, bool useInputSubmit = true, string def = "",
+    public SettingsContainer AddLineEdit(string text, string saveId, string def = "",
         int columnIndex = 0, Action<LineEdit>? extraConfig = null)
     {
         LineEdit edit = new();
@@ -75,8 +75,7 @@ public partial class SettingsContainer : HSplitContainer
         extraConfig?.Invoke(edit);
 
         edit.Text = SaveType<string>.Load(saveId, def);
-        if (useInputSubmit) edit.TextSubmitted += s => SaveType<string>.Save(saveId, s, true);
-        else edit.TextChanged += s => SaveType<string>.Save(saveId, s, true);
+        edit.TextChanged += s => SaveType<string>.Save(saveId, s, true);
 
         this[columnIndex].AddChild(CreateBoxWithLabel(edit, text, false));
         return this;

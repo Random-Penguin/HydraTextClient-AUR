@@ -67,7 +67,6 @@ Prefix = "MainMenuUI"
 Controls = {
 "ClientsTabContainer": NodePath("../Main Container/Clients"),
 "ConnectionsTabContainer": NodePath("../Main Container/Connection"),
-"MainTabsContainer": NodePath("../Main Container"),
 "SettingsTabContainer": NodePath("../Main Container/Settings")
 }
 
@@ -84,10 +83,9 @@ expand_mode = 2
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 4
+current_tab = 0
 
 [node name="Connection" type="TabContainer" parent="Main Container" unique_id=2072097402]
-visible = false
 layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 0
@@ -141,6 +139,7 @@ layout_mode = 2
 metadata/_tab_index = 3
 
 [node name="Players" parent="Main Container" unique_id=936307540 instance=ExtResource("12_w1qgd")]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 

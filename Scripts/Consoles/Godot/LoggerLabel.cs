@@ -14,8 +14,11 @@ public partial class LoggerLabel :RichTextLabel
 
     public void Init()
     {
-        LoggerWriter.AutoFlush = true;
-        MainController.OnExit += () => LoggerWriter.Close();
+        MainController.OnExit += () =>
+        {
+            LoggerWriter.Flush();
+            LoggerWriter.Close();
+        };
         Logger = new AppLogger(this);
         Logger._LogMessage("Logger Init", false);
         SaveType<double>.OnSaveEvent += (s, d) =>

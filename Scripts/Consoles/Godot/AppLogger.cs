@@ -45,6 +45,8 @@ public partial class AppLogger(LoggerLabel label) : Logger
             text += $"\n{BLOCK}{string.Join($"\n{BLOCK} ", split.Skip(1))}"; 
             _Label.LoggerWriter.WriteLine($"\n{BLOCK}{string.Join($"\n{BLOCK} ", split.Skip(1))}");
         }
+        
+        if (error) _Label.LoggerWriter.Flush();
 
         _Messages.Add($"{text}[/color]");
 

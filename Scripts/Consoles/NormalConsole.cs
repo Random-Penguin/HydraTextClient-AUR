@@ -21,8 +21,11 @@ public partial class NormalConsole : RichTextLabel
     {
         if (!Has)
         {
-            SlotLogs.AutoFlush = true;
-            MainController.OnExit += () => SlotLogs.Close();
+            MainController.OnExit += () =>
+            {
+                SlotLogs.Flush();
+                SlotLogs.Close();
+            };
             Has = true;
         }
 
@@ -56,7 +59,8 @@ public partial class NormalConsole : RichTextLabel
             sb.Append('\n').Append(BLOCK).Append(string.Join($"\n{BLOCK}", split.Skip(1)));
             SlotLogs.WriteLine($"\n{BLOCK}{string.Join($"\n{BLOCK}", split.Skip(1))}");
         }
-
+        if (error) SlotLogs.Flush();
+        
         CallDeferred("AddLine", sb.ToString());
     }
 

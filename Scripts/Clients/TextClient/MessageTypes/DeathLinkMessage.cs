@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
@@ -41,10 +42,10 @@ public partial class DeathLinkMessage : MessageScene
 
         if (PlayerSlot is not -1)
             PlayerSlot = leader.PlayerNames.Contains(Player) ? Array.IndexOf(leader.PlayerNames, Player) : -1;
-
+        
         CachedReplacement = new Dictionary<string, string>
         {
-            ["player"] = PlayerSlot is -1 ? $"[hint=?]{Player}[/hint]" : $"{{{{player;{PlayerSlot}}}}}",
+            ["player"] = PlayerSlot is -1 ? "Unknown Player" : $"{{{{player;{PlayerSlot}}}}}",
             ["groups"] = Groups = $"{string.Join(", ", dl.Groups.Select(g => $"DeathLink{g}").ToArray())}",
         };
 
@@ -53,7 +54,7 @@ public partial class DeathLinkMessage : MessageScene
             LastCause = LastCause.Contains(dl.Player) ? LastCause.Replace(dl.Player, "{{player}}")
                 : $"{{player}} {LastCause}";
 
-            CachedReplacement["cause"] = LastCause;
+            CachedReplacement["cause"] = LastCause.CompileSimpleText(CachedReplacement);
         }
 
         Reload();
@@ -90,13 +91,13 @@ public partial class DeathLinkMessage : MessageScene
         Dictionary<string, string> compile =
             new()
             {
-                ["groups"] = Groups, ["player"] = PlayerSlot is -1 ? $"[hint=?]{Player}[/hint]"
+                ["groups"] = Groups, ["player"] = PlayerSlot is -1 ? "Unknown Player"
                     : PlayerEffect.PlayerName(PlayerSlot, out _),
             };
 
         if (LastCause is null)
             compile["cause"] = SaveType<string>.Load(SaveIdUnknown, DefaultUnknown).CompileSimpleText(compile);
-        else compile["cause"] = LastCause;
+        else compile["cause"] = LastCause.CompileSimpleText(compile);
         return SaveType<string>.Load(SaveIdMessage, DefaultMessage).CompileSimpleText(compile);
     }
 }

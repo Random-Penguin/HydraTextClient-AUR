@@ -56,10 +56,10 @@ public partial class PlayerItem : PanelContainer
 
         CheckProgress.Visible = true;
 
-        ProgressTween?.Kill();
         if (Goaled)
         {
             if (LastCount == -2) return;
+            ProgressTween?.Kill();
             ProgressTween = CreateTween();
             ProgressTween.SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
             SetConnected(null);
@@ -74,6 +74,7 @@ public partial class PlayerItem : PanelContainer
 
         if (LastCount == count) return;
         LastCount = count;
+        ProgressTween?.Kill();
         ProgressTween = CreateTween();
         ProgressTween.SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
         var normalized = (double)count / max;

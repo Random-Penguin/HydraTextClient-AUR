@@ -115,7 +115,7 @@ public partial class MainController : Control
 
     public void CreateErrorDialogue(string error)
     {
-        if (ErrorDialog is null)
+        if (ErrorDialog is null || !IsInstanceValid(ErrorDialog) || ErrorDialog.IsQueuedForDeletion())
         {
             ErrorDialog = ErrorWindow.Instantiate<ErrorDialog>();
             AddChild(ErrorDialog);

@@ -140,6 +140,11 @@ public partial class HintTable : TextTable
                        }
                    )
                   .SelectMany(kv => kv.Value)
+                  .DistinctBy(hint => HashCode.Combine(
+                           hint.FindingPlayer, hint.LocationId, hint.ReceivingPlayer, hint.FindingPlayer, hint.Entrance,
+                           hint.ItemFlags
+                       )
+                   )
                   .Where(hint =>
                        {
                            var order1 = GetOrderSlot(hint.FindingPlayer);

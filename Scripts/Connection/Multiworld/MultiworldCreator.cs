@@ -1,12 +1,13 @@
 using Godot;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.Popups;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using static HydraTextClient.Scripts.Controllers.ConnectionController;
 
 namespace HydraTextClient.Scripts.Connection.Multiworld;
 
-public partial class MultiworldCreator : MarginContainer
+public partial class MultiworldCreator : WindowSetter
 {
     [Export] private MultiworldLabel TemporaryLabel;
     [Export] private Control LabelContainer;
@@ -30,6 +31,7 @@ public partial class MultiworldCreator : MarginContainer
         if (SaveType<MultiworldData>.ContainsKey(TemporaryLabel.MultiWorldName)) return;
         var def = new MultiworldData { WorldName = TemporaryLabel.MultiWorldName };
         SaveType<MultiworldData>.Save(def.WorldName, def, false);
+        CloseCalled += ClearData;
     }
 
     public MultiworldData GenDataFromFields()
@@ -72,6 +74,7 @@ public partial class MultiworldCreator : MarginContainer
         ListAdder.Clear();
         ListAdder.AddGroups(data.DeathLinkGroups);
         EditData = data;
+        Show();
     }
 
     public void ClearWorld(MultiworldLabel label)
@@ -84,14 +87,14 @@ public partial class MultiworldCreator : MarginContainer
     {
         if (CurrentMultiworld == label.MultiWorldName) SetWorld(TemporaryLabel);
         SaveType<MultiworldData>.Delete(label.MultiWorldName);
+        Close();
     }
 
-    public void SetAsTemp()
+    private void SetAsTemp()
     {
         var data = GenDataFromFields();
         data.WorldName = TemporaryLabel.MultiWorldName;
         SaveType<MultiworldData>.Save(TemporaryLabel.MultiWorldName, data, false);
-        ClearData();
     }
 
     public void AddMultiworld()
@@ -104,7 +107,7 @@ public partial class MultiworldCreator : MarginContainer
         }
 
         SaveType<MultiworldData>.Save(data.WorldName, GenDataFromFields(), true);
-        ClearData();
+        Close();
     }
 
     public void ClearData()

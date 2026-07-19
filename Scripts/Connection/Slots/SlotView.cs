@@ -22,6 +22,7 @@ public partial class SlotView : MarginContainer
     [Export] private Texture2D UnknownGame;
 
     [Signal] public delegate void EditPortraitEventHandler(string slotName);
+    [Signal] public delegate void AddNewPortraitEventHandler();
 
     private Dictionary<string, SlotPortrait> Portraits = [];
     private string[] OrderedSlots = [];
@@ -147,6 +148,7 @@ public partial class SlotView : MarginContainer
         return mw is not null && mw!.SlotNames.Values.Contains(name);
     }
 
+    public void CallAddNew() => EmitSignalAddNewPortrait();
     public static SlotPortrait Portrait(string name) => Singleton.Portraits[name];
     public static void SetPortraitStatus(string name, ConnectionStatus status) => Portrait(name).SetStatus(status);
 }

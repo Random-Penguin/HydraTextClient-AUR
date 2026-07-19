@@ -3,10 +3,11 @@ using Godot;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.Popups;
 
 namespace HydraTextClient.Scripts.Connection.Slots;
 
-public partial class CreateSlot : MarginContainer
+public partial class CreateSlot : WindowSetter
 {
     [ExportGroup("Internal")]
     [Export] private LineEdit SlotName;
@@ -21,6 +22,7 @@ public partial class CreateSlot : MarginContainer
         SetGameImages();
         GamePortraitLoader.OnReloadImages += SetGameImages;
         GameImages.GetPopup().AddThemeConstantOverride("icon_max_width", 14);
+        CloseCalled += Clear;
     }
 
     public SlotGameData GenSlotData() => new()
@@ -54,6 +56,7 @@ public partial class CreateSlot : MarginContainer
         }
         else GameImages.Selected = 0;
         SlotCommands.Text = string.Join('\n', data.ProcessCommands);
+        Show();
     }
     
     public void AddOverride()
@@ -63,13 +66,13 @@ public partial class CreateSlot : MarginContainer
         SaveType<SlotGameData>.Save(data.Name, data, true);
         ConnectionController.SetMultiworldName(data.Name, WorldSlotName.Text);
         ConnectionController.SetMultiworldPassword(data.Name, WorldPassword.Text);
-        Clear();
+        Close();
     }
 
     public void Delete()
     {
         SaveType<SlotGameData>.Delete(SlotName.Text);
-        Clear();
+        Close();
     }
 
     public void Clear()

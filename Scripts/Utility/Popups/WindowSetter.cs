@@ -11,6 +11,8 @@ public partial class WindowSetter : Window
     [Export] private bool OnTop = false;
     [Export] private bool ToQueueFree = true;
     [Export] private bool ClickAnywhereToClose = false;
+
+    [Signal] public delegate void CloseCalledEventHandler();
     
     public WindowSetter()
     {
@@ -32,6 +34,7 @@ public partial class WindowSetter : Window
     public void Close()
     {
         CallDeferred("hide");
+        EmitSignalCloseCalled();
         if (!ToQueueFree) return;
         GetParent().CallDeferred("remove_child", this);
         CallDeferred("queue_free");

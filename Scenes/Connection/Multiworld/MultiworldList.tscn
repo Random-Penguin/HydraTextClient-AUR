@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://b2nv20y6ao7hm"]
 
-[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_664we"]
 [ext_resource type="PackedScene" uid="uid://p6q3f7bnu8d7" path="res://Scenes/Connection/Multiworld/CreateMW.tscn" id="2_m1nwk"]
 [ext_resource type="PackedScene" uid="uid://cs3goc3qhi627" path="res://Scenes/Connection/Multiworld/MultiworldLabel.tscn" id="3_e5f7q"]
 [ext_resource type="Script" uid="uid://c8s11hmopycsm" path="res://Scripts/Connection/Multiworld/DonateShenanigans.cs" id="3_hspv7"]
@@ -8,51 +7,34 @@
 [ext_resource type="Script" uid="uid://cgimk2ddyngeh" path="res://Scripts/Connection/Multiworld/MwLabelContainer.cs" id="4_xy8cq"]
 [ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="5_pm80a"]
 
-[node name="Multiworlds" type="HSplitContainer" unique_id=410932317]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = ExtResource("1_664we")
-split_offsets = PackedInt32Array(400)
-split_offset = 400
-
-[node name="CreateMW" parent="." unique_id=1404091652 node_paths=PackedStringArray("TemporaryLabel", "LabelContainer", "CurrentMultiWorldLabel") instance=ExtResource("2_m1nwk")]
-layout_mode = 2
-TemporaryLabel = NodePath("../View/VBoxContainer/MultiworldLabel")
-LabelContainer = NodePath("../View/VBoxContainer/ScrollContainer/MWLabelContainer")
-CurrentMultiWorldLabel = NodePath("../View/VBoxContainer/CurrentWorld")
-
-[node name="View" type="MarginContainer" parent="." unique_id=868016302]
-layout_mode = 2
+[node name="View" type="MarginContainer" unique_id=868016302]
+offset_right = 1152.0
+offset_bottom = 648.0
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="View" unique_id=1373641790]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1373641790]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="View/VBoxContainer" unique_id=1608080352]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1608080352]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="View/VBoxContainer/HBoxContainer" unique_id=1462473622]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1462473622]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 12
 text = "Hydra Text Client v.0.6-beta.4"
 
-[node name="PanelContainer" type="PanelContainer" parent="View/VBoxContainer/HBoxContainer" unique_id=262171140]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer" unique_id=262171140]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="View/VBoxContainer/HBoxContainer/PanelContainer" unique_id=1386936215]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer/PanelContainer" unique_id=1386936215]
 layout_mode = 2
 theme_override_constants/margin_left = 3
 theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
 
-[node name="LinkButton" type="LinkButton" parent="View/VBoxContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1762520638]
+[node name="LinkButton" type="LinkButton" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1762520638]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Donate ❤️ :3c="
@@ -60,14 +42,19 @@ underline = 1
 uri = "https://www.patreon.com/c/SW_CreeperKing"
 script = ExtResource("3_hspv7")
 
-[node name="CurrentWorld" type="Label" parent="View/VBoxContainer" unique_id=767848215]
+[node name="CurrentWorld" type="Label" parent="VBoxContainer" unique_id=767848215]
 layout_mode = 2
 text = "Current Multiworld: Temporary Multiworld"
 
-[node name="HSeparator" type="HSeparator" parent="View/VBoxContainer" unique_id=1394140028]
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=995388583]
+layout_mode = 2
+text = "Add Multiworld"
+script = ExtResource("5_pm80a")
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1394140028]
 layout_mode = 2
 
-[node name="MultiworldLabel" type="PanelContainer" parent="View/VBoxContainer" unique_id=511647106 node_paths=PackedStringArray("Set", "Edit", "ClearCache", "WorldName")]
+[node name="MultiworldLabel" type="PanelContainer" parent="VBoxContainer" unique_id=511647106 node_paths=PackedStringArray("Set", "Edit", "ClearCache", "WorldName")]
 layout_mode = 2
 script = ExtResource("3_q5ci1")
 Set = NodePath("MarginContainer/HBoxContainer/Set")
@@ -75,54 +62,60 @@ Edit = NodePath("MarginContainer/HBoxContainer/Edit")
 ClearCache = NodePath("MarginContainer/HBoxContainer/ClearCache")
 WorldName = NodePath("MarginContainer/HBoxContainer/Label")
 
-[node name="MarginContainer" type="MarginContainer" parent="View/VBoxContainer/MultiworldLabel" unique_id=1271278699]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MultiworldLabel" unique_id=1271278699]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="View/VBoxContainer/MultiworldLabel/MarginContainer" unique_id=1409836876]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MultiworldLabel/MarginContainer" unique_id=1409836876]
 layout_mode = 2
 
-[node name="Set" type="Button" parent="View/VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer" unique_id=1082198779]
+[node name="Set" type="Button" parent="VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer" unique_id=1082198779]
 modulate = Color(0.3540313, 1, 0.482589, 1)
 layout_mode = 2
 text = "Set"
 script = ExtResource("5_pm80a")
 
-[node name="Edit" type="Button" parent="View/VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer" unique_id=753042446]
+[node name="Edit" type="Button" parent="VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer" unique_id=753042446]
 modulate = Color(0.91676694, 0.8532224, 0, 1)
 layout_mode = 2
 text = "Edit"
 script = ExtResource("5_pm80a")
 
-[node name="Label" type="Label" parent="View/VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer" unique_id=956388085]
+[node name="Label" type="Label" parent="VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer" unique_id=956388085]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Temporary Multiworld"
 horizontal_alignment = 1
 
-[node name="ClearCache" type="Button" parent="View/VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer" unique_id=191689506]
+[node name="ClearCache" type="Button" parent="VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer" unique_id=191689506]
 modulate = Color(0.9192285, 0.25766784, 0, 1)
 layout_mode = 2
 text = "Clear Cache"
 script = ExtResource("5_pm80a")
 
-[node name="HSeparator2" type="HSeparator" parent="View/VBoxContainer" unique_id=633945942]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=633945942]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="View/VBoxContainer" unique_id=898788332]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=898788332]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MWLabelContainer" type="VBoxContainer" parent="View/VBoxContainer/ScrollContainer" unique_id=382704273 node_paths=PackedStringArray("Creator")]
+[node name="MWLabelContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=382704273 node_paths=PackedStringArray("Creator")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_xy8cq")
-Creator = NodePath("../../../../CreateMW")
+Creator = NodePath("../../../CreateMW")
 DataLabel = ExtResource("3_e5f7q")
 
-[connection signal="ClearWorld" from="View/VBoxContainer/MultiworldLabel" to="CreateMW" method="ClearWorld" flags=18]
-[connection signal="EditWorld" from="View/VBoxContainer/MultiworldLabel" to="CreateMW" method="EditWorld" flags=18]
-[connection signal="SetWorld" from="View/VBoxContainer/MultiworldLabel" to="CreateMW" method="SetWorld" flags=18]
-[connection signal="pressed" from="View/VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer/Set" to="View/VBoxContainer/MultiworldLabel" method="EmitSetWorld"]
-[connection signal="pressed" from="View/VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer/Edit" to="View/VBoxContainer/MultiworldLabel" method="EmitEditWorld"]
-[connection signal="pressed" from="View/VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer/ClearCache" to="View/VBoxContainer/MultiworldLabel" method="EmitClearWorld"]
+[node name="CreateMW" parent="." unique_id=1404091652 node_paths=PackedStringArray("TemporaryLabel", "LabelContainer", "CurrentMultiWorldLabel") instance=ExtResource("2_m1nwk")]
+TemporaryLabel = NodePath("../VBoxContainer/MultiworldLabel")
+LabelContainer = NodePath("../VBoxContainer/ScrollContainer/MWLabelContainer")
+CurrentMultiWorldLabel = NodePath("../VBoxContainer/CurrentWorld")
+
+[connection signal="pressed" from="VBoxContainer/Button" to="CreateMW" method="show"]
+[connection signal="ClearWorld" from="VBoxContainer/MultiworldLabel" to="CreateMW" method="ClearWorld" flags=18]
+[connection signal="EditWorld" from="VBoxContainer/MultiworldLabel" to="CreateMW" method="EditWorld" flags=18]
+[connection signal="SetWorld" from="VBoxContainer/MultiworldLabel" to="CreateMW" method="SetWorld" flags=18]
+[connection signal="pressed" from="VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer/Set" to="VBoxContainer/MultiworldLabel" method="EmitSetWorld"]
+[connection signal="pressed" from="VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer/Edit" to="VBoxContainer/MultiworldLabel" method="EmitEditWorld"]
+[connection signal="pressed" from="VBoxContainer/MultiworldLabel/MarginContainer/HBoxContainer/ClearCache" to="VBoxContainer/MultiworldLabel" method="EmitClearWorld"]

@@ -84,7 +84,7 @@ expand_mode = 2
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 2
+current_tab = 4
 
 [node name="Connection" type="TabContainer" parent="Main Container" unique_id=2072097402]
 visible = false
@@ -132,6 +132,7 @@ layout_mode = 2
 metadata/_tab_index = 1
 
 [node name="Hints" parent="Main Container" unique_id=664656044 instance=ExtResource("11_wplvb")]
+visible = false
 layout_mode = 2
 
 [node name="Utilities" parent="Main Container" unique_id=1245487862 instance=ExtResource("14_i5ty2")]
@@ -140,7 +141,6 @@ layout_mode = 2
 metadata/_tab_index = 3
 
 [node name="Players" parent="Main Container" unique_id=936307540 instance=ExtResource("12_w1qgd")]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 

@@ -26,21 +26,23 @@ public partial class ClientMessage : AnimatedMessageScene
         GameName = leader.PlayerGames[packet.Slot];
         MessageText = packet.Message.Sanitize();
         Player = $"{{{{player;{PlayerSlot = packet.Slot}}}}}";
-        
+
         Reload();
         RunBounceAnimation();
     }
 
     public override void Reload()
     {
-        if (GamePortraitLoader.TryGet(GameName, out var gameImage)) GamePortrait.Texture = gameImage;
-        
+        if (GamePortraitLoader.TryGet(GameName, out var gameImage)
+            && SaveType<bool>.Load(TextClient.ShowGamePortraits, true)) GamePortrait.Texture = gameImage;
+        else GamePortrait.Visible = false;
+
         UpdateFontSize(Message);
         UpdateFontSize(PlayerName);
-        
+
         Message.Clear();
         PlayerName.Clear();
-        
+
         Message.ApplyCompiledPrintableObjs(MessageText.CompileRichText(GetCompileEffects(), false));
         PlayerName.ApplyCompiledPrintableObjs(Player.CompileRichText(GetCompileEffects(), false));
     }

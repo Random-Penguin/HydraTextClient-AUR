@@ -28,6 +28,7 @@ public partial class TextClient : Control
     public const string ShowTrap = "TextClient/show_trap";
     public const string ShowOnlyYou = "TextClient/show_only_you";
     public const string ShowFoundHints = "TextClient/show_found_hints";
+    public const string ShowGamePortraits = "TextClient/show_portraits";
     [Export] private Godot.Collections.Dictionary<MessageType, ChildLimiter> Containers = [];
     [Export] private Godot.Collections.Dictionary<MessageType, PackedScene> MessageScenes = [];
     [Export] private Array<ScrollFix> ScrollFixes = [];
@@ -123,7 +124,10 @@ public partial class TextClient : Control
             "Text Client",
             tab =>
             {
-                tab.AddLineEdit("Join Message", JoinMessage.SaveId, JoinMessage.Default)
+                tab
+                   .AddCheckBox("Toggle Game Portraits", ShowGamePortraits, true)
+                   .AddSeparator()
+                   .AddLineEdit("Join Message", JoinMessage.SaveId, JoinMessage.Default)
                    .AddSeparator()
                    .AddLineEdit("Leave Message", LeaveMessage.SaveId, LeaveMessage.Default)
                    .AddSeparator()

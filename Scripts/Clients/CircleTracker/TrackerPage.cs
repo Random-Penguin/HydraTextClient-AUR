@@ -14,12 +14,14 @@ using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
+using Color = Godot.Color;
 
 namespace HydraTextClient.Scripts.Clients.CircleTracker;
 
 public partial class TrackerPage : Control
 {
     private const string ShowEmptyCircles = "circle_tracker/show_empty";
+    private const string ShowFutureCircles = "circle_tracker/spoil_future";
     private ConcurrentQueue<bool> UpdateQueue = [];
     [Export] private PopoutWindow PopoutWindow;
     [Export] private EmptyRichLabelInteractor Label;
@@ -33,6 +35,8 @@ public partial class TrackerPage : Control
     private int CurrentCircle;
     private Action<ItemInfo[], int> OnItemsReceived;
     private Action<ReadOnlyCollection<long>> OnLocationsChecked;
+    private Action<Hint[]> OnHintsUpdated;
+    private Action<string, bool> OnBoolSaveDataUpdated;
     private HydraBridgeEntry Entry;
 
     [Signal] public delegate void OnStopCalledEventHandler();
@@ -57,10 +61,16 @@ public partial class TrackerPage : Control
         client.CheckedLocationsUpdated += OnLocationsChecked;
         OnStopCalled += () => client.CheckedLocationsUpdated -= OnLocationsChecked;
 
-        SaveType<bool>.OnSaveEvent += (id, _) =>
+        OnHintsUpdated = _ => QueueUpdate();
+        client.HintsTrackedEvent += OnHintsUpdated;
+        OnStopCalled += () => client.HintsTrackedEvent -= OnHintsUpdated;
+
+        OnBoolSaveDataUpdated = (id, _) =>
         {
-            if (id is ShowEmptyCircles) QueueUpdate();
+            if (id is ShowEmptyCircles or ShowFutureCircles) QueueUpdate();
         };
+        SaveType<bool>.OnSaveEvent += OnBoolSaveDataUpdated;
+        OnStopCalled += () => SaveType<bool>.OnSaveEvent -= OnBoolSaveDataUpdated;
     }
 
     public override void _Process(double delta)
@@ -75,12 +85,17 @@ public partial class TrackerPage : Control
             StringBuilder sb = new();
             var font = (int)SaveType<double>.Load(GlobalThemeSettings.GlobalFontSize, 20d);
             List<ulong> recordedLocations = [];
+            var localHints = Client.Hints.Where(hint => hint.FindingPlayer == Client.PlayerSlot).ToArray();
+            var hints = localHints.ToDictionary(hint => hint.LocationId, hint => hint.GetItemEffectText());
+            var priority = localHints.Where(hint => hint.Status is HintStatus.Priority).Select(hint => hint.LocationId)
+                                     .ToArray();
+            var firstEnd = SaveType<bool>.Load(ShowFutureCircles, false);
             foreach (var (circle, locations) in Circles.OrderBy(kv => kv.Key))
             {
                 var uniqueLocations = locations.Except(recordedLocations).ToArray();
                 recordedLocations.AddRange(uniqueLocations);
                 uniqueLocations = uniqueLocations.Where(id => Client.MissingRawLocations.Contains((long)id)).ToArray();
-                
+
                 if (uniqueLocations.Length == 0 && !SaveType<bool>.Load(ShowEmptyCircles, true)) continue;
 
                 sb.Append("[center][font_size=").Append(font * (uniqueLocations.Length == 0 ? 1 : 2))
@@ -93,12 +108,23 @@ public partial class TrackerPage : Control
 
                 if (CircleItems[circle].Length != 0)
                     sb.Append("[center]").Append(CircleItems[circle]).Append("[/center]\n");
+                
+                if (uniqueLocations.Length == 0) continue;
+                var orderedLocations = uniqueLocations
+                                      .OrderByDescending(id => priority.Contains((long)id))
+                                      .ThenBy(id => Client.Locations[(long)id]).ToArray();
 
-                foreach (var id in uniqueLocations.OrderBy(id => Client.Locations[(long)id]))
+                sb.Append("[table=2][cell bg=#00000069] Locations [/cell][cell bg=#00000069] Hinted Items [/cell]");
+                for (var i = 0; i < orderedLocations.Length; i++)
                 {
-                    sb.Append($" {{{{loc;{id};{Client.PlayerSlot}}}}}\n");
+                    var id = orderedLocations[i];
+                    sb.Append(i % 2 == 0 ? "[cell bg=#00000044]" : "[cell]").Append(" {{loc;").Append(id).Append(';')
+                      .Append(Client.PlayerSlot).Append("}}[/cell]").Append(i % 2 == 0 ? "[cell bg=#00000044] " : "[cell] ");
+                    if (hints.TryGetValue((long)id, out var item)) sb.Append(item);
+                    sb.Append(" [/cell]");
                 }
-                sb.Append('\n');
+                sb.Append("[/table]\n");
+                if (!firstEnd) break;
             }
 
             CompiledMessage = sb.ToString().CompileRichText(GetCompileEffects(), true);
@@ -124,10 +150,7 @@ public partial class TrackerPage : Control
             QueueCircle(CurrentCircle++, start);
         }
 
-        while (items.Length > TrackedCount)
-        {
-            QueueCircle(CurrentCircle++, items.Take(TrackedCount + 1).ToArray());
-        }
+        while (items.Length > TrackedCount) { QueueCircle(CurrentCircle++, items.Take(TrackedCount + 1).ToArray()); }
     }
 
     public void QueueCircle(int circle, params ItemInfo[] items)

@@ -46,9 +46,11 @@ grow_vertical = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Popout/ScrollContainer" unique_id=1972510381]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 2
 bbcode_enabled = true
 text = "[center]Loading . . .[/center]"
 fit_content = true
+selection_enabled = true
 script = ExtResource("5_3kkys")
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="Stop"]

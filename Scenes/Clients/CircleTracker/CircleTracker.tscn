@@ -36,6 +36,10 @@ layout_mode = 2
 button_pressed = true
 text = "Show Empty Circles"
 
+[node name="CheckBox2" type="CheckBox" parent="MarginContainer/VBoxContainer" unique_id=384526913]
+layout_mode = 2
+text = "Spoil Future Circles"
+
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1096340705]
 layout_mode = 2
 
@@ -57,5 +61,6 @@ metadata/_tab_index = 1
 layout_mode = 2
 Prefix = "circle_tracker"
 Controls = {
-"show_empty": NodePath("../MarginContainer/VBoxContainer/CheckBox")
+"show_empty": NodePath("../MarginContainer/VBoxContainer/CheckBox"),
+"spoil_future": NodePath("../MarginContainer/VBoxContainer/CheckBox2")
 }

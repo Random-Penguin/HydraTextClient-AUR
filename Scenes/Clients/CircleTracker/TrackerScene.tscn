@@ -33,7 +33,6 @@ script = ExtResource("2_iqac5")
 layout_mode = 2
 Title = "Tracker"
 Child = NodePath("ScrollContainer")
-RestoreSize = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Popout" unique_id=29724702]
 layout_mode = 1

@@ -60,6 +60,7 @@ public partial class PopoutWindow : Control
 		if (RestoreSize) Child.Size = Size;
 		Child.LayoutMode = LayoutMode;
 		Child.SetAnchorsPreset(Preset);
+		Child.Position = Vector2.Zero;
 		EmitSignalPoppedIn();
 	}
 	

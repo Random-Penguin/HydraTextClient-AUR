@@ -37,7 +37,7 @@ public class ItemEffect : MessageParserEffect
                     ["img"] = (l, _) => l.AddImage(
                         CustomAssets.ItemImage(args[0], args[1], args[0], _ => reloadFunction()), 0, 20
                     ),
-                    ["name"] = (l, _) => l.AppendText(args[1]),
+                    ["name"] = (l, _) => l.AddText(args[1]),
                 }, false
             );
         }

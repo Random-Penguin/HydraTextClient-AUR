@@ -12,3 +12,85 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - make sure that in hydra `Settings -> Theme` that your arcihpelago directory is set 
 
 ### Support me and hydra's development on [Patreon](https://www.patreon.com/SW_CreeperKing)
+
+## Features
+
+- Connetions
+  - Save Multiworld address, ports, passwords and change b/t them at will
+    - Contains slotname overrides
+    - Contains slot password overrides
+    - Caches current/max check counts
+    - Caches hints
+    - Caches item received history
+    - Supports multiple deathlink groups
+  - Can delete/edit/set/clear the cache of a multiworld
+  - Save Slot names to be used across worlds
+    - Saves slot name
+    - Can set a slot name override for a multiworld
+    - Can set a slot password for a multiworld
+    - Can set a game portrait image
+    - Can set a list of programs that can ran on connect (very untested)
+  - Change the scale of the slot name text and portrait
+  - Can have up to 7 slots connected at a time
+    - The first Client that connects is designated as the 'Leader' client
+    - Can change the leader client
+  - On connection slots are separated based on if the slot name appears in the multiworld or not
+- Clients
+  - Text Client
+    - Messages are separated into different categories (all, chat, item, hint, server)
+    - Any specific category can be popped out into a popup window (top right)
+    - Settings for showing specific kinds of items in the item log (removes anything not matching)
+    - Send messages (messages are sent from the current 'Leader' client)
+    - Emote menu to view and write emotes by clicking on them
+    - Can change how some messages get displayed in the settings -> text client
+  - Circle Tracker
+    - Uses [Universal Tracker](https://discord.com/channels/731205301247803413/1367270230635839539) to display locations in order based on the order of items received for any connected slot
+    - Disclaimer: this is NOT a sphere tracker
+    - Displays any hinted items next to the location
+    - Moves priority hinted locations to the top of a circle
+    - Displays what the new item received for each circle
+    - Ability to show/hide circles that have no locations
+    - Ability to show/hode circles beyond the first one that has locations
+    - Can have multiple circle trackers opened with multiple slots
+    - Any slot's tracker can be popped out into a popup window (top right)
+- Hint Table
+  - Can sort hints based on multiple columns
+  - Sort order is saved
+  - Can view cached hints from other slots (can change: all/logged in slots/'leader' only slot)
+  - Change visibility settings for specific kinds of hints (found/priority/unspecified/no priority/avoid)
+  - Can copy a hint into your clipboard with a click of a button
+  - Can change how a hint gets copied in the settings -> hints
+- Utilities
+  - Displays inventory (view an item to see who sent you those items)
+  - Can view the history of all items received (based on the order you received them)
+  - View all items in your game, clicking on one gives you a hint propmpt
+  - View all missing locations in your game, click on one gives you a hint location prompt
+- Players
+  - Can view every player in the multiworld as well as their status (connected/not connected/goaled)
+  - Can display check counts when !status is used (there is a button that does !status for you)
+  - Displays a fading + when a slot checks a location
+  - Hovering hover a name will show their game
+
+## Extra Info
+
+- Game Portraits
+  - Images saved to the game portrait directory (in settings -> theme)
+  - Uses the name of the image as the portrait/game name
+  - Need to click the reload button or reopen hydra for them to reload
+- Emotes/Emojis
+  - Images saved to the emote directory (in settings -> theme)
+  - Uses the name of the image as the emote name
+  - An emote is written as `{{e;[emote name]}}`
+  - Emotes you do not have an image for are shown as `[emote name]`
+- Message effects 
+  - `{{e;[emote name]}}` displays an emote (hovering over it will show the image in its full resolution)
+  - `{{player;[player slot]}}` displays a reference to the player (hover effects included)
+  - `{{item;[game name];[item name]}}` displays a reference to an item, has support for Custom Assets
+  - `{{item;[game name];[item name];[item flag]}}` like the above but adds on the item type
+    - 0: Normal
+    - 1: Progression
+    - 2: Useful
+    - 4: Trap
+  - `{{loc;[location id];[player slot]}}` displays a location, location id is specific to the apworld
+  - `{{entrance;[entrance text]}}` displays the text as an entrance
+  - `{{found}}`/`{{notfound}}` displays hint found/not found text

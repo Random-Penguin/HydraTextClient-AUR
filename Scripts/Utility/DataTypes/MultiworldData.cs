@@ -16,7 +16,6 @@ public class MultiworldData
     public ConcurrentDictionary<string, int> CheckCountsChecked = [];
     public ConcurrentDictionary<string, int> CheckCounts = [];
     public ConcurrentDictionary<string, Hint[]> Hints = [];
-    public ConcurrentDictionary<string, Circle[]> Circles = [];
     public ConcurrentDictionary<string, int> ItemHistory = [];
 
     public void ClearCache()
@@ -27,7 +26,6 @@ public class MultiworldData
         CheckCounts.Clear();
         SlotNames.Clear();
         Hints.Clear();
-        Circles.Clear();
         ItemHistory.Clear();
     }
 

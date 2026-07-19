@@ -30,5 +30,5 @@ public class LocationEffect : MessageParserEffect
         label.PopContext();
     }
 
-    public static string LocationName(long id, int slot) => ConnectionController.LeaderClient!.LocationIdToLocationName(id, slot);
+    public static string LocationName(long id, int slot) => ConnectionController.LeaderClient!.LocationIdToLocationName(id, slot) ?? "Unknown Location";
 }

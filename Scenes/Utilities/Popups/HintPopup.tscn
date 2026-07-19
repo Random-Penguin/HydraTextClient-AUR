@@ -9,7 +9,7 @@ oversampling_override = 1.0
 size = Vector2i(300, 150)
 theme = ExtResource("1_xec4r")
 script = ExtResource("2_kr6qn")
-Label = NodePath("Panel/MarginContainer/VBoxContainer/VBoxContainer2/Label")
+Label = NodePath("Panel/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer2/Label")
 
 [node name="Panel" type="Panel" parent="." unique_id=1710102424]
 anchors_preset = 15
@@ -32,13 +32,18 @@ mouse_filter = 2
 layout_mode = 2
 mouse_filter = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=382988394]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=159019575]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer" unique_id=382988394]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/VBoxContainer2" unique_id=1451044750]
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer2" unique_id=1451044750]
 layout_mode = 2
 horizontal_alignment = 1
 vertical_alignment = 1

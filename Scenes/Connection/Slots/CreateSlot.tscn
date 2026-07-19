@@ -9,6 +9,7 @@
 [node name="Create" type="Window" unique_id=1459984325 node_paths=PackedStringArray("SlotName", "WorldSlotName", "WorldPassword", "GameImages", "SlotCommands")]
 oversampling_override = 1.0
 size = Vector2i(850, 630)
+visible = false
 theme = ExtResource("1_osnw7")
 script = ExtResource("2_ty5pc")
 SlotName = NodePath("Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/SlotNameEdit")
@@ -54,23 +55,23 @@ size_flags_vertical = 3
 [node name="HBoxContainer2" type="HBoxContainer" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer" unique_id=655959795]
 layout_mode = 2
 
-[node name="ClearCache" type="Button" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=167274466]
-modulate = Color(0.9192285, 0.25766784, 0, 1)
-layout_mode = 2
-text = "Clear"
-script = ExtResource("5_77wv5")
-
-[node name="SlotName" type="Label" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=1418696935]
+[node name="VSeparator" type="VSeparator" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=793979760]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Slot Name"
-horizontal_alignment = 1
+theme_override_constants/separation = 40
 
 [node name="Delete" type="Button" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=83228144]
 modulate = Color(0.999996, 0.26342845, 0.29194015, 1)
 layout_mode = 2
 text = "Delete"
 script = ExtResource("5_77wv5")
+
+[node name="VSeparator2" type="VSeparator" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/HBoxContainer2" unique_id=1480474060]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 40
 
 [node name="SlotNameEdit" type="LineEdit" parent="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer" unique_id=1926132930]
 layout_mode = 2
@@ -158,6 +159,5 @@ Controls = {
 "SlotSideAppRunner": NodePath("../Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/TerminalCommands")
 }
 
-[connection signal="pressed" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/ClearCache" to="." method="Clear"]
 [connection signal="pressed" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/Delete" to="." method="Delete"]
 [connection signal="pressed" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/Button" to="." method="AddOverride"]

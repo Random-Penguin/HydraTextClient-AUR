@@ -34,7 +34,7 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - Can have up to 7 slots connected at a time
     - The first Client that connects is designated as the 'Leader' client
     - Can change the leader client
-  - On connection slots are separated based on if the slot name appears in the multiworld or not
+  - On connection, slots are separated based on if the slot name appears in the multiworld or not
 - Clients
   - Text Client
     - Messages are separated into different categories (all, chat, item, hint, server)
@@ -70,6 +70,13 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - Can display check counts when !status is used (there is a button that does !status for you)
   - Displays a fading + when a slot checks a location
   - Hovering hover a name will show their game
+- Item Filter
+  - Clicking on an item (almost anywhere) or the `Add Filter` button in the settings -> Item Filter opens up a popup to add an item filter
+  - If an item was clicked, it will auto fill the information
+  - Can show/hide items filtered from the Item Log in the text client
+  - Can show/hide items filtered from the Hint Table
+  - Can mark an item as special
+    - Special Items are treated higher than progression items and can have their own colors
 
 ## Extra Info
 

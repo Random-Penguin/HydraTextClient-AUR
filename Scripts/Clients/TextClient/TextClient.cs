@@ -107,10 +107,16 @@ public partial class TextClient : Control
             client.OnLeaveLogPacketReceived += packet => Enqueue(MessageType.LeaveMessage, packet);
             client.OnTagsChangedLogPacketReceived += packet => Enqueue(MessageType.TagsChangedMessage, packet);
             client.OnGoalPrintJsonPacketReceived += packet => Enqueue(MessageType.GoalMessage, packet);
-            client.OnDeathLinkPacketReceived += (groups, player, message)
-                => MessageQueue.Enqueue(new DeathLinkPacket(groups, player, message));
-            client.OnUnregisteredTrapLinkReceived
-                += (player, trap) => MessageQueue.Enqueue(new TrapLinkPacket(player, trap));
+            client.OnDeathLinkPacketReceived += (groups, player, message) =>
+            {
+                if (ConnectionController.LeaderClient! != client) return;
+                MessageQueue.Enqueue(new DeathLinkPacket(groups, player, message));
+            };
+            client.OnUnregisteredTrapLinkReceived += (player, trap) =>
+            {
+                if (ConnectionController.LeaderClient! != client) return;
+                MessageQueue.Enqueue(new TrapLinkPacket(player, trap));
+            };
         };
 
         SettingsCreator.Tab(
@@ -146,16 +152,7 @@ public partial class TextClient : Control
                    .AddSeparator()
                    .AddLineEdit("Player Text (With Alias)", PlayerEffect.SaveIdWithAlias, PlayerEffect.DefaultWithAlias)
                    .AddSeparator()
-                   .AddLineEdit("Item Text", ItemEffect.SaveId, ItemEffect.Default)
-                   .AddText("Item Log Filter Options\n(Deletes Item Log Messages)", 1)
-                   .AddCheckBox("Show Progressive Items", ShowProgressive, true, 1)
-                   .AddCheckBox("Show Useful Items", ShowUseful, true, 1)
-                   .AddCheckBox("Show Normal Items", ShowNormal, true, 1)
-                   .AddCheckBox("Show Trap Items", ShowTrap, true, 1)
-                   .AddCheckBox("Show Only Related to You", ShowOnlyYou, false, 1)
-                   .AddSeparator(1)
-                   .AddText("Hint Log Options", 1)
-                   .AddCheckBox("Show Found Hints", ShowFoundHints, true, 1);
+                   .AddLineEdit("Item Text", ItemEffect.SaveId, ItemEffect.Default);
             }
         );
 

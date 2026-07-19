@@ -78,10 +78,10 @@ public partial class TrackerPage : Control
             foreach (var (circle, locations) in Circles.OrderBy(kv => kv.Key))
             {
                 var uniqueLocations = locations.Except(recordedLocations).ToArray();
-                if (uniqueLocations.Length == 0 && !SaveType<bool>.Load(ShowEmptyCircles, true)) continue;
-
                 recordedLocations.AddRange(uniqueLocations);
                 uniqueLocations = uniqueLocations.Where(id => Client.MissingRawLocations.Contains((long)id)).ToArray();
+                
+                if (uniqueLocations.Length == 0 && !SaveType<bool>.Load(ShowEmptyCircles, true)) continue;
 
                 sb.Append("[center][font_size=").Append(font * (uniqueLocations.Length == 0 ? 1 : 2))
                   .Append("]Circle #").Append($"{circle:###,###}").Append("[/font_size]");
@@ -109,11 +109,12 @@ public partial class TrackerPage : Control
 
     public void CalculateCircles()
     {
-        var items = Client.ItemHandler.Items.Skip(TrackedCount)
-                          .Where(item => (item.Flags.HasFlag(ItemFlags.Advancement)
-                                          || item.Flags.HasFlag(ItemFlags.NeverExclude))
+        var items = Client.ItemHandler.Items
+                          .Where(item => item.Player.Name is "Server"
+                                         || (item.Flags.HasFlag(ItemFlags.Advancement)
+                                             || item.Flags.HasFlag(ItemFlags.NeverExclude))
                                          && !item.Flags.HasFlag(ItemFlags.Trap)
-                           ).ToList();
+                           ).ToArray();
 
         if (CurrentCircle is 0)
         {
@@ -121,21 +122,19 @@ public partial class TrackerPage : Control
             var start = items.TakeWhile(item => item.Player.Name is "Server" && item.LocationName is "Server")
                              .ToArray();
             QueueCircle(CurrentCircle++, start);
-            items = items.Skip(TrackedCount).ToList();
         }
 
-        while (items.Count != 0)
+        while (items.Length > TrackedCount)
         {
-            QueueCircle(CurrentCircle++, items[0]);
-            items.RemoveAt(0);
+            QueueCircle(CurrentCircle++, items.Take(TrackedCount + 1).ToArray());
         }
     }
 
     public void QueueCircle(int circle, params ItemInfo[] items)
     {
-        CircleItems[circle] = $"{string.Join(", ", items.Select(item => item.GetEffectText()))}";
+        CircleItems[circle] = $"{string.Join(", ", items.Skip(TrackedCount).Select(item => item.GetEffectText()))}";
         Entry.ItemsQueued.Enqueue((circle, items.Select(item => item.ItemId).ToArray()));
-        TrackedCount += items.Length;
+        TrackedCount = items.Length;
     }
 
     public void Stop() => EmitSignalOnStopCalled();

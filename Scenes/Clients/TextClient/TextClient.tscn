@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://bsi5phhveo36w" path="res://Scenes/Clients/TextClient/MessageTypes/DeathLinkMessage.tscn" id="13_r31ss"]
 [ext_resource type="PackedScene" uid="uid://g0tvn7j75ujx" path="res://Scenes/Clients/TextClient/MessageTypes/TrapLinkMessage.tscn" id="14_q866f"]
 [ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="17_f17e1"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="20_shqtv"]
 
 [node name="Text Client" type="VBoxContainer" unique_id=763075218 node_paths=PackedStringArray("Containers", "ScrollFixes", "UniqueLimiters", "SendMessageEdit", "EmotePicker")]
 offset_right = 1152.0
@@ -58,6 +59,42 @@ ScrollFixes = [NodePath("TabContainer/All/AllScroll"), NodePath("TabContainer/Ch
 UniqueLimiters = [NodePath("TabContainer/All/AllScroll/MarginContainer/AllLimiter"), NodePath("TabContainer/Chat Only/ChatOnlyScroll/MarginContainer2/ChatLimiter"), NodePath("TabContainer/Item Only/ItemOnlyScroll/MarginContainer3/ItemLimiter"), NodePath("TabContainer/Hint Only/HintOnlyScroll/MarginContainer4/HintLimiter"), NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")]
 SendMessageEdit = NodePath("MarginContainer5/HBoxContainer/LineEdit")
 EmotePicker = NodePath("EmotePicker")
+
+[node name="FoldableContainer" type="FoldableContainer" parent="." unique_id=1318856601]
+layout_mode = 2
+title = "Show Item Settings"
+
+[node name="HFlowContainer" type="HFlowContainer" parent="FoldableContainer" unique_id=203183868]
+layout_mode = 2
+alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="FoldableContainer/HFlowContainer" unique_id=1640763694]
+layout_mode = 2
+button_pressed = true
+text = "Show Progressive Items"
+
+[node name="CheckBox2" type="CheckBox" parent="FoldableContainer/HFlowContainer" unique_id=548027275]
+layout_mode = 2
+button_pressed = true
+text = "Show Useful Items"
+
+[node name="CheckBox3" type="CheckBox" parent="FoldableContainer/HFlowContainer" unique_id=1802120122]
+layout_mode = 2
+button_pressed = true
+text = "Show Normal Items"
+
+[node name="CheckBox4" type="CheckBox" parent="FoldableContainer/HFlowContainer" unique_id=310509368]
+layout_mode = 2
+button_pressed = true
+text = "Show Trap Items"
+
+[node name="CheckBox5" type="CheckBox" parent="FoldableContainer/HFlowContainer" unique_id=1279652832]
+layout_mode = 2
+text = "Show Items Only Related to You"
+
+[node name="CheckBox6" type="CheckBox" parent="FoldableContainer/HFlowContainer" unique_id=307773019]
+layout_mode = 2
+text = "Show Found Hints"
 
 [node name="TabContainer" type="TabContainer" parent="." unique_id=1908550667]
 layout_mode = 2
@@ -247,6 +284,19 @@ text = "Scroll to Bottom"
 script = ExtResource("17_f17e1")
 
 [node name="EmotePicker" parent="." unique_id=1985108309 instance=ExtResource("4_n7wuu")]
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("20_shqtv")]
+layout_mode = 2
+Prefix = "TextClient"
+Controls = {
+"ShowItemsFolding": NodePath("../FoldableContainer"),
+"show_found_hints": NodePath("../FoldableContainer/HFlowContainer/CheckBox6"),
+"show_normal": NodePath("../FoldableContainer/HFlowContainer/CheckBox3"),
+"show_only_you": NodePath("../FoldableContainer/HFlowContainer/CheckBox5"),
+"show_progressive": NodePath("../FoldableContainer/HFlowContainer/CheckBox"),
+"show_trap": NodePath("../FoldableContainer/HFlowContainer/CheckBox4"),
+"show_useful": NodePath("../FoldableContainer/HFlowContainer/CheckBox2")
+}
 
 [connection signal="pressed" from="MarginContainer5/HBoxContainer/Button" to="." method="SubmitMsg"]
 [connection signal="text_submitted" from="MarginContainer5/HBoxContainer/LineEdit" to="." method="Clear" flags=18]

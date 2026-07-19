@@ -32,13 +32,14 @@ public partial class NormalConsole : RichTextLabel
         {
             if (s is not ChildLimiter.QueueSaveId) return;
             Messages.SetLimit((int)d);
+            CallDeferred("Update");
         };
     }
 
     private void AddLine(string text)
     {
         Messages.Add(text);
-        Text = string.Join("\n", Messages.GetCollection);
+        Update();
     }
 
     public void WriteLine(string message, bool error = false)
@@ -63,4 +64,6 @@ public partial class NormalConsole : RichTextLabel
     public void WriteError(string err) => WriteLine(err, true);
 
     public string GetTimestamp() => $"[color=darkgray]{DateTime.Now:[HH:mm:ss]}[/color] ";
+
+    public void Update() => Text = string.Join("\n", Messages.GetCollection);
 }

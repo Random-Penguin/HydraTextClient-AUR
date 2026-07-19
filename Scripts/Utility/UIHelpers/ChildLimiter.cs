@@ -12,11 +12,11 @@ public partial class ChildLimiter : VBoxContainer
 
     public override void _Ready()
     {
-        Limiter = new LimitedCollection<Control>((int)SaveType<double>.Load(QueueSaveId, 200));
+        Limiter = new LimitedCollection<Control>(Math.Max((int)SaveType<double>.Load(QueueSaveId, 200), 20));
         SaveType<double>.OnSaveEvent += (s, d) =>
         {
             if (s is not QueueSaveId) return;
-            Limiter.SetLimit(Math.Max((int)d, 50));
+            Limiter.SetLimit(Math.Max((int)d, 20), c => CallDeferred("RemoveTheChild", c));
         };
     }
 

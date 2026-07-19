@@ -22,12 +22,17 @@ public partial class LoggerLabel :RichTextLabel
         {
             if (s is not ChildLimiter.QueueSaveId) return;
             Logger.SetSize((int)d);
+            CallDeferred("Update");
         };
     }
 
     public override void _Process(double delta)
     {
-        if (!RefreshUI) return;
+        if (RefreshUI) Update();
+    }
+
+    public void Update()
+    {
         Text = string.Join("\n", Logger.Messages);
         RefreshUI = false;
     }

@@ -23,6 +23,7 @@ public partial class MainController : Control
     [Export] private LoggerLabel GDLogger;
     [Export] private TextureRect BackgroundImage;
     [Export] private SettingsPorter Porter;
+    [Export] private TabContainer MainContainer;
 
     private ErrorDialog ErrorDialog;
 
@@ -81,6 +82,7 @@ public partial class MainController : Control
     {
         DRPC.Init();
         GlobalThemeSettings.Init();
+        MainContainer.CurrentTab = 0;
         
         if (SaveType<bool>.Load("Main/HasPorted", !File.Exists(Directories.LegacyData))) return;
         Porter.Startup();

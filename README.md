@@ -77,6 +77,11 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - Can show/hide items filtered from the Hint Table
   - Can mark an item as special
     - Special Items are treated higher than progression items and can have their own colors
+- Misc Settings/Features
+  - Change Color Themes
+  - Import/Export Color themes from/to clipboard
+  - Set Background image and alpha (transparency/opacity)
+  - Change some Font Sizes
 
 ## Extra Info
 

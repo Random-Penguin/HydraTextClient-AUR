@@ -5,7 +5,8 @@ namespace HydraTextClient.Scripts.Utility.Popups;
 
 public partial class WindowSetter : Window
 {
-    [Export] private bool DisableMinMax = true;
+    [Export] private bool DisableMin = true;
+    [Export] private bool DisableMax = false;
     [Export] private bool BlockParent = true;
     [Export] private bool OnTop = false;
     [Export] private bool ToQueueFree = true;
@@ -19,8 +20,8 @@ public partial class WindowSetter : Window
         WrapControls = true;
         Transient = true;
         Exclusive = BlockParent;
-        MinimizeDisabled = DisableMinMax;
-        MaximizeDisabled = DisableMinMax;
+        MinimizeDisabled = DisableMin;
+        MaximizeDisabled = DisableMax;
         ForceNative = true;
         Transparent = true;
         InitialPosition = WindowInitialPosition.CenterMainWindowScreen;

@@ -162,9 +162,9 @@ public partial class HintTable : TextTable
                    )
                   .Where(hint => !SaveType<FilterType>.TryGet(hint.UID, out var filter) || filter.ShowInHintsTable)
                   .OrderBy(hint => hint.FindingPlayer);
-
-            if (SortOrder.Count > 0) orderedHints = SortingOrder(orderedHints, SortOrder[0], true);
-            else orderedHints = orderedHints.ThenBy(hint => hint.ReceivingPlayer);
+            
+            orderedHints = SortOrder.Count > 0 ? SortingOrder(orderedHints, SortOrder[0], true)
+                : orderedHints.ThenBy(hint => hint.ReceivingPlayer);
 
             if (SortOrder.Count > 1)
                 orderedHints = SortOrder.Skip(1)

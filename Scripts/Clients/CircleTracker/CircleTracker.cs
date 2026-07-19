@@ -30,11 +30,7 @@ public partial class CircleTracker : Control
     public void AddButton(string name, ApClient client)
     {
         Button button = new();
-        button.Pressed += () =>
-        {
-            button.Disabled = true;
-            OpenTracker(name);
-        };
+        button.Pressed += () => button.Disabled = OpenTracker(name);
         button.Text = name;
         Buttons.Add(name, button);
         Clients.TryAdd(name, client);
@@ -52,7 +48,7 @@ public partial class CircleTracker : Control
         }
     }
 
-    public void OpenTracker(string name)
+    public bool OpenTracker(string name)
     {
         var apDir = SaveType<string>.Load(GlobalThemeSettings.ApDir, "");
         if (apDir is "" || !Directory.Exists(apDir))
@@ -61,18 +57,18 @@ public partial class CircleTracker : Control
                 apDir is "" ? "Archipelago Directory not set, set it in the Settings/Theme"
                     : "Invalid Archipelago Directory"
             );
-            return;
+            return false;
         }
 
-        if (!DoesApWorldExist(apDir, "HydraUTBridge", out var bridgeLoc)) return;
+        if (!DoesApWorldExist(apDir, "HydraUTBridge", out var bridgeLoc)) return false;
         
         if (ExternalAppController.GetFileSha(bridgeLoc) != HydraUTBridgeFileHash)
         {
             MainController.ShowError("HydraUTBridge.apworld version is not compatible with the current Hydra version");
-            return;
+            return false;
         }
         
-        if (!DoesApWorldExist(apDir, "tracker", out _)) return;
+        if (!DoesApWorldExist(apDir, "tracker", out _)) return false;
 
         var page = TrackerScene.Instantiate<TrackerPage>();
         HydraBridgeEntry entry;
@@ -81,7 +77,7 @@ public partial class CircleTracker : Control
         {
             MainController.ShowError($"Error with [{apDir}]", e);
             page.QueueFree();
-            return;
+            return false;
         }
 
         if (!entry.FileExists())
@@ -90,7 +86,7 @@ public partial class CircleTracker : Control
                 "The ArchipelagoLauncherDebug executable was not found in your Archipelago Folder"
             );
             page.QueueFree();
-            return;
+            return false;
         }
 
         page.OnStopCalled += () =>
@@ -101,6 +97,7 @@ public partial class CircleTracker : Control
         Pages.Add(name, page);
         PageContainer.CallDeferred("add_child", page);
         page.Setup(name, Clients[name], entry);
+        return true;
     }
 
     public bool DoesApWorldExist(string apDir, string world, out string path)

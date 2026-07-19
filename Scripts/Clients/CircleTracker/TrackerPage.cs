@@ -49,7 +49,6 @@ public partial class TrackerPage : Control
         Entry = entry;
 
         ProcessId = ExternalAppController.StartProcess(name, entry);
-
         OnStopCalled += () => ExternalAppController.EndProcess(ProcessId);
 
         CalculateCircles();

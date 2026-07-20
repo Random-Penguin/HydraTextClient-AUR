@@ -70,7 +70,7 @@ public partial class HintTable : TextTable
             tab =>
             {
                 tab.AddLineEdit(
-                    "Copy Hint Text Format (Progressive Items)", GlobalCopyFormatProgressive,
+                    "Copy Hint Text Format (Progression Items)", GlobalCopyFormatProgressive,
                     "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
                 ).AddLineEdit(
                     "Copy Hint Text Format", GlobalCopyFormat,
@@ -145,14 +145,14 @@ public partial class HintTable : TextTable
                    )
                   .SelectMany(kv => kv.Value)
                   .DistinctBy(hint => HashCode.Combine(
-                           hint.FindingPlayer, hint.LocationId, hint.ReceivingPlayer, hint.FindingPlayer, hint.Entrance,
-                           hint.ItemFlags
+                           hint.FindingPlayer, hint.LocationId, hint.ReceivingPlayer, hint.Entrance, hint.ItemFlags
                        )
                    )
                   .Where(hint =>
                        {
+                           // not obvious, remove hints where finder and receiver are not in hydra
                            var order1 = GetOrderSlot(hint.FindingPlayer);
-                           return !(GetOrderSlot(hint.FindingPlayer) == order1 && order1 == 1);
+                           return !(GetOrderSlot(hint.ReceivingPlayer) == order1 && order1 == 1);
                        }
                    )
                   .Where(hint => hint.Status switch

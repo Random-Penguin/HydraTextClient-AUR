@@ -38,12 +38,12 @@ public partial class AppLogger(LoggerLabel label) : Logger
         if (split.Length == 0) return;
 
         _Label.LoggerWriter.WriteLine($"{timeStamp} [{(error ? "ERROR" : "Info")}] {split[0]}");
-        var text = $"[color=darkgray]{timeStamp}[/color] [color={(error ? "red" : "white")}]{split[0]}";
+        var text = $"[color=darkgray]{timeStamp}[/color] [color={(error ? "red" : "white")}]{split[0].Replace("[", "[lb]")}";
 
         if (split.Length > 1)
         {
             text += $"\n{BLOCK}{string.Join($"\n{BLOCK} ", split.Skip(1))}"; 
-            _Label.LoggerWriter.WriteLine($"\n{BLOCK}{string.Join($"\n{BLOCK} ", split.Skip(1))}");
+            _Label.LoggerWriter.WriteLine($"\n{BLOCK}{string.Join($"\n{BLOCK} ", split.Skip(1)).Replace("[", "[lb]")}");
         }
         
         if (error) _Label.LoggerWriter.Flush();

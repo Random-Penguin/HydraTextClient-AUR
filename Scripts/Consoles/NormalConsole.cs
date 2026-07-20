@@ -53,10 +53,10 @@ public partial class NormalConsole : RichTextLabel
 
         StringBuilder sb = new();
         SlotLogs.WriteLine($"{DateTime.Now:[HH:mm:ss]} [{(error ? "ERROR" : "Info")}] [{Name}] {split[0]}");
-        sb.Append(GetTimestamp()).Append("[color=").Append(error ? "red" : "white").Append(']').Append(split[0]);
+        sb.Append(GetTimestamp()).Append("[color=").Append(error ? "red" : "white").Append(']').Append(split[0].Replace("[", "[lb]"));
         if (split.Length > 1)
         {
-            sb.Append('\n').Append(BLOCK).Append(string.Join($"\n{BLOCK}", split.Skip(1)));
+            sb.Append('\n').Append(BLOCK).Append(string.Join($"\n{BLOCK}", split.Skip(1)).Replace("[", "[lb]"));
             SlotLogs.WriteLine($"\n{BLOCK}{string.Join($"\n{BLOCK}", split.Skip(1))}");
         }
         if (error) SlotLogs.Flush();

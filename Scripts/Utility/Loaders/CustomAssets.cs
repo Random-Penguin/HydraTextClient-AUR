@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Models;
@@ -15,12 +16,12 @@ public partial class CustomAssets : Control
     [Export] private Texture2D Fallback;
     private static CustomAssets Singleton;
 
-    public static Dictionary<string, ImageTexture> ItemSprites = [];
+    public static ConcurrentDictionary<string, ImageTexture> ItemSprites = [];
     public static ArchipelagoItemSprites ItemSpritesManager;
     private static Logger Logger;
 
     public static Texture2D GetFallback => Singleton.Fallback;
-    
+
     public override void _Ready()
     {
         Singleton = this;
@@ -44,10 +45,13 @@ public partial class CustomAssets : Control
                 {
                     try
                     {
-                        var res = ItemSpritesManager.TryGetCustomAsset(
-                            location, selfGame, false, true,
-                            out var spriteData
-                        );
+                        bool res;
+                        ItemSprite spriteData;
+                        lock (ItemSpritesManager)
+                            res = ItemSpritesManager.TryGetCustomAsset(
+                                location, selfGame, false, true,
+                                out spriteData
+                            );
 
                         if (!res || spriteData is null) return Task.FromResult(Task.FromResult(Singleton.Fallback));
                         var file = spriteData.FilePath;

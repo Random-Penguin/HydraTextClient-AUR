@@ -22,7 +22,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 12
-text = "Hydra Text Client v.0.6-beta.6"
+text = "Hydra Text Client v.0.6-beta.7"
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer" unique_id=262171140]
 layout_mode = 2

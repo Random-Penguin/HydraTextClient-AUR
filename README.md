@@ -82,6 +82,7 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - Import/Export Color themes from/to clipboard
   - Set Background image and alpha (transparency/opacity)
   - Change some Font Sizes
+  - Discord Rich Presence
 
 ## Extra Info
 

@@ -34,7 +34,11 @@ public partial class ClientMessage : AnimatedMessageScene
     public override void Reload()
     {
         if (GamePortraitLoader.TryGet(GameName, out var gameImage)
-            && SaveType<bool>.Load(TextClient.ShowGamePortraits, true)) GamePortrait.Texture = gameImage;
+            && SaveType<bool>.Load(TextClient.ShowGamePortraits, true))
+        {
+            GamePortrait.Visible = true;
+            GamePortrait.Texture = gameImage;
+        }
         else GamePortrait.Visible = false;
 
         UpdateFontSize(Message);

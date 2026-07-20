@@ -31,7 +31,7 @@ public static class GamePortraitLoader
         {
             var gameName = string.Join(".", file.Replace("\\", "/").Split("/")[^1].Split('.')[..^1]);
             if (GamePortraitImages.ContainsKey(gameName)) continue;
-            GamePortraitImages[gameName.ToLower()] = ImageTexture.CreateFromImage(Image.LoadFromFile(file));
+            GamePortraitImages[CleanName(gameName)] = ImageTexture.CreateFromImage(Image.LoadFromFile(file));
             BaseList.Add(gameName);
             GD.Print($"Loaded image [{file.Replace(dir, ".")}] for game [{gameName}]");
         }
@@ -40,14 +40,15 @@ public static class GamePortraitLoader
     }
 
     public static bool TryGet(string gameName, out ImageTexture img)
-        => GamePortraitImages.TryGetValue(gameName.ToLower(), out img);
+        => GamePortraitImages.TryGetValue(CleanName(gameName), out img);
 
     public static Texture2D GetOrDef(string gameName, Texture2D def)
     {
-        if (!GamePortraitImages.ContainsKey(gameName.ToLower())) return def;
-        return GamePortraitImages[gameName.ToLower()];
+        if (!GamePortraitImages.ContainsKey(CleanName(gameName))) return def;
+        return GamePortraitImages[CleanName(gameName)];
     }
 
     public static ImageTexture GetImage(string name) => GamePortraitImages[name.ToLower()];
     public static string GameAt(int i) => GameList[i];
+    private static string CleanName(string name) => name.ToLower().Replace(":", "");
 }

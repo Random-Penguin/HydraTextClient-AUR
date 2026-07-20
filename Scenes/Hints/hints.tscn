@@ -58,6 +58,10 @@ layout_mode = 2
 button_pressed = true
 text = "Show Avoid"
 
+[node name="CheckBox6" type="CheckBox" parent="VBoxContainer/FlowContainer" unique_id=1980918180]
+layout_mode = 2
+text = "Word Wrap"
+
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1701859526]
 layout_mode = 2
 size_flags_vertical = 3
@@ -85,7 +89,8 @@ Controls = {
 "show_found": NodePath("../VBoxContainer/FlowContainer/CheckBox"),
 "show_nopriority": NodePath("../VBoxContainer/FlowContainer/CheckBox4"),
 "show_priority": NodePath("../VBoxContainer/FlowContainer/CheckBox2"),
-"show_unspecified": NodePath("../VBoxContainer/FlowContainer/CheckBox3")
+"show_unspecified": NodePath("../VBoxContainer/FlowContainer/CheckBox3"),
+"word_wrap": NodePath("../VBoxContainer/FlowContainer/CheckBox6")
 }
 
 [node name="PopupMenu" type="PopupMenu" parent="." unique_id=1473533629]

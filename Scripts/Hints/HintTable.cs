@@ -100,8 +100,12 @@ public partial class HintTable : TextTable
             CallDeferred("clear");
         };
 
-        SaveType<bool>.OnSaveEvent += (key, _) =>
+        AutowrapMode = SaveType<bool>.Load("hint_table/word_wrap", false) ? TextServer.AutowrapMode.WordSmart
+            : TextServer.AutowrapMode.Off;
+        SaveType<bool>.OnSaveEvent += (key, b) =>
         {
+            if (key is "hint_table/word_wrap")
+                AutowrapMode = b ? TextServer.AutowrapMode.WordSmart : TextServer.AutowrapMode.Off;
             if (!key.StartsWith("hint_table/show_")) return;
             QueueUiRefresh(true);
         };
@@ -162,7 +166,7 @@ public partial class HintTable : TextTable
                    )
                   .Where(hint => !SaveType<FilterType>.TryGet(hint.UID, out var filter) || filter.ShowInHintsTable)
                   .OrderBy(hint => hint.FindingPlayer);
-            
+
             orderedHints = SortOrder.Count > 0 ? SortingOrder(orderedHints, SortOrder[0], true)
                 : orderedHints.ThenBy(hint => hint.ReceivingPlayer);
 

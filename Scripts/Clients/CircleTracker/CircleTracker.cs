@@ -92,7 +92,7 @@ public partial class CircleTracker : Control
         page.OnStopCalled += () =>
         {
             if (Pages.Remove(name, out var node)) PageContainer.CallDeferred("remove_child", node);
-            Buttons[name].Disabled = false;
+            if (Buttons.TryGetValue(name, out var button)) button.Disabled = false;
         };
         Pages.Add(name, page);
         PageContainer.CallDeferred("add_child", page);

@@ -11,7 +11,7 @@ public static class GamePortraitLoader
 {
     public static event Action? OnReloadImages;
     private static Dictionary<string, ImageTexture> GamePortraitImages = [];
-    private static List<string> BaseList = [];
+    private static HashSet<string> BaseList = [];
     public static string[] GameList = [];
 
     static GamePortraitLoader() => ReloadImages();
@@ -19,10 +19,10 @@ public static class GamePortraitLoader
     public static void ReloadImages()
     {
         GD.Print("Loading Portraits");
-        OnReloadImages?.Invoke();
         if (!Directory.Exists(GamePortraits)) Directory.CreateDirectory(GamePortraits);
         LoadDirectory(GamePortraits);
         GameList = BaseList.Order().ToArray();
+        OnReloadImages?.Invoke();
     }
 
     private static void LoadDirectory(string dir)
@@ -48,5 +48,6 @@ public static class GamePortraitLoader
         return GamePortraitImages[gameName.ToLower()];
     }
 
-    public static Dictionary<string, ImageTexture> GetImages() => GamePortraitImages;
+    public static ImageTexture GetImage(string name) => GamePortraitImages[name.ToLower()];
+    public static string GameAt(int i) => GameList[i];
 }

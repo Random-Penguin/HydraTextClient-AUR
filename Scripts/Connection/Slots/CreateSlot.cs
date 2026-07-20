@@ -28,7 +28,7 @@ public partial class CreateSlot : WindowSetter
     public SlotGameData GenSlotData() => new()
     {
         Name = SlotName.Text,
-        Game = GameImages.Selected is 0 ? "Unknown" : GamePortraitLoader.GameList[GameImages.Selected - 1],
+        Game = GameImages.Selected is 0 ? "Unknown" : GamePortraitLoader.GameAt(GameImages.Selected - 1),
         ProcessCommands = SlotCommands.Text.Replace("\r", "").Split('\n'),
     };
 
@@ -37,7 +37,7 @@ public partial class CreateSlot : WindowSetter
         GameImages.Clear();
         GameImages.AddIconItem(UnknownImage, "Unknown");
 
-        foreach (var (game, icon) in GamePortraitLoader.GetImages()) GameImages.AddIconItem(icon, game);
+        foreach (var game in GamePortraitLoader.GameList) GameImages.AddIconItem(GamePortraitLoader.GetImage(game), game);
     }
 
     public void EditPortrait(string slotName)

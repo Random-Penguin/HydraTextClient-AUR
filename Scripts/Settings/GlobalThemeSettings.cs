@@ -72,7 +72,7 @@ public static class GlobalThemeSettings
                   .AddSeparator(2)
                   .AddText("Sites to download portraits", 2)
                   .AddButton("SteamGridDB.com", () => OS.ShellOpen("https://www.steamgriddb.com/"), 2)
-                  .AddButton("IDGB.com", () => OS.ShellOpen("https://www.igdb.com/"), 2)
+                  .AddButton("IGDB.com", () => OS.ShellOpen("https://www.igdb.com/"), 2)
                   .AddBrowseFile(
                        "Set Background Image", FileDialog.FileModeEnum.OpenFile, ["*.png", "*.jpg"], col: 1,
                        extraConfig: (button, dialog) =>

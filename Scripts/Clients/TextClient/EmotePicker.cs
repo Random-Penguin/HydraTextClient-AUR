@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -13,10 +14,33 @@ public partial class EmotePicker : WindowSetter
 	
 	[Signal] public delegate void EmotePickedEventHandler(string emote);
 
-	private List<Button> EmoteButtons = [];
+	private ConcurrentBag<Button> EmoteButtons = [];
 	
 	public override void _Ready()
 	{
+		UpdateEmotes();
+		EmoteLoader.OnReloadImages += UpdateEmotes;
+	}
+
+	public void PickEmote(string emote) => EmitSignalEmotePicked($"{{{{e;{emote}}}}}");
+
+	public void UpdateSearch(string changed)
+	{
+		foreach (var button in EmoteButtons)
+		{
+			button.Visible = button.Text.Contains(changed);
+		}
+	}
+
+	public void UpdateEmotes()
+	{
+		foreach (var button in EmoteButtons.ToArray())
+		{
+			Container.CallDeferred("remove_child", button);
+			button.QueueFree();
+		}
+		
+		EmoteButtons.Clear();
 		var emotes = EmoteLoader.GetImages();
 		foreach (var emote in emotes.Keys.Order())
 		{
@@ -28,18 +52,8 @@ public partial class EmotePicker : WindowSetter
 			button.Pressed += () => CallDeferred("PickEmote", emote);
 			button.AddThemeConstantOverride("icon_max_width", 64);
 			
-			Container.AddChild(button);
+			Container.CallDeferred("add_child", button);
 			EmoteButtons.Add(button);
-		}
-	}
-
-	public void PickEmote(string emote) => EmitSignalEmotePicked($"{{{{e;{emote}}}}}");
-
-	public void UpdateSearch(string changed)
-	{
-		foreach (var button in EmoteButtons)
-		{
-			button.Visible = button.Text.Contains(changed);
 		}
 	}
 }

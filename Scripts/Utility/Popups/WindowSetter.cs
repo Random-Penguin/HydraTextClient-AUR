@@ -13,14 +13,16 @@ public partial class WindowSetter : Window
     [Export] private bool ClickAnywhereToClose = false;
 
     [Signal] public delegate void CloseCalledEventHandler();
-    
-    public WindowSetter()
+
+    public WindowSetter() => Visible = false;
+
+    public override void _EnterTree()
     {
         PopupWindow = ClickAnywhereToClose;
         AlwaysOnTop = OnTop;
         Visible = false;
         WrapControls = true;
-        Transient = true;
+        Transient = !OnTop;
         Exclusive = BlockParent;
         MinimizeDisabled = DisableMin;
         MaximizeDisabled = DisableMax;

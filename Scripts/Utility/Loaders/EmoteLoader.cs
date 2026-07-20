@@ -15,9 +15,9 @@ public static class EmoteLoader
     public static void ReloadImages()
     {
         GD.Print("Loading Emotes");
-        OnReloadImages?.Invoke();
         if (!Directory.Exists(Directories.Emotes)) Directory.CreateDirectory(Directories.Emotes);
         LoadDirectory(Directories.Emotes);
+        OnReloadImages?.Invoke();
     }
 
     private static void LoadDirectory(string dir)

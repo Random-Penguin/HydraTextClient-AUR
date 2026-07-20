@@ -36,7 +36,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[node name="Main" type="PanelContainer" unique_id=880516871 node_paths=PackedStringArray("GDLogger", "BackgroundImage", "Porter")]
+[node name="Main" type="PanelContainer" unique_id=880516871 node_paths=PackedStringArray("GDLogger", "BackgroundImage", "Porter", "MainContainer")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -54,6 +54,7 @@ ItemFilterDisplay = ExtResource("5_dc4qw")
 GDLogger = NodePath("Main Container/Consoles/Godot/Godot")
 BackgroundImage = NodePath("BackgroundImage")
 Porter = NodePath("Port Settings")
+MainContainer = NodePath("Main Container")
 
 [node name="CustomAssets" type="Control" parent="." unique_id=1782125956]
 visible = false

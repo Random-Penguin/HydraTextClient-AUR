@@ -58,7 +58,8 @@ public partial class CreateSlot : WindowSetter
         SlotCommands.Text = string.Join('\n', data.ProcessCommands);
         Show();
     }
-    
+
+    public void AddOverride(string _) => AddOverride();
     public void AddOverride()
     {
         var data = GenSlotData();

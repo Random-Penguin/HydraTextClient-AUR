@@ -22,7 +22,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 12
-text = "Hydra Text Client v.0.6-beta.7"
+text = "Hydra Text Client v.0.6-beta.8"
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer" unique_id=262171140]
 layout_mode = 2
@@ -108,6 +108,7 @@ Creator = NodePath("../../../CreateMW")
 DataLabel = ExtResource("3_e5f7q")
 
 [node name="CreateMW" parent="." unique_id=1404091652 node_paths=PackedStringArray("TemporaryLabel", "LabelContainer", "CurrentMultiWorldLabel") instance=ExtResource("2_m1nwk")]
+visible = false
 TemporaryLabel = NodePath("../VBoxContainer/MultiworldLabel")
 LabelContainer = NodePath("../VBoxContainer/ScrollContainer/MWLabelContainer")
 CurrentMultiWorldLabel = NodePath("../VBoxContainer/CurrentWorld")

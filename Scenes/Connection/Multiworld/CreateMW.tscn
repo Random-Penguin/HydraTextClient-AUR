@@ -210,6 +210,7 @@ layout_mode = 2
 [connection signal="toggled" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/Info/__/HidePort" to="Panel/ScrollContainer/MarginContainer/VBoxContainer2/Info/PortEdit" method="TogglePassword"]
 [connection signal="toggled" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/Info/___/HidePassword" to="Panel/ScrollContainer/MarginContainer/VBoxContainer2/Info/PasswordEdit" method="TogglePassword"]
 [connection signal="pressed" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/SetTemp" to="." method="SetAsTemp"]
+[connection signal="text_submitted" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/MWNameEdit" to="." method="AddMultiworld"]
 [connection signal="pressed" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/AddMW" to="." method="AddMultiworld"]
 [connection signal="text_submitted" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/DeathlinkGroups/MarginContainer/VBoxContainer/HBoxContainer/DlgEdit" to="Panel/ScrollContainer/MarginContainer/VBoxContainer2/DeathlinkGroups" method="AddGroup"]
 [connection signal="pressed" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/DeathlinkGroups/MarginContainer/VBoxContainer/HBoxContainer/DlgAdd" to="Panel/ScrollContainer/MarginContainer/VBoxContainer2/DeathlinkGroups" method="AddGroup"]

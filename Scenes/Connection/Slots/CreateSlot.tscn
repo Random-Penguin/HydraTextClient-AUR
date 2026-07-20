@@ -160,4 +160,5 @@ Controls = {
 }
 
 [connection signal="pressed" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/HBoxContainer2/Delete" to="." method="Delete"]
+[connection signal="text_submitted" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/SlotNameEdit" to="." method="AddOverride"]
 [connection signal="pressed" from="Panel/ScrollContainer/MarginContainer/VBoxContainer2/Button" to="." method="AddOverride"]

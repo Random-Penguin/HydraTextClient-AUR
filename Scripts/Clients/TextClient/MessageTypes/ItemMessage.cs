@@ -65,9 +65,8 @@ public partial class ItemMessage : MessageScene
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
 
-    public override bool CanReload(string saveId, out bool queueSelfForDelete)
+    public override bool CanReload(string saveId)
     {
-        queueSelfForDelete = false;
         if (saveId is PlayerConnect) return true;
         if (IdToConstant.TryGetValue(saveId, out var constant))
             return constant.IsPlayerColor() || constant.IsItemColor() || constant is LocationColor;
@@ -75,42 +74,41 @@ public partial class ItemMessage : MessageScene
         switch (saveId)
         {
             case TextClient.ShowProgressive:
-                if (SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Advancement))
-                    queueSelfForDelete = true;
+                Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Advancement));
                 break;
             case TextClient.ShowUseful:
-                if (SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.NeverExclude))
-                    queueSelfForDelete = true;
+                Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.NeverExclude));
                 break;
             case TextClient.ShowNormal:
-                if (SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.None)) queueSelfForDelete = true;
+                Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.None));
                 break;
             case TextClient.ShowTrap:
-                if (SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Trap)) queueSelfForDelete = true;
+                Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Trap));
                 break;
             case TextClient.ShowOnlyYou:
-                if (SaveType<bool>.Load(saveId, false) && !SlotView.ContainsSlot(FinderName)
-                                                       && !SlotView.ContainsSlot(ReceiverName))
-                    queueSelfForDelete = true;
+                var isRandomPeople = !SlotView.ContainsSlot(FinderName) && !SlotView.ContainsSlot(ReceiverName);
+                Visible = !(!SaveType<bool>.Load(saveId, true) && isRandomPeople);
                 break;
             case SaveIdDifferentPerson or SaveIdSamePerson: return true;
         }
 
         if (saveId == ThisFilter.UID && SaveType<FilterType>.TryGet(saveId, out var filter))
         {
-            queueSelfForDelete = !filter.ShowInItemLog;
+            Visible = filter.ShowInItemLog;
             return true;
         }
-        
+
         return false;
     }
 
     public override string CopyText() => SaveType<string>.Load(
         FinderIsReceiver ? SaveIdSamePerson : SaveIdDifferentPerson,
         FinderIsReceiver ? DefaultSamePerson : DefaultDifferentPerson
-    ).CompileSimpleText(new Dictionary<string, string>
-    {
-        ["finder"] = PlayerEffect.PlayerName(FinderSlot, out _), ["item"] = ItemName,
-        ["receiver"] = PlayerEffect.PlayerName(ReceiverSlot, out _), ["loc"] = LocationName,
-    });
+    ).CompileSimpleText(
+        new Dictionary<string, string>
+        {
+            ["finder"] = PlayerEffect.PlayerName(FinderSlot, out _), ["item"] = ItemName,
+            ["receiver"] = PlayerEffect.PlayerName(ReceiverSlot, out _), ["loc"] = LocationName,
+        }
+    );
 }

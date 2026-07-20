@@ -86,6 +86,11 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
 
 ## Extra Info
 
+- Text Client: How Item Log and Hint Log filter deletes items
+  - If an item/hint is blocked by your settings/filters they will not be added at all
+  - If a setting/filter is updated, any messages in the text client will be hidden/reshown
+  - If the message history is full the oldest hidden messages will be deleted first
+    - If there are no hidden messages, the oldest message will then be deleted 
 - Game Portraits
   - Images saved to the game portrait directory (in settings -> theme)
   - Uses the name of the image as the portrait/game name

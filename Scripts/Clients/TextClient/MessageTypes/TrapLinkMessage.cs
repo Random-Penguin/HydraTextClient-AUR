@@ -57,9 +57,8 @@ public partial class TrapLinkMessage : MessageScene
         );
     }
 
-    public override bool CanReload(string saveId, out bool queueSelfForDelete)
+    public override bool CanReload(string saveId)
     {
-        queueSelfForDelete = false;
         if (saveId is PlayerConnect) return true;
         if (IdToConstant.TryGetValue(saveId, out var constant)) return constant.IsPlayerColor();
         return saveId is SaveIdMessage;

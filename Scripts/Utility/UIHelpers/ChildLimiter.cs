@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CreepyUtil.Archipelago;
 using Godot;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -12,7 +13,10 @@ public partial class ChildLimiter : VBoxContainer
 
     public override void _Ready()
     {
-        Limiter = new LimitedCollection<Control>(Math.Max((int)SaveType<double>.Load(QueueSaveId, 200), 20));
+        Limiter = new LimitedCollection<Control>(
+            Math.Max((int)SaveType<double>.Load(QueueSaveId, 200), 20),
+            list => list.FirstOrDefault(item => !item.Visible, null)
+        );
         SaveType<double>.OnSaveEvent += (s, d) =>
         {
             if (s is not QueueSaveId) return;
@@ -31,7 +35,7 @@ public partial class ChildLimiter : VBoxContainer
         Limiter.Add(child, c => CallDeferred("RemoveTheChild", c));
         CallDeferred("AddTheChild", child);
     }
-    
+
     public void RemoveFromLimiter(Control child) => Limiter.Remove(child, c => CallDeferred("RemoveTheChild", c));
     public void AddTheChild(Control child) => AddChild(child);
     public void RemoveTheChild(Control child) => child.GetParent().RemoveChild(child);

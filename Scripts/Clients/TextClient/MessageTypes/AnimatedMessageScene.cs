@@ -30,9 +30,8 @@ public abstract partial class AnimatedMessageScene : MessageScene
 
     public void RunBounceAnimation() => RunAnimation = true;
 
-    public override bool CanReload(string saveId, out bool queueSelfForDelete)
+    public override bool CanReload(string saveId)
     {
-        queueSelfForDelete = false;
         return saveId is PlayerConnect or TextClient.FontSizeId or TextClient.ShowGamePortraits
                || IdToConstant.ContainsKey(saveId);
     }

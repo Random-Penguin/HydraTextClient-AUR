@@ -247,8 +247,7 @@ public partial class TextClient : Control
             container.ForEach(control =>
                 {
                     if (control is not MessageScene msg) return;
-                    msg.ReloadUi(id, out var deleteEntry);
-                    if (deleteEntry) container.RemoveTheChild(msg);
+                    msg.ReloadUi(id);
                 }
             );
     }

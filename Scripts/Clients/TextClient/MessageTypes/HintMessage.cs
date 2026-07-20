@@ -52,17 +52,15 @@ public partial class HintMessage : MessageScene
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
 
-    public override bool CanReload(string saveId, out bool queueSelfForDelete)
+    public override bool CanReload(string saveId)
     {
-        queueSelfForDelete = false;
         if (saveId is PlayerConnect) return true;
         if (IdToConstant.TryGetValue(saveId, out var constant))
             return constant.IsPlayerColor() || constant.IsItemColor()
                                             || constant is FoundColor or NotFoundColor or LocationColor;
 
-        if (saveId is TextClient.ShowFoundHints && !SaveType<bool>.Load(saveId, true) && HasBeenFound)
-            queueSelfForDelete = true;
-
+        if (saveId is TextClient.ShowFoundHints) Visible = !(!SaveType<bool>.Load(saveId, true) && HasBeenFound);
+        
         return saveId is SaveId;
     }
 

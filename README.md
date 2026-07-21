@@ -103,8 +103,8 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
 - Message effects 
   - `{{e;[emote name]}}` displays an emote (hovering over it will show the image in its full resolution)
   - `{{player;[player slot]}}` displays a reference to the player (hover effects included)
-  - `{{item;[game name];[item name]}}` displays a reference to an item, has support for Custom Assets
-  - `{{item;[game name];[item name];[item flag]}}` like the above but adds on the item type
+  - `{{item;``[game name]``;``[item name]``}}` displays a reference to an item, has support for Custom Assets
+  - `{{item;``[game name]``;``[item name]``;[item flag]}}` like the above but adds on the item type
     - 0: Normal
     - 1: Progression
     - 2: Useful

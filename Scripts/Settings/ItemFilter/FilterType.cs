@@ -15,5 +15,5 @@ public struct FilterType(string itemName, string gameName, ItemFlags itemFlags)
     public static string MakeUID(string itemName, string gameName, ItemFlags itemFlags)
         => $"{itemName}%__%{gameName}%__%{(int)itemFlags}";
 
-    public string GetEffectText() => $"{{{{item;{GameName};{ItemName};{(int)ItemFlags}}}}}";
+    public string GetEffectText() => $"{{{{item;``{GameName}``;``{ItemName}``;{(int)ItemFlags}}}}}";
 }

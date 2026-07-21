@@ -11,7 +11,7 @@ public class EntranceEffect : MessageParserEffect
 
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
-        var entrance = args.Length == 0 ? "Vanilla" : args[0];
+        var entrance = args.Length == 0 ? "Vanilla" : string.Join(';', args[0]);
         label.PushContext();
         label.PushColor(ColorIdConstants.ColorConstant.EntranceColor.Color());
         label.AddText(entrance);

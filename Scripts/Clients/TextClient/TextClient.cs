@@ -15,6 +15,7 @@ using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
+using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Clients.TextClient;
 
@@ -107,6 +108,10 @@ public partial class TextClient : Control
             client.OnLeaveLogPacketReceived += packet => Enqueue(MessageType.LeaveMessage, packet);
             client.OnTagsChangedLogPacketReceived += packet => Enqueue(MessageType.TagsChangedMessage, packet);
             client.OnGoalPrintJsonPacketReceived += packet => Enqueue(MessageType.GoalMessage, packet);
+            client.OnPrintJsonPacketReceived += packet =>
+            {
+                GD.Print($"print: [{JsonConvert.SerializeObject(packet, Formatting.Indented)}]");
+            };
             client.OnDeathLinkPacketReceived += (groups, player, message) =>
             {
                 if (ConnectionController.LeaderClient! != client) return;
@@ -117,10 +122,7 @@ public partial class TextClient : Control
                 if (ConnectionController.LeaderClient! != client) return;
                 MessageQueue.Enqueue(new TrapLinkPacket(player, trap));
             };
-            client.OnUnhandledPacketReceived += packet =>
-            {
-                GD.PushWarning($"Unhandled Packet: [{packet.PacketType}]");
-            };
+            // client.OnUnhandledPacketReceived += packet => { };
         };
 
         SettingsCreator.Tab(

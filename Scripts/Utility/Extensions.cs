@@ -62,7 +62,7 @@ public static class Extensions // sorted alphabetically for the memes
 
         public string UID => FilterType.MakeUID(hint.ItemName, hint.ItemGame, hint.ItemFlags);
         public string EntranceName => hint.Entrance == "" ? "Vanilla" : hint.Entrance;
-        public string GetItemEffectText() => $"{{{{item;{hint.ItemGame};{hint.ItemName};{(int)hint.ItemFlags}}}}}";
+        public string GetItemEffectText() => $"{{{{item;``{hint.ItemGame}``;``{hint.ItemName}``;{(int)hint.ItemFlags}}}}}";
     }
 
     extension(HintPrintJsonPacket packet)
@@ -89,7 +89,7 @@ public static class Extensions // sorted alphabetically for the memes
         }
 
         public string GetItemEffectText()
-            => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
+            => $"{{{{item;``{packet.ItemGame}``;``{packet.ItemName}``;{(int)packet.Item.Flags}}}}}";
 
         public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
         public string GetLocationName() => LocationEffect.LocationName(packet.Item.Location, packet.FindingPlayer);
@@ -120,7 +120,7 @@ public static class Extensions // sorted alphabetically for the memes
         }
 
         public string GetItemEffectText()
-            => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
+            => $"{{{{item;``{packet.ItemGame}``;``{packet.ItemName}``;{(int)packet.Item.Flags}}}}}";
 
         public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
         public string GetLocationName() => LocationEffect.LocationName(packet.Item.Location, packet.FindingPlayer);
@@ -159,7 +159,7 @@ public static class Extensions // sorted alphabetically for the memes
     extension(ItemInfo item)
     {
         public string UID => FilterType.MakeUID(item.ItemName, item.ItemGame, item.Flags);
-        public string GetEffectText() => $"{{{{item;{item.ItemGame};{item.ItemName};{(int)item.Flags}}}}}";
+        public string GetEffectText() => $"{{{{item;``{item.ItemGame}``;``{item.ItemName}``;{(int)item.Flags}}}}}";
         public string GetLocationEffectText() => $"{{{{loc;{item.LocationId};{item.Player.Slot}}}}}";
     }
 
@@ -187,7 +187,7 @@ public static class Extensions // sorted alphabetically for the memes
         }
 
         public string GetItemEffectText()
-            => $"{{{{item;{packet.ItemGame};{packet.ItemName};{(int)packet.Item.Flags}}}}}";
+            => $"{{{{item``;{packet.ItemGame}``;``{packet.ItemName}``;{(int)packet.Item.Flags}}}}}";
 
         public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
         public string GetLocationName() => LocationEffect.LocationName(packet.Item.Location, packet.FindingPlayer);

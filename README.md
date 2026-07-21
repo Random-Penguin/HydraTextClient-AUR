@@ -83,6 +83,10 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - Set Background image and alpha (transparency/opacity)
   - Change some Font Sizes
   - Discord Rich Presence
+- Autoupdater
+  - Requires internet (duh)
+  - Might be buggy/unstable
+  - If there are new updates, it will print to the console
 
 ## Extra Info
 

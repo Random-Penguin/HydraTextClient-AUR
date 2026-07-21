@@ -24,7 +24,7 @@ public class HintStatusEffect : MessageParserEffect
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
         if (args.Length is not (1 or 3)) return;
-        var isClickable = args.Length is 3 && args[2].ToLower()[0] == 't';
+        var isClickable = args.Length is 3 && args[2].ToLower()[0] == 't' && args[0] is not "4";
         var status = args[0] switch
         {
             "1" => NoPriority, "2" => Avoid, "3" => Priority, "4" => FoundColor, _ => Unspecified,

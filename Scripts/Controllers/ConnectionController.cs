@@ -225,7 +225,11 @@ public partial class ConnectionController : Control
         if (ConnectionCooldown > 0) return;
         var mw = SaveType<MultiworldData>.Load(CurrentMultiworld, null);
         if (mw is null) return;
-        if (Singleton.Clients.Count >= 7 && mw.Address.ToLower() is not ("localhost" or "127.0.0.1")) return;
+        if (Singleton.Clients.Count >= 7 && mw.Address.ToLower() is not ("localhost" or "127.0.0.1"))
+        {
+            MainController.ShowError("Max Connected Slots Reached (so ap doesn't get mad at me)");
+            return;
+        }
 
         var multiWorldName = GetMultiworldName(name, mw);
 

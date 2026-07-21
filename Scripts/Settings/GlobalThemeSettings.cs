@@ -41,7 +41,7 @@ public static class GlobalThemeSettings
                   .AddButton("Force (Safety) Save", Save, 2)
                   .AddButton("Open Save Directory", () => OS.ShellOpen(Directories.MainDirectory), 2)
                   .AddSeparator(2)
-                  .AddCheckBox("Check For Updates on Start", CheckForUpdate, true, 2)
+                  .AddCheckBox("Check For Updates on Start", CheckForUpdate, false, 2)
                   .AddButton("Check For Updates", CheckForUpdates, 2)
                   .AddSeparator(2)
                   .AddButton(

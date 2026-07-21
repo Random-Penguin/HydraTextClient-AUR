@@ -95,7 +95,7 @@ public partial class MainController : Control
             if (Path.GetFileName(old) is "_OLD_HYDRA_DELETE_ME"
                 && File.GetAttributes(old).HasFlag(FileAttributes.Hidden)) File.Delete(old);
         }
-        if (SaveType<bool>.Load(CheckForUpdate, true) && RunAutoUpdater()) return;
+        if (SaveType<bool>.Load(CheckForUpdate, false) && RunAutoUpdater()) return;
 
         if (SaveType<bool>.Load("Main/HasPorted", !File.Exists(Directories.LegacyData))) return;
         Porter.Startup();

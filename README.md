@@ -30,6 +30,7 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
     - Can set a slot password for a multiworld
     - Can set a game portrait image
     - Can set a list of programs that can ran on connect (very untested)
+      - WARNING: if connection gets dropped it will close the games attached to it
   - Change the scale of the slot name text and portrait
   - Can have up to 7 slots connected at a time
     - The first Client that connects is designated as the 'Leader' client

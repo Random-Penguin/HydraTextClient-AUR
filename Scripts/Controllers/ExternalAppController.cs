@@ -111,8 +111,7 @@ public abstract class CoreAppEntry
 
         Executable = fileToRun;
         Arguments = args;
-        var fileEnd = fileToRun.Split('/')[^1];
-        ShortName = fileToRun.Contains('.') ? fileEnd[..fileEnd.LastIndexOf('.')] : fileEnd;
+        ShortName = Path.GetFileNameWithoutExtension(fileToRun);
         Hash = fileToRun is "" ? "" : ExternalAppController.GetFileSha(fileToRun);
     }
 

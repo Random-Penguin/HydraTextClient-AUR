@@ -61,18 +61,18 @@ public partial class CircleTracker : Control
         }
 
         if (!DoesApWorldExist(apDir, "HydraUTBridge", out var bridgeLoc)) return false;
-        
+
         if (ExternalAppController.GetFileSha(bridgeLoc) != HydraUTBridgeFileHash)
         {
             MainController.ShowError("HydraUTBridge.apworld version is not compatible with the current Hydra version");
             return false;
         }
-        
+
         if (!DoesApWorldExist(apDir, "tracker", out _)) return false;
 
         var page = TrackerScene.Instantiate<TrackerPage>();
         HydraBridgeEntry entry;
-        try { entry = new HydraBridgeEntry(apDir, Clients[name], page); }
+        try { entry = new HydraBridgeEntry(apDir, Clients[name], page, true); }
         catch (Exception e)
         {
             MainController.ShowError($"Error with [{apDir}]", e);
@@ -82,9 +82,18 @@ public partial class CircleTracker : Control
 
         if (!entry.FileExists())
         {
-            MainController.ShowError(
-                "The ArchipelagoLauncherDebug executable was not found in your Archipelago Folder"
-            );
+            try { entry = new HydraBridgeEntry(apDir, Clients[name], page, false); }
+            catch (Exception e)
+            {
+                MainController.ShowError($"Error with [{apDir}]", e);
+                page.QueueFree();
+                return false;
+            }
+        }
+
+        if (!entry.FileExists())
+        {
+            MainController.ShowError("The selected folder is not the Archipelago Folder (folder invalid)");
             page.QueueFree();
             return false;
         }

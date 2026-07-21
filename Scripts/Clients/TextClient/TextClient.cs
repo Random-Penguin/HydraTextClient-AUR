@@ -109,10 +109,7 @@ public partial class TextClient : Control
             client.OnLeaveLogPacketReceived += packet => Enqueue(MessageType.LeaveMessage, packet);
             client.OnTagsChangedLogPacketReceived += packet => Enqueue(MessageType.TagsChangedMessage, packet);
             client.OnGoalPrintJsonPacketReceived += packet => Enqueue(MessageType.GoalMessage, packet);
-            client.OnPrintJsonPacketReceived += packet =>
-            {
-                GD.Print($"print: [{JsonConvert.SerializeObject(packet, Formatting.Indented)}]");
-            };
+            client.OnPrintJsonPacketReceived += packet => Enqueue(MessageType.ServerMessage, packet);
             client.OnDeathLinkPacketReceived += (groups, player, message) =>
             {
                 if (ConnectionController.LeaderClient! != client) return;

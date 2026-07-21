@@ -99,9 +99,11 @@ public partial class AutoUpdater : WindowSetter
             {
                 MainController.ShowError($"Item [{zipType}] in filetypereverse gave [{VersioningHelperPopup.FileTypesReverse[zipType]}], not present in zip");
                 Close();
+                return;
             }
             
-            entry.ExtractToFile(selfFile);
+            entry!.ExtractToFile(selfFile);
+            File.Delete(zipPath);
         }
         catch (Exception e) { GD.PrintErr(e); }
         Close();

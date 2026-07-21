@@ -84,7 +84,7 @@ public partial class AutoUpdater : WindowSetter
         try
         {
             // grab zip
-            var selfFile = System.Environment.ProcessPath;
+            var selfFile = System.Environment.ProcessPath!;
             var zipType = CurrentVersion.FileHashes[ExternalAppController.GetFileSha(selfFile)];
             var zipPath = $"{Path.GetDirectoryName(System.Environment.ProcessPath)!}/{zipType}";
 
@@ -111,7 +111,7 @@ public partial class AutoUpdater : WindowSetter
             File.Delete(zipPath);
         }
         catch (Exception e) { GD.PrintErr(e); }
-        Close();
+        MainController.QuitHydra();
     }
 
     protected override void Dispose(bool disposing) => Client?.Dispose();

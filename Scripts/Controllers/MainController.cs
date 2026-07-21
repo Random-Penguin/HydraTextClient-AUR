@@ -88,15 +88,15 @@ public partial class MainController : Control
         DRPC.Init();
         GlobalThemeSettings.Init();
         MainContainer.CurrentTab = 0;
-        
-        if (Path.GetFileName(System.Environment.ProcessPath)!.StartsWith('_')) GetTree().CallDeferred("quit");
-        var underscore = $"{Path.GetDirectoryName(System.Environment.ProcessPath)}/_{Path.GetFileName(System.Environment.ProcessPath)}";
+
+        if (Path.GetFileNameWithoutExtension(System.Environment.ProcessPath)! is "_OLD_HYDRA_DELETE_ME") Quit();
         foreach (var old in Directory.GetFiles(Path.GetDirectoryName(System.Environment.ProcessPath)!))
         {
-            if (Path.GetFileName(old) is "_OLD_HYDRA_DELETE_ME") File.Delete(old);
+            if (Path.GetFileName(old) is "_OLD_HYDRA_DELETE_ME"
+                && File.GetAttributes(old).HasFlag(FileAttributes.Hidden)) File.Delete(old);
         }
         if (SaveType<bool>.Load(CheckForUpdate, true) && RunAutoUpdater()) return;
-        
+
         if (SaveType<bool>.Load("Main/HasPorted", !File.Exists(Directories.LegacyData))) return;
         Porter.Startup();
         Porter.Show();
@@ -117,7 +117,7 @@ public partial class MainController : Control
             ShowError("Cannot check for updates with connected slots");
             return false;
         }
-        
+
         var updater = AutoUpdater.Instantiate<AutoUpdater>();
         if (!updater.CanRunUpdater()) return false;
         CallDeferred("add_child", updater);
@@ -138,7 +138,7 @@ public partial class MainController : Control
         BackgroundImage.Modulate = color;
     }
 
-    #if DEBUG
+#if DEBUG
     public override void _UnhandledInput(InputEvent @event)
     {
         if (Input.IsActionJustPressed("debug_HasherHelper"))
@@ -148,7 +148,7 @@ public partial class MainController : Control
             helper.Show();
         }
     }
-    #endif
+#endif
 
     public static void ShowError(string message, Exception e) => ShowError($"{message}\n{e.Message}\n{e.StackTrace}");
     public static void ShowError(Exception e) => ShowError($"{e.Message}\n{e.StackTrace}");
@@ -186,4 +186,6 @@ public partial class MainController : Control
     public static string GetVersion() => Singleton.VersionNumber;
     public static void CheckForUpdates() => Singleton.RunAutoUpdater();
     public void UpdateDiscord() => DRPC.CheckDiscord();
+    public void Quit() => GetTree().CallDeferred("quit");
+    public static void QuitHydra() => Singleton.GetTree().CallDeferred("quit");
 }

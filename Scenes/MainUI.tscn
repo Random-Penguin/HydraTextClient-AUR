@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://ckvp4iindgmqy" path="res://Scenes/Utility/Popups/ItemFilterDialog.tscn" id="4_p6tld"]
 [ext_resource type="Texture2D" uid="uid://cahn5oddssdk6" path="res://Assets/Images/UI/UnknownItem.png" id="4_uq7wj"]
 [ext_resource type="PackedScene" uid="uid://utog84qrsmp8" path="res://Scenes/Settings/item_filter_display.tscn" id="5_dc4qw"]
+[ext_resource type="PackedScene" uid="uid://bubavuafdy6ni" path="res://Scenes/Utility/Popups/AutoUpdater.tscn" id="6_0jvmx"]
 [ext_resource type="PackedScene" uid="uid://dwwtwy2mhiqmu" path="res://Scenes/Utility/Popups/ErrorDialog.tscn" id="8_uwgue"]
 [ext_resource type="PackedScene" uid="uid://b6bu3tqarbf4m" path="res://Scenes/Utility/Popups/ConnectIndicator.tscn" id="9_2s37q"]
 [ext_resource type="Script" uid="uid://cruu5vtwkvyij" path="res://Scripts/Settings/SettingsCreator.cs" id="11_uq7wj"]
@@ -44,7 +45,6 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-offset_transform_enabled = true
 theme = ExtResource("1_yd0xa")
 theme_override_styles/panel = SubResource("StyleBoxFlat_yd0xa")
 script = ExtResource("1_8dqd8")
@@ -55,6 +55,7 @@ GDLogger = NodePath("Main Container/Consoles/Godot/Godot")
 BackgroundImage = NodePath("BackgroundImage")
 Porter = NodePath("Port Settings")
 MainContainer = NodePath("Main Container")
+AutoUpdater = ExtResource("6_0jvmx")
 
 [node name="CustomAssets" type="Control" parent="." unique_id=1782125956]
 visible = false
@@ -79,7 +80,7 @@ script = ExtResource("3_b5wqe")
 [node name="BackgroundImage" type="TextureRect" parent="." unique_id=1366911435]
 layout_mode = 2
 mouse_filter = 2
-expand_mode = 2
+expand_mode = 1
 
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2

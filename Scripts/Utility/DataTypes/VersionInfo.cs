@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Utility.DataTypes;
 
@@ -12,6 +13,7 @@ public struct VersionInfo(int majorVersion, int minorVersion, int patchVersion, 
     public string[] Content = content;
     public Dictionary<string, string> FileHashes = fileHashes;
 
+    [JsonIgnore]
     public string VersionText => $"v{MajorVersion}.{MinorVersion}.{PatchVersion}{ExtVersion}";
 
     public static bool operator ==(VersionInfo i1, VersionInfo i2) => i1.MajorVersion == i2.MajorVersion

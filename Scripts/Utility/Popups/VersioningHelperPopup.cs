@@ -39,18 +39,15 @@ public partial class VersioningHelperPopup : WindowSetter
     {
         var files = Directory.GetFiles(BuildPath).Where(file => !(file is "Licenses" || file.EndsWith(".zip")))
                              .ToArray();
-
+        
         foreach (var file in files)
         {
-            var zip = $"{BuildPath}/{FileTypes[Path.GetFileName(file)]}.zip";
-            if (File.Exists(zip)) File.Delete(zip);
             using var archive = ZipFile.Open($"{BuildPath}/{FileTypes[Path.GetFileName(file)]}", ZipArchiveMode.Create);
             archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
             foreach (var license in Directory.GetFiles($"{BuildPath}/Licenses"))
             {
                 archive.CreateEntryFromFile(license, $"Licenses/{Path.GetFileName(license)}", CompressionLevel.Optimal);
             }
-            break;
         }
 
         var newInfo = VersionInfo.CreateFrom(

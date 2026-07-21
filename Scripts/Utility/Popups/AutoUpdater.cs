@@ -24,34 +24,17 @@ public partial class AutoUpdater : WindowSetter
 
     public VersionInfo MaxVersion;
     public VersionInfo CurrentVersion;
+    public Dictionary<string, VersionInfo> VersionInfos;
 
     public override void _Ready()
     {
-        CloseCalled += () => Client.Dispose();
-
-        Client = new HttpClient();
-        using var response = Client.GetAsync(GithubVersionPath).GetAwaiter().GetResult();
-        if (response.StatusCode is HttpStatusCode.PartialContent) return;
-        MainController.ShowError(
-            $"Failed to Check for Updates: code: [{response.StatusCode}] [{(int)response.StatusCode}]"
-        );
-        Close();
-
-        using var content = response.Content;
-        var versionJson = content.ReadAsStringAsync().GetAwaiter().GetResult();
-        var thisVersion = VersionInfo.CreateEmpty(MainController.GetVersion());
-        var versionInfos = JsonConvert.DeserializeObject<List<VersionInfo>>(versionJson)
-                                      .Where(info => info != thisVersion && info > thisVersion)
-                                      .ToDictionary(i => i.VersionText, i => i);
-        CurrentVersion = versionInfos[thisVersion.VersionText];
-        MaxVersion = versionInfos.Values.Aggregate((i1, i2) => i1 > i2 ? i1 : i2);
         Title = $"[{MainController.GetVersion()}] -> [{MaxVersion.VersionText}]";
 
-        while (versionInfos.Any())
+        while (VersionInfos.Count != 0)
         {
-            var lowest = versionInfos.Values.Aggregate((i1, i2) => i1 < i2 ? i1 : i2);
+            var lowest = VersionInfos.Values.Aggregate((i1, i2) => i1 < i2 ? i1 : i2);
             AddVersion(lowest);
-            versionInfos.Remove(lowest.VersionText);
+            VersionInfos.Remove(lowest.VersionText);
         }
     }
 
@@ -71,9 +54,28 @@ public partial class AutoUpdater : WindowSetter
     {
         var selfFile = System.Environment.ProcessPath;
         if (Path.GetFileNameWithoutExtension(selfFile)!.ToLower() is "godot") return false;
-        var hash = ExternalAppController.GetFileSha(selfFile);
-        GD.Print(hash);
-        return true;
+        
+        Client = new HttpClient();
+        using var response = Client.GetAsync(GithubVersionPath).GetAwaiter().GetResult();
+        if (response.StatusCode is HttpStatusCode.NotFound) { return false; }
+        if (response.StatusCode is not HttpStatusCode.OK)
+        {
+            MainController.ShowError(
+                $"Failed to Check for Updates: code: [{response.StatusCode}] [{(int)response.StatusCode}]"
+            );
+            return false;
+        }
+
+        using var content = response.Content;
+        var versionJson = content.ReadAsStringAsync().GetAwaiter().GetResult();
+        var thisVersion = VersionInfo.CreateEmpty(MainController.GetVersion());
+        VersionInfos = JsonConvert.DeserializeObject<List<VersionInfo>>(versionJson)
+                                  .Where(info => info != thisVersion && info > thisVersion)
+                                  .ToDictionary(i => i.VersionText, i => i);
+        
+        CurrentVersion = VersionInfos[thisVersion.VersionText];
+        MaxVersion = VersionInfos.Values.Aggregate((i1, i2) => i1 > i2 ? i1 : i2);
+        return CurrentVersion != MaxVersion;
     }
 
     public void Update(Button sender)
@@ -85,10 +87,11 @@ public partial class AutoUpdater : WindowSetter
             var selfFile = System.Environment.ProcessPath;
             var zipType = CurrentVersion.FileHashes[ExternalAppController.GetFileSha(selfFile)];
             var zipPath = $"{Path.GetDirectoryName(System.Environment.ProcessPath)!}/{zipType}";
-            
-            using var response = Client.GetStreamAsync($"{GithubReleasesPath}{MaxVersion.VersionText}/{zipType}").GetAwaiter().GetResult();
+
+            using var response = Client.GetStreamAsync($"{GithubReleasesPath}{MaxVersion.VersionText}/{zipType}")
+                                       .GetAwaiter().GetResult();
             response.CopyTo(File.Create(zipPath));
-            
+
             // extract
             File.SetAttributes(selfFile, FileAttributes.Hidden);
             File.Move(selfFile, $"{Path.GetDirectoryName(selfFile)}/_OLD_HYDRA_DELETE_ME");
@@ -97,15 +100,19 @@ public partial class AutoUpdater : WindowSetter
             var entry = zip.GetEntry(VersioningHelperPopup.FileTypesReverse[zipType]);
             if (entry is null)
             {
-                MainController.ShowError($"Item [{zipType}] in filetypereverse gave [{VersioningHelperPopup.FileTypesReverse[zipType]}], not present in zip");
+                MainController.ShowError(
+                    $"Item [{zipType}] in filetypereverse gave [{VersioningHelperPopup.FileTypesReverse[zipType]}], not present in zip"
+                );
                 Close();
                 return;
             }
-            
+
             entry!.ExtractToFile(selfFile);
             File.Delete(zipPath);
         }
         catch (Exception e) { GD.PrintErr(e); }
         Close();
     }
+
+    protected override void Dispose(bool disposing) => Client?.Dispose();
 }

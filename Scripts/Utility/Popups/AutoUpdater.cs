@@ -18,7 +18,7 @@ public partial class AutoUpdater : WindowSetter
     public HttpClient Client;
 
     public const string GithubVersionPath
-        = "https://github.com/SWCreeperKing/HydraTextClient_Rewrite/blob/master/Version.json";
+        = "https://raw.githubusercontent.com/SWCreeperKing/HydraTextClient_Rewrite/refs/heads/master/Version.json";
 
     [Export] private TabContainer Container;
 
@@ -54,7 +54,7 @@ public partial class AutoUpdater : WindowSetter
     {
         var selfFile = System.Environment.ProcessPath;
         if (Path.GetFileNameWithoutExtension(selfFile)!.ToLower() is "godot") return false;
-        
+
         Client = new HttpClient();
         using var response = Client.GetAsync(GithubVersionPath).GetAwaiter().GetResult();
         if (response.StatusCode is HttpStatusCode.NotFound) { return false; }
@@ -69,11 +69,17 @@ public partial class AutoUpdater : WindowSetter
         using var content = response.Content;
         var versionJson = content.ReadAsStringAsync().GetAwaiter().GetResult();
         var thisVersion = VersionInfo.CreateEmpty(MainController.GetVersion());
-        VersionInfos = JsonConvert.DeserializeObject<List<VersionInfo>>(versionJson)
-                                  .Where(info => info != thisVersion && info > thisVersion)
-                                  .ToDictionary(i => i.VersionText, i => i);
-        
-        CurrentVersion = VersionInfos[thisVersion.VersionText];
+        var raw = JsonConvert.DeserializeObject<List<VersionInfo>>(versionJson);
+        VersionInfos = raw
+                      .Where(info => info == thisVersion || info > thisVersion)
+                      .ToDictionary(i => i.VersionText, i => i);
+        VersionInfos.Remove(thisVersion.VersionText, out CurrentVersion);
+
+        if (VersionInfos.Count == 0)
+        {
+            GD.Print("No new updates");
+            return false;
+        }
         MaxVersion = VersionInfos.Values.Aggregate((i1, i2) => i1 > i2 ? i1 : i2);
         if (CurrentVersion == MaxVersion) GD.Print("No new updates");
         return CurrentVersion != MaxVersion;

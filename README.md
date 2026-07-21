@@ -7,7 +7,7 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - run project (play button top right)
 - Add UT support (circle tracker):
   - make sure you have the ap launcher installed
-  - grab [univeral tracker](https://discord.com/channels/731205301247803413/1367270230635839539) and place it in your custom worlds folder
+  - grab [universal tracker](https://discord.com/channels/731205301247803413/1367270230635839539) and place it in your custom worlds folder
   - grab the HydraUTBridge.apworld from [releases](https://github.com/SWCreeperKing/HydraTextClient_Rewrite/releases/latest) and place it also in your custom worlds folder
   - make sure that in hydra `Settings -> Theme` that your arcihpelago directory is set 
 

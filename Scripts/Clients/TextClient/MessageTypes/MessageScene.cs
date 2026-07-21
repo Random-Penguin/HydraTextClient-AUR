@@ -30,6 +30,12 @@ public abstract partial class MessageScene : PanelContainer
         if (ConnectionController.CurrentMultiworld != MultiWorld) return;
         if (!ConnectionController.HasLeaderClient) return;
 
+        if (saveId is TextClient.ShowTimestamps)
+        {
+            TimeStamp.Visible = SaveType<bool>.Load(TextClient.ShowTimestamps, true);
+            return;
+        }
+        
         if (saveId.StartsWith("Clients/TextClient/TextEffects/") || saveId is PlayerConnect or TextClient.FontSizeId)
         {
             CallReload();

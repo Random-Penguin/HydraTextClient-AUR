@@ -29,6 +29,7 @@ public partial class TextClient : Control
     public const string ShowOnlyYou = "TextClient/show_only_you";
     public const string ShowFoundHints = "TextClient/show_found_hints";
     public const string ShowGamePortraits = "TextClient/show_portraits";
+    public const string ShowTimestamps = "TextClient/show_timestamps";
     [Export] private Godot.Collections.Dictionary<MessageType, ChildLimiter> Containers = [];
     [Export] private Godot.Collections.Dictionary<MessageType, PackedScene> MessageScenes = [];
     [Export] private Array<ScrollFix> ScrollFixes = [];
@@ -130,7 +131,8 @@ public partial class TextClient : Control
             tab =>
             {
                 tab
-                   .AddCheckBox("Toggle Game Portraits", ShowGamePortraits, true)
+                   .AddCheckBox("Show Timestamps", ShowTimestamps, true)
+                   .AddCheckBox("Show Game Portraits", ShowGamePortraits, true)
                    .AddSeparator()
                    .AddLineEdit("Join Message", JoinMessage.SaveId, JoinMessage.Default)
                    .AddSeparator()

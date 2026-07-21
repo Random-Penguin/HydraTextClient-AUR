@@ -51,6 +51,8 @@ public class ItemEffect : MessageParserEffect
             return;
         }
 
+        args[0] = args[0][2..^2];
+        args[1] = args[1][2..^2];
         var id = $"{args[0]};{args[1]}";
         if (!CustomAssetsItemCache.TryGetValue(id, out var value))
         {

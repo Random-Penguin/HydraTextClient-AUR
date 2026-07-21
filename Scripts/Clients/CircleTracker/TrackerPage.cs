@@ -11,6 +11,7 @@ using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
@@ -36,6 +37,7 @@ public partial class TrackerPage : Control
     private Action<ReadOnlyCollection<long>> OnLocationsChecked;
     private Action<Hint[]> OnHintsUpdated;
     private Action<string, bool> OnBoolSaveDataUpdated;
+    private Action<string, FilterType> OnFilterDataUpdated;
     private HydraBridgeEntry Entry;
 
     [Signal] public delegate void OnStopCalledEventHandler();
@@ -69,6 +71,10 @@ public partial class TrackerPage : Control
         };
         SaveType<bool>.OnSaveEvent += OnBoolSaveDataUpdated;
         OnStopCalled += () => SaveType<bool>.OnSaveEvent -= OnBoolSaveDataUpdated;
+        
+        OnFilterDataUpdated = (_, _) => QueueUpdate();
+        SaveType<FilterType>.OnSaveEvent += OnFilterDataUpdated;
+        OnStopCalled += () => SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
     }
 
     public override void _Process(double delta)

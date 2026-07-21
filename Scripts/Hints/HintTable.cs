@@ -189,7 +189,7 @@ public partial class HintTable : TextTable
                     current, hint => GetOrderSlot(hint.ReceivingPlayer),
                     option.IsDescending, isFirst
                 ),
-                "Item" => Order(current, hint => hint.ItemFlags.SortNumber(), option.IsDescending, isFirst),
+                "Item" => Order(current, hint => hint.SortNumber(), option.IsDescending, isFirst),
                 "Finding Player" => Order(
                     current, hint => GetOrderSlot(hint.FindingPlayer), option.IsDescending,
                     isFirst

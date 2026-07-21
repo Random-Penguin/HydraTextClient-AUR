@@ -63,6 +63,12 @@ public static class Extensions // sorted alphabetically for the memes
         public string UID => FilterType.MakeUID(hint.ItemName, hint.ItemGame, hint.ItemFlags);
         public string EntranceName => hint.Entrance == "" ? "Vanilla" : hint.Entrance;
         public string GetItemEffectText() => $"{{{{item;``{hint.ItemGame}``;``{hint.ItemName}``;{(int)hint.ItemFlags}}}}}";
+
+        public int SortNumber()
+        {
+            if (SaveType<FilterType>.TryGet(hint.UID, out var filter) && filter.IsSpecial) return -1;
+            return hint.ItemFlags.SortNumber();
+        }
     }
 
     extension(HintPrintJsonPacket packet)
@@ -161,6 +167,12 @@ public static class Extensions // sorted alphabetically for the memes
         public string UID => FilterType.MakeUID(item.ItemName, item.ItemGame, item.Flags);
         public string GetEffectText() => $"{{{{item;``{item.ItemGame}``;``{item.ItemName}``;{(int)item.Flags}}}}}";
         public string GetLocationEffectText() => $"{{{{loc;{item.LocationId};{item.Player.Slot}}}}}";
+
+        public int SortNumber()
+        {
+            if (SaveType<FilterType>.TryGet(item.UID, out var filter) && filter.IsSpecial) return -1;
+            return item.Flags.SortNumber();
+        }
     }
 
     extension(ItemPrintJsonPacket packet)

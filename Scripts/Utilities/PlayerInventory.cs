@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utilities.Popups;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -27,6 +29,7 @@ public partial class PlayerInventory : TextTable
     public string[] RawItemNames;
     public bool OpenNewWindow;
     public bool HasOpenedNewWindow = false;
+    private Action<string, FilterType> OnFilterDataUpdated;
 
     public void SetupInventory(ApClient client)
     {
@@ -38,6 +41,9 @@ public partial class PlayerInventory : TextTable
         };
         Client?.UpdateItemHandler();
         QueueUiRefresh(true);
+
+        OnFilterDataUpdated = (_, _) => QueueUiRefresh(true);
+        SaveType<FilterType>.OnSaveEvent += OnFilterDataUpdated;
     }
 
     public override void _PhysicsProcess(double delta) => Client?.UpdateItemHandler();
@@ -51,7 +57,7 @@ public partial class PlayerInventory : TextTable
 
         var items = Client.ItemHandler.Items;
         Inventory = items.GroupBy(item => item.UID).ToDictionary(g => g.Key, g => g.ToArray());
-        Keys = Inventory.OrderBy(kv => kv.Value[0].Flags.SortNumber()).ThenByDescending(kv => kv.Value.Length)
+        Keys = Inventory.OrderBy(kv => kv.Value[0].SortNumber()).ThenByDescending(kv => kv.Value.Length)
                         .Select(kv => kv.Key).ToArray();
         RawItemNames = Inventory.Values.Select(arr => arr[0].ItemName).Distinct().ToArray();
 
@@ -108,4 +114,6 @@ public partial class PlayerInventory : TextTable
         AddChild(popup);
         popup.Show();
     }
+
+    protected override void Dispose(bool disposing) => SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
 }

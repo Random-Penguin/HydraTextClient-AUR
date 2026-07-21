@@ -43,7 +43,7 @@ public partial class ItemFilterDisplay : TextTable
 
     public override void RefreshUi(bool recompile)
     {
-        FilterTypes = SaveType<FilterType>.GetValues().OrderBy(f => f.GameName).ThenBy(f => f.ItemFlags.SortNumber())
+        FilterTypes = SaveType<FilterType>.GetValues().OrderBy(f => f.GameName).ThenBy(f => f.SortNumber())
                                           .ToArray();
         UpdateData(recompile);
     }

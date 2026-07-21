@@ -1,4 +1,6 @@
 ﻿using Archipelago.MultiClient.Net.Enums;
+using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Settings.ItemFilter;
 
@@ -16,4 +18,10 @@ public struct FilterType(string itemName, string gameName, ItemFlags itemFlags)
         => $"{itemName}%__%{gameName}%__%{(int)itemFlags}";
 
     public string GetEffectText() => $"{{{{item;``{GameName}``;``{ItemName}``;{(int)ItemFlags}}}}}";
+
+    public int SortNumber()
+    {
+        if (SaveType<FilterType>.TryGet(UID, out var filter) && filter.IsSpecial) return -1;
+        return ItemFlags.SortNumber();
+    }
 }

@@ -15,7 +15,7 @@ public partial class ItemCounterTable : TextTable
 
     public void SetItems(ItemInfo[] items)
     {
-        Items = items.OrderBy(item => item.Flags.SortNumber()).GroupBy(item => item.UID)
+        Items = items.OrderBy(item => item.SortNumber()).GroupBy(item => item.UID)
                      .ToDictionary(g => g.Key, g => g.ToArray());
         Keys = Items.Keys.ToArray();
         QueueUiRefresh(true);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Godot;
+using HydraTextClient.Scripts.Controllers;
 using static HydraTextClient.Scripts.Utility.Loaders.Directories;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;
@@ -29,11 +30,15 @@ public static class GamePortraitLoader
     {
         foreach (var file in Directory.GetFiles(dir))
         {
-            var gameName = string.Join(".", file.Replace("\\", "/").Split("/")[^1].Split('.')[..^1]);
-            if (GamePortraitImages.ContainsKey(gameName)) continue;
-            GamePortraitImages[CleanName(gameName)] = ImageTexture.CreateFromImage(Image.LoadFromFile(file));
-            BaseList.Add(gameName);
-            GD.Print($"Loaded image [{file.Replace(dir, ".")}] for game [{gameName}]");
+            try
+            {
+                var gameName = string.Join(".", file.Replace("\\", "/").Split("/")[^1].Split('.')[..^1]);
+                if (GamePortraitImages.ContainsKey(gameName)) continue;
+                GamePortraitImages[CleanName(gameName)] = ImageTexture.CreateFromImage(Image.LoadFromFile(file));
+                BaseList.Add(gameName);
+                GD.Print($"Loaded image [{file.Replace(dir, ".")}] for game [{gameName}]");
+            }
+            catch (Exception e) { MainController.ShowError($"Error Loading a Portrait [{file}]", e); }
         }
 
         foreach (var subDir in Directory.GetDirectories(dir)) LoadDirectory(subDir);

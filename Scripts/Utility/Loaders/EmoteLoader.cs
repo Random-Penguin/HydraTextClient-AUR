@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Godot;
+using HydraTextClient.Scripts.Controllers;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;
 
@@ -24,10 +25,14 @@ public static class EmoteLoader
     {
         foreach (var file in Directory.GetFiles(dir))
         {
-            var emoteName = string.Join(".", file.Replace("\\", "/").Split("/")[^1].Split('.')[..^1]);
-            if (Emotes.ContainsKey(emoteName)) continue;
-            Emotes[emoteName.ToLower()] = ImageTexture.CreateFromImage(Image.LoadFromFile(file));
-            GD.Print($"Loaded image [{file.Replace(dir, ".")}] for game [{emoteName}]");
+            try
+            {
+                var emoteName = string.Join(".", file.Replace("\\", "/").Split("/")[^1].Split('.')[..^1]);
+                if (Emotes.ContainsKey(emoteName)) continue;
+                Emotes[emoteName.ToLower()] = ImageTexture.CreateFromImage(Image.LoadFromFile(file));
+                GD.Print($"Loaded image [{file.Replace(dir, ".")}] for game [{emoteName}]");
+            }
+            catch (Exception e) { MainController.ShowError($"Error Loading Emote [{file}]", e); }
         }
 
         foreach (var subDir in Directory.GetDirectories(dir)) LoadDirectory(subDir);

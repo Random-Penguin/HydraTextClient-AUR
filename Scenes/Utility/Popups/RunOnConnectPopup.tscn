@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_kufrg"]
 [ext_resource type="Script" uid="uid://dy46bpoes25f1" path="res://Scripts/Utility/Popups/RunOnConnect.cs" id="2_1fyyr"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="3_1fyyr"]
 
 [node name="RunOnConnectPopup" type="Window" unique_id=1218589099 node_paths=PackedStringArray("Container", "RunAll", "RunSelected")]
 oversampling_override = 1.0
@@ -66,5 +67,11 @@ text = "Run Selected"
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Close"
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("3_1fyyr")]
+Prefix = "window_nodes"
+Controls = {
+"connection_popup": NodePath("..")
+}
 
 [connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Button3" to="." method="Close"]

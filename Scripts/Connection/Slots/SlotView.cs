@@ -22,6 +22,7 @@ public partial class SlotView : MarginContainer
     [Export] private Texture2D UnknownGame;
 
     [Signal] public delegate void EditPortraitEventHandler(string slotName);
+
     [Signal] public delegate void AddNewPortraitEventHandler();
 
     private Dictionary<string, SlotPortrait> Portraits = [];
@@ -47,6 +48,9 @@ public partial class SlotView : MarginContainer
         ReOrganizeSlots();
         LeaderChanger.GetPopup().AddThemeConstantOverride("icon_max_width", 14);
     }
+
+    public override void _Process(double delta)
+        => LeaderChanger.Disabled = ConnectionController.IsConnecting || ConnectionController.GetConnectionCooldown > 0;
 
     public override void _GuiInput(InputEvent @event)
     {

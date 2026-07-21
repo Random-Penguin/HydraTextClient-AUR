@@ -125,6 +125,7 @@ public partial class TrackerPage : Control
                 if (!firstEnd) break;
             }
 
+            if (sb.ToString().Trim() is "") sb.Append("Super BK :(\nEither that or there was an error from UT");
             CompiledMessage = sb.ToString().CompileRichText(GetCompileEffects(), true);
         }
 

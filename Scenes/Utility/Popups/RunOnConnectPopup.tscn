@@ -8,9 +8,10 @@ oversampling_override = 1.0
 size = Vector2i(450, 200)
 theme = ExtResource("1_kufrg")
 script = ExtResource("2_1fyyr")
-Container = NodePath("Panel/MarginContainer/ScrollContainer/VBoxContainer")
+Container = NodePath("Panel/MarginContainer/ScrollContainer/VBoxContainer/Container")
 RunAll = NodePath("Panel/MarginContainer/ScrollContainer/VBoxContainer/Button")
 RunSelected = NodePath("Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Button2")
+OnTop = true
 
 [node name="Panel" type="Panel" parent="." unique_id=2050311449]
 anchors_preset = 15
@@ -34,6 +35,9 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=898024207]
+layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1108241910]
 modulate = Color(1, 1, 1, 0)

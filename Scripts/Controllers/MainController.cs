@@ -16,7 +16,9 @@ public partial class MainController : Control
     public const string WindowSaveId = "window_nodes/MAIN_WINDOW";
     public const string WindowBackGroundImage = "Theme/BackgroundImage";
     public const string WindowBackGroundImageAlpha = "Theme/BackgroundImageAlpha";
+    public const string CheckForUpdate = "Main/CheckForUpdates";
 
+    [Export] private string VersionNumber;
     [Export] private PackedScene ErrorWindow;
     [Export] private PackedScene ItemFilterWindow;
     [Export] private PackedScene ItemFilterDisplay;
@@ -24,6 +26,8 @@ public partial class MainController : Control
     [Export] private TextureRect BackgroundImage;
     [Export] private SettingsPorter Porter;
     [Export] private TabContainer MainContainer;
+    [Export] private PackedScene AutoUpdater;
+    [Export, ExportGroup("Debug")] private PackedScene VersioningHelper;
 
     private ErrorDialog ErrorDialog;
 
@@ -45,6 +49,7 @@ public partial class MainController : Control
         window.Size = SaveType<Vector2I>.Load($"{WindowSaveId}_size", window.Size);
         window.Position = SaveType<Vector2I>.Load($"{WindowSaveId}_pos", window.Position);
         window.SizeChanged += () => SaveType<Vector2I>.Save($"{WindowSaveId}_size", window.Size, true);
+        window.Title = $"Hydra Text Client {VersionNumber}";
 
         var mainBackgroundBox = (StyleBoxFlat)GetThemeStylebox("panel");
         mainBackgroundBox.BgColor = ColorIdConstants.ColorConstant.UiBackground.Load();
@@ -84,6 +89,14 @@ public partial class MainController : Control
         GlobalThemeSettings.Init();
         MainContainer.CurrentTab = 0;
         
+        if (Path.GetFileName(System.Environment.ProcessPath)!.StartsWith('_')) GetTree().CallDeferred("quit");
+        var underscore = $"{Path.GetDirectoryName(System.Environment.ProcessPath)}/_{Path.GetFileName(System.Environment.ProcessPath)}";
+        foreach (var old in Directory.GetFiles(Path.GetDirectoryName(System.Environment.ProcessPath)!))
+        {
+            if (Path.GetFileName(old) is "_OLD_HYDRA_DELETE_ME") File.Delete(old);
+        }
+        if (SaveType<bool>.Load(CheckForUpdate, true) && RunAutoUpdater()) return;
+        
         if (SaveType<bool>.Load("Main/HasPorted", !File.Exists(Directories.LegacyData))) return;
         Porter.Startup();
         Porter.Show();
@@ -97,18 +110,45 @@ public partial class MainController : Control
         OnExit?.Invoke();
     }
 
+    public bool RunAutoUpdater()
+    {
+        if (ConnectionController.HasLeaderClient)
+        {
+            ShowError("Cannot check for updates with connected slots");
+            return false;
+        }
+        
+        var updater = AutoUpdater.Instantiate<AutoUpdater>();
+        if (!updater.CanRunUpdater()) return false;
+        CallDeferred("add_child", updater);
+        updater.CallDeferred("show");
+        return true;
+    }
+
     public void LoadBackgroundImage(string path)
     {
         if (path is "" || !File.Exists(path)) return;
         BackgroundImage.Texture = ImageTexture.CreateFromImage(Image.LoadFromFile(path));
     }
-    
+
     public void LoadBackgroundImageTransparency(double val)
     {
         var color = BackgroundImage.Modulate;
-        color.A = (int)Math.Clamp(val, 0, 255)/255f;
+        color.A = (int)Math.Clamp(val, 0, 255) / 255f;
         BackgroundImage.Modulate = color;
     }
+
+    #if DEBUG
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (Input.IsActionJustPressed("debug_HasherHelper"))
+        {
+            var helper = VersioningHelper.Instantiate<VersioningHelperPopup>();
+            AddChild(helper);
+            helper.Show();
+        }
+    }
+    #endif
 
     public static void ShowError(string message, Exception e) => ShowError($"{message}\n{e.Message}\n{e.StackTrace}");
     public static void ShowError(Exception e) => ShowError($"{e.Message}\n{e.StackTrace}");
@@ -143,5 +183,7 @@ public partial class MainController : Control
     public static void Save() => OnSave?.Invoke();
     public static string GetTimestamp() => DateTime.Now.ToString("[HH:mm:ss]");
     public static void SetAlwaysOnTop(bool val) => Singleton.GetWindow().AlwaysOnTop = val;
+    public static string GetVersion() => Singleton.VersionNumber;
+    public static void CheckForUpdates() => Singleton.RunAutoUpdater();
     public void UpdateDiscord() => DRPC.CheckDiscord();
 }

@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
@@ -117,6 +116,10 @@ public partial class TextClient : Control
             {
                 if (ConnectionController.LeaderClient! != client) return;
                 MessageQueue.Enqueue(new TrapLinkPacket(player, trap));
+            };
+            client.OnUnhandledPacketReceived += packet =>
+            {
+                GD.PushWarning($"Unhandled Packet: [{packet.PacketType}]");
             };
         };
 

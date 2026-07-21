@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
@@ -75,6 +74,11 @@ public partial class SlotPortrait : TextureRect
         {
             var mw = ConnectionController.GetCurrentMultiworld;
             if (mw is null) return;
+            
+            var player = mw.GetSlotName(slot);
+            var thisPlayer = mw.GetSlotName(SlotName);
+            if (thisPlayer != player) return;
+            
             var data = SaveType<SlotGameData>.Load(SlotName, null, false);
             if (data is null) return;
             var commands = data.ProcessCommands.Select(command => command.Trim()).Where(command => command is not "")
@@ -90,6 +94,7 @@ public partial class SlotPortrait : TextureRect
                                         args[0], string.Join(' ', args.Length > 1 ? args[1..] : [])
                                     )
                                 ).ToArray();
+            
             if (commands.Length == 0) return;
 
             var popup = RunOnCommandPopup.Instantiate<RunOnConnect>();
@@ -102,10 +107,19 @@ public partial class SlotPortrait : TextureRect
                     ProcessIds.Add(id);
                 }
             });
+            GetParent().GetParent().CallDeferred("add_child", popup);
+            popup.CallDeferred("show");
         };
 
-        OnDisconnect = (_, _, _) =>
+        OnDisconnect = (slot, _, _) =>
         {
+            var mw = ConnectionController.GetCurrentMultiworld;
+            if (mw is null) return;
+            
+            var player = mw.GetSlotName(slot);
+            var thisPlayer = mw.GetSlotName(SlotName);
+            if (thisPlayer != player) return;
+            
             if (ProcessIds.IsEmpty) return;
             foreach (var id in ProcessIds) ExternalAppController.EndProcess(id);
         };

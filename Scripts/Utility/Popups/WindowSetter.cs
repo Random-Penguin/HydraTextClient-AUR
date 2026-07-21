@@ -11,6 +11,7 @@ public partial class WindowSetter : Window
     [Export] private bool OnTop = false;
     [Export] private bool ToQueueFree = true;
     [Export] private bool ClickAnywhereToClose = false;
+    private bool Added;
 
     [Signal] public delegate void CloseCalledEventHandler();
 
@@ -29,8 +30,10 @@ public partial class WindowSetter : Window
         ForceNative = true;
         Transparent = true;
         InitialPosition = WindowInitialPosition.CenterMainWindowScreen;
-        CloseRequested += Close;
         Theme = MainController.GlobalTheme;
+        if (Added) return;
+        CloseRequested += Close;
+        Added = true;
     }
 
     public void Close()

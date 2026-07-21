@@ -2,7 +2,6 @@
 using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
-using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -41,6 +40,9 @@ public static class GlobalThemeSettings
                   .AddSeparator(1)
                   .AddButton("Force (Safety) Save", Save, 2)
                   .AddButton("Open Save Directory", () => OS.ShellOpen(Directories.MainDirectory), 2)
+                  .AddSeparator(2)
+                  .AddCheckBox("Check For Updates on Start", CheckForUpdate, true, 2)
+                  .AddButton("Check For Updates", CheckForUpdates, 2)
                   .AddSeparator(2)
                   .AddButton(
                        "Export Colors to Clipboard",

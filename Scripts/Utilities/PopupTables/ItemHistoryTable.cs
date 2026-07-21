@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
-using Godot;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 

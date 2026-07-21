@@ -28,10 +28,10 @@ public static class Extensions // sorted alphabetically for the memes
 
         public void Save(Color color, bool broadcast = true)
             => SaveType<HexColor>.Save(ConstantToId[constant], color, broadcast);
-        
+
         public HexColor Load(bool broadcast = false)
             => SaveType<HexColor>.Load(ConstantToId[constant], ConstantToDefaultColor[constant], broadcast);
-        
+
         public bool IsPlayerColor()
             => constant is PlayerConnected or PlayerListedNonConnected or PlayerNonConnected or ServerColor;
 
@@ -204,7 +204,7 @@ public static class Extensions // sorted alphabetically for the memes
         {
             foreach (var printableObj in objs) printableObj.AddText(label);
         }
-        
+
         public void SetFontSizeOverride(double val)
         {
             label.SetFontSizeOverride("bold_italic_font_size", val);
@@ -275,6 +275,17 @@ public static class Extensions // sorted alphabetically for the memes
         public string CompileSimpleText(Dictionary<string, string> replacers) => replacers.Aggregate(
             str, (s, kv) => s.Replace($"{{{{{kv.Key}}}}}", kv.Value)
         );
+
+        public void SplitVersionNumber(out int majorVersion, out int minorVersion, out int patchVersion,
+            out string extVersion)
+        {
+            var firstSplit = str.ToLower().Split('-');
+            var ver = firstSplit[0].Replace("v", "").ToLower().Split('.');
+            majorVersion = int.Parse(ver[0]);
+            minorVersion = ver.Length == 1 ? 0 : int.Parse(ver[1]);
+            patchVersion = ver.Length == 2 ? 0 : int.Parse(ver[2]);
+            extVersion = str.Contains('-') ? $"-{firstSplit[1]}" : "";
+        }
 
         public string Sanitize() => ((string[]) //bbcode blacklist
         [

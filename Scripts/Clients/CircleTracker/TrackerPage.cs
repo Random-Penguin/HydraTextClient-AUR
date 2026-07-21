@@ -14,7 +14,6 @@ using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
-using Color = Godot.Color;
 
 namespace HydraTextClient.Scripts.Clients.CircleTracker;
 

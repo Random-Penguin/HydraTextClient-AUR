@@ -23,7 +23,7 @@ public class HintStatusEffect : MessageParserEffect
 
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
-        if (args.Length is 1 or 3) return;
+        if (args.Length is not (1 or 3)) return;
         var isClickable = args.Length is 3 && args[2].ToLower()[0] == 't';
         var status = args[0] switch
         {

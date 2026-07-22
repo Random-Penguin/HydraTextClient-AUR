@@ -199,7 +199,7 @@ public static class Extensions // sorted alphabetically for the memes
         }
 
         public string GetItemEffectText()
-            => $"{{{{item``;{packet.ItemGame}``;``{packet.ItemName}``;{(int)packet.Item.Flags}}}}}";
+            => $"{{{{item;``{packet.ItemGame}``;``{packet.ItemName}``;{(int)packet.Item.Flags}}}}}";
 
         public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
         public string GetLocationName() => LocationEffect.LocationName(packet.Item.Location, packet.FindingPlayer);

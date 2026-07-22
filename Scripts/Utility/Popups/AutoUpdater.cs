@@ -97,7 +97,12 @@ public partial class AutoUpdater : WindowSetter
 
             using var response = Client.GetStreamAsync($"{GithubReleasesPath}{MaxVersion.VersionText}/{zipType}")
                                        .GetAwaiter().GetResult();
-            response.CopyTo(File.Create(zipPath));
+            var file = File.Create(zipPath);
+            response.CopyToAsync(file).Wait();
+            response.Flush();
+            response.Close();
+            file.Flush();
+            file.Close();
 
             // extract
             File.SetAttributes(selfFile, FileAttributes.Hidden);
@@ -116,9 +121,9 @@ public partial class AutoUpdater : WindowSetter
 
             entry!.ExtractToFile(selfFile);
             File.Delete(zipPath);
+            MainController.QuitHydra();
         }
         catch (Exception e) { GD.PrintErr(e); }
-        MainController.QuitHydra();
     }
 
     protected override void Dispose(bool disposing) => Client?.Dispose();

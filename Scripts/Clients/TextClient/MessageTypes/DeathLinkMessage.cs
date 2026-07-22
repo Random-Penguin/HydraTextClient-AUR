@@ -33,9 +33,9 @@ public partial class DeathLinkMessage : MessageScene
 
         if (Player.Contains('(') && Player.Contains(')'))
         {
-            var left = Player.LastIndexOf('(') + 1;
+            var left = Player.IndexOf('(') + 1;
             var right = Player.LastIndexOf(')');
-            if (left < right) Player = Player[(left + 1)..right];
+            if (left < right) Player = Player[left..right];
             else PlayerSlot = -1;
         }
 
@@ -44,7 +44,7 @@ public partial class DeathLinkMessage : MessageScene
         
         CachedReplacement = new Dictionary<string, string>
         {
-            ["player"] = PlayerSlot is -1 ? "Unknown Player" : $"{{{{player;{PlayerSlot}}}}}",
+            ["player"] = PlayerSlot is -1 ? dl.Player : $"{{{{player;{PlayerSlot}}}}}",
             ["groups"] = Groups = $"{string.Join(", ", dl.Groups.Select(g => $"DeathLink{g}").ToArray())}",
         };
 

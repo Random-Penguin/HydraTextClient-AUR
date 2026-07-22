@@ -74,6 +74,7 @@ public partial class ConnectionController : Control
             var isLeader = !HasLeaderClient;
             List<ArchipelagoTag> tags = [ArchipelagoTag.TextOnly, ArchipelagoTag.DeathLink, ArchipelagoTag.TrapLink];
             client.DeathLinkGroups = mw.DeathLinkGroups.ToHashSet();
+            client.DeathLinkGroups.Add("");
 
             if (!isLeader) tags.Add(ArchipelagoTag.NoText);
             OnClientPrepareConnection?.Invoke(name, client, tags, isLeader);

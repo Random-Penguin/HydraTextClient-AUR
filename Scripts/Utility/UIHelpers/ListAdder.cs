@@ -23,6 +23,7 @@ public partial class ListAdder : FoldableContainer
     public void AddGroup(string name)
     {
         var group = name ?? GroupName.Text;
+        if (group.Trim() is "") return;
         if (Groups.ContainsKey(group)) return;
 
         HBoxContainer container = new();

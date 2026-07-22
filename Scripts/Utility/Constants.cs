@@ -74,7 +74,7 @@ public static class ColorIdConstants
                     if (constant is Unknown) continue;
                     tab.AddColorChanger(ConstantToId[constant], SettingNames[constant]);
                 }
-            }, int.MinValue
+            }, -100
         );
     }
 

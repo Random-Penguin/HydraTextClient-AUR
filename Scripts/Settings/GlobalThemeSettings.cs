@@ -30,27 +30,61 @@ public static class GlobalThemeSettings
         CreateSettings();
 
         SettingsCreator.Tab(
+            "Main Settings", tab =>
+            {
+                tab.AddBrowseFile(
+                        "Set Archipelago Folder", FileDialog.FileModeEnum.OpenDir, [], 
+                        extraConfig: (button, dialog) =>
+                        {
+                            button.Pressed += () =>
+                            {
+                                var curSaved = SaveType<string>.Load(ApDir, "");
+                                if (curSaved is not "") dialog.CurrentPath = curSaved;
+                            };
+                            dialog.DirSelected += dir => SaveType<string>.Save(ApDir, dir, true);
+                        }
+                    )
+                   .AddSeparator()
+                   .AddCheckBox("Clear UI on Full Disconnection", ClearDataOnFullDisconnect, true)
+                   .AddSpinBox("Message History Limit", ChildLimiter.QueueSaveId, 200d)
+                   .AddSeparator()
+                   .AddCheckBox("Always on top", AlwaysOnTop, false, 0, b => b.Toggled += SetAlwaysOnTop)
+                   .AddCheckBox("Show new Items on Connect", DisplayNewItemsPopup, true)
+                   .AddButton("Force (Safety) Save", Save, 1)
+                   .AddButton("Open Save Directory", () => OS.ShellOpen(Directories.MainDirectory), 1)
+                   .AddSeparator(1)
+                   .AddCheckBox("Check For Updates on Start", CheckForUpdate, true, 1)
+                   .AddButton("Check For Updates", CheckForUpdates, 1)
+                   .AddButton("Open Emotes Directory", () => OS.ShellOpen(Directories.Emotes), 2)
+                   .AddButton("Open Portrait Directory", () => OS.ShellOpen(Directories.GamePortraits), 2)
+                   .AddButton(
+                        "Reload Emotes and Portraits", () =>
+                        {
+                            EmoteLoader.ReloadImages();
+                            GamePortraitLoader.ReloadImages();
+                        }, 2
+                    )
+                   .AddSeparator(2)
+                   .AddText("Sites to download portraits", 2)
+                   .AddButton("SteamGridDB.com", () => OS.ShellOpen("https://www.steamgriddb.com/"), 2)
+                   .AddButton("IGDB.com", () => OS.ShellOpen("https://www.igdb.com/"), 2)
+                   .AddButton(
+                        "mk-404's Archipelaog Library",
+                        () => OS.ShellOpen("https://mk-404.github.io/Archipelago-Games-Library/"), 2
+                    );
+            }, int.MinValue
+        );
+
+        SettingsCreator.Tab(
             "Theme",
             tab => tab
-                  .AddCheckBox("Clear UI on Full Disconnection", ClearDataOnFullDisconnect, true, 1)
-                  .AddSpinBox("Message History Limit", ChildLimiter.QueueSaveId, 200d, 1)
-                  .AddSeparator(1)
-                  .AddCheckBox("Always on top", AlwaysOnTop, false, 1, b => b.Toggled += SetAlwaysOnTop)
-                  .AddCheckBox("Show new Items on Connect", DisplayNewItemsPopup, true, 1)
-                  .AddSeparator(1)
-                  .AddButton("Force (Safety) Save", Save, 2)
-                  .AddButton("Open Save Directory", () => OS.ShellOpen(Directories.MainDirectory), 2)
-                  .AddSeparator(2)
-                  .AddCheckBox("Check For Updates on Start", CheckForUpdate, true, 2)
-                  .AddButton("Check For Updates", CheckForUpdates, 2)
-                  .AddSeparator(2)
                   .AddButton(
-                       "Export Colors to Clipboard",
+                       "Export Theme Colors to Clipboard",
                        () => DisplayServer.ClipboardSet(
                            string.Join('|', ConstantToId.Select(kv => $"{kv.Value}={kv.Key.Color().ToHtml()}"))
-                       ), 2
+                       ), 1
                    ).AddButton(
-                       "Import Colors from Clipboard"
+                       "Import Theme Colors from Clipboard"
                        , () =>
                        {
                            var colors = DisplayServer.ClipboardGet().Split('|');
@@ -62,19 +96,9 @@ public static class GlobalThemeSettings
                                if (split.Length is not 2 || !SaveType<HexColor>.ContainsKey(id)) continue;
                                SaveType<HexColor>.Save(id, new HexColor(new Color(split[1]).ToRgba64()), true);
                            }
-                       }, 2
-                   ).AddSeparator(2)
-                  .AddButton("Open Emotes Directory", () => OS.ShellOpen(Directories.Emotes), 2)
-                  .AddButton("Open Portrait Directory", () => OS.ShellOpen(Directories.GamePortraits), 2)
-                  .AddButton("Reload Emotes and Portraits", () =>
-                   {
-                       EmoteLoader.ReloadImages();
-                       GamePortraitLoader.ReloadImages();
-                   }, 2)
-                  .AddSeparator(2)
-                  .AddText("Sites to download portraits", 2)
-                  .AddButton("SteamGridDB.com", () => OS.ShellOpen("https://www.steamgriddb.com/"), 2)
-                  .AddButton("IGDB.com", () => OS.ShellOpen("https://www.igdb.com/"), 2)
+                       }, 1
+                   )
+                  .AddSeparator(1)
                   .AddBrowseFile(
                        "Set Background Image", FileDialog.FileModeEnum.OpenFile, ["*.png", "*.jpg"], col: 1,
                        extraConfig: (button, dialog) =>
@@ -91,19 +115,6 @@ public static class GlobalThemeSettings
                        {
                            box.MaxValue = 255;
                            box.MinValue = 0;
-                       }
-                   )
-                  .AddSeparator(1)
-                  .AddBrowseFile(
-                       "Set Archipelago Folder", FileDialog.FileModeEnum.OpenDir, [], col: 1,
-                       extraConfig: (button, dialog) =>
-                       {
-                           button.Pressed += () =>
-                           {
-                               var curSaved = SaveType<string>.Load(ApDir, "");
-                               if (curSaved is not "") dialog.CurrentPath = curSaved;
-                           };
-                           dialog.DirSelected += dir => SaveType<string>.Save(ApDir, dir, true);
                        }
                    )
                   .AddSeparator(1)

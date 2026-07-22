@@ -141,7 +141,12 @@ layout_mode = 2
 [node name="Utilities" parent="Main Container" unique_id=1245487862 instance=ExtResource("14_i5ty2")]
 visible = false
 layout_mode = 2
+current_tab = 0
 metadata/_tab_index = 3
+
+[node name="Item Filter" parent="Main Container/Utilities" unique_id=1407271342 instance=ExtResource("5_dc4qw")]
+layout_mode = 2
+metadata/_tab_index = 0
 
 [node name="Players" parent="Main Container" unique_id=936307540 instance=ExtResource("12_w1qgd")]
 visible = false
@@ -151,14 +156,9 @@ metadata/_tab_index = 4
 [node name="Settings" type="TabContainer" parent="Main Container" unique_id=1972428991 node_paths=PackedStringArray("Saver")]
 visible = false
 layout_mode = 2
-current_tab = 0
 script = ExtResource("11_uq7wj")
 Saver = NodePath("../../UISaver")
 metadata/_tab_index = 5
-
-[node name="Item Filter" parent="Main Container/Settings" unique_id=1407271342 instance=ExtResource("5_dc4qw")]
-layout_mode = 2
-metadata/_tab_index = 0
 
 [node name="Consoles" type="TabContainer" parent="Main Container" unique_id=1719204472]
 visible = false

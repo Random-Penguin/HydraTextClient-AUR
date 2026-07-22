@@ -16,6 +16,7 @@ namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 public class ItemEffect : MessageParserEffect
 {
     public const string SaveId = "Clients/TextClient/TextEffects/ItemMessageEffect";
+    public const string FallbackSaveId = "Clients/TextClient/TextEffects/ItemMessageHideFallback";
     public const string Default = "[{{img}}{{name}}]";
 
     private static ConcurrentDictionary<string, Texture2D> CustomAssetsItemCache = [];
@@ -79,9 +80,12 @@ public class ItemEffect : MessageParserEffect
             SaveType<string>.Load(SaveId, Default).CompileRichText(
                 new Dictionary<string, Action<RichTextLabel, string[]>>
                 {
-                    ["img"] = (l, _) => l.AddImage(
-                        CustomAssets.ItemImage(args[0], args[1], args[0], _ => reloadFunction()), 0, 20
-                    ),
+                    ["img"] = (l, _) =>
+                    {
+                        var img = CustomAssets.ItemImage(args[0], args[1], args[0], _ => reloadFunction(), out var isFallback);
+                        if (isFallback && SaveType<bool>.Load(FallbackSaveId ,false)) return;
+                        l.AddImage(img, 0, 20);
+                    },
                     ["name"] = (l, _) => l.AddText(args[1]),
                 }, false
             )

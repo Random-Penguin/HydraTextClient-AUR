@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utilities.Popups;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -57,10 +58,11 @@ public partial class SlotUtility : HSplitContainer
         var game = client.PlayerGames[client.PlayerSlot];
         ItemList.OnItemCreated += (list, index, item) =>
         {
-            list.CallDeferred(
-                "set_item_icon", index,
-                CustomAssets.ItemImage(game, item, game, asset => list.CallDeferred("set_item_icon", index, asset))
+            var img = CustomAssets.ItemImage(
+                game, item, game, asset => list.CallDeferred("set_item_icon", index, asset), out var isFallback
             );
+            if (isFallback && SaveType<bool>.Load(ItemEffect.FallbackSaveId, false)) return;
+            list.CallDeferred("set_item_icon", index, img);
         };
         ItemList.SetItems(client.Items.Select(kv => kv.Key).ToArray());
         ItemList.List.FixedIconSize = new Vector2I(fontSize, fontSize);

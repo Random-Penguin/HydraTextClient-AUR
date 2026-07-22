@@ -36,7 +36,13 @@ public partial class ItemFilterDisplay : TextTable
 
         SaveType<string>.OnSaveEvent += (id, _) =>
         {
-            if (id != ItemEffect.SaveId) return;
+            if (id is not ItemEffect.SaveId) return;
+            QueueUiRefresh(false);
+        };
+
+        SaveType<bool>.OnSaveEvent += (id, _) =>
+        {
+            if (id is not ItemEffect.FallbackSaveId) return;
             QueueUiRefresh(false);
         };
     }

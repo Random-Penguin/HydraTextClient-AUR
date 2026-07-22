@@ -130,6 +130,7 @@ public partial class TextClient : Control
                 tab
                    .AddCheckBox("Show Timestamps", ShowTimestamps, true)
                    .AddCheckBox("Show Game Portraits", ShowGamePortraits, true)
+                   .AddCheckBox("Hide Item Fallback Image", ItemEffect.FallbackSaveId)
                    .AddSeparator()
                    .AddLineEdit("Join Message", JoinMessage.SaveId, JoinMessage.Default)
                    .AddSeparator()

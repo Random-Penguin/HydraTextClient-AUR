@@ -68,7 +68,7 @@ public partial class ItemMessage : MessageScene
 
     public override bool CanReload(string saveId)
     {
-        if (saveId is PlayerConnect or SaveIdDifferentPerson or SaveIdSamePerson or ItemEffect.SaveId) return true;
+        if (saveId is PlayerConnect or SaveIdDifferentPerson or SaveIdSamePerson or ItemEffect.SaveId or ItemEffect.FallbackSaveId) return true;
         if (IdToConstant.TryGetValue(saveId, out var constant))
             return constant.IsPlayerColor() || constant.IsItemColor() || constant is LocationColor;
 

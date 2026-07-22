@@ -57,8 +57,7 @@ public partial class HintTable : TextTable
 
         SaveType<string>.OnSaveEvent += (id, _) =>
         {
-            if (id != PlayerEffect.SaveIdNoAlias && id != PlayerEffect.SaveIdWithAlias
-                                                 && id != ItemEffect.SaveId) return;
+            if (id is not (PlayerEffect.SaveIdNoAlias or PlayerEffect.SaveIdWithAlias or ItemEffect.SaveId)) return;
             QueueUiRefresh(false);
         };
 
@@ -104,6 +103,11 @@ public partial class HintTable : TextTable
             : TextServer.AutowrapMode.Off;
         SaveType<bool>.OnSaveEvent += (key, b) =>
         {
+            if (key is ItemEffect.FallbackSaveId)
+            {
+                QueueUiRefresh(false);
+                return;
+            }
             if (key is "hint_table/word_wrap")
                 AutowrapMode = b ? TextServer.AutowrapMode.WordSmart : TextServer.AutowrapMode.Off;
             if (!key.StartsWith("hint_table/show_")) return;

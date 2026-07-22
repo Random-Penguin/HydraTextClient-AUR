@@ -32,14 +32,19 @@ public partial class CustomAssets : Control
 
     public static ImageTexture CreateSprite(string file) => ImageTexture.CreateFromImage(Image.LoadFromFile(file));
 
-    public static Texture2D ItemImage(string itemGameName, string itemName, string selfGame, Action<Texture2D> callback)
-        => ItemImage(new AssetItem(itemGameName, itemName), selfGame, callback);
+    public static Texture2D ItemImage(string itemGameName, string itemName, string selfGame, Action<Texture2D> callback, out bool isFallback)
+        => ItemImage(new AssetItem(itemGameName, itemName), selfGame, callback, out isFallback);
 
-    private static Texture2D ItemImage(AssetItem location, string selfGame, Action<Texture2D> callback)
+    private static Texture2D ItemImage(AssetItem location, string selfGame, Action<Texture2D> callback, out bool isFallback)
     {
         try
         {
-            if (ItemSprites.TryGetValue(location.Uid, out var sprite)) return sprite;
+            if (ItemSprites.TryGetValue(location.Uid, out var sprite))
+            {
+                isFallback = false;
+                return sprite;
+            }
+            isFallback = true;
             Task.Run(() =>
                 {
                     try
@@ -52,7 +57,7 @@ public partial class CustomAssets : Control
                                 out spriteData
                             );
 
-                        if (!res || spriteData is null) return Task.FromResult(Task.FromResult(Singleton.Fallback));
+                        if (!res || spriteData is null) return Task.FromResult(Singleton.Fallback);
                         var file = spriteData.FilePath;
                         ItemSprites[location.Uid] = sprite = CreateSprite(file);
                         callback(sprite);
@@ -61,12 +66,13 @@ public partial class CustomAssets : Control
                     return Task.CompletedTask;
                 }
             );
-
+            
             return Singleton.Fallback;
         }
         catch (Exception e)
         {
             GD.Print("Custom Assets: Race Condition? Defaulting on Fallback");
+            isFallback = true;
             return GetFallback;
         }
     }

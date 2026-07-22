@@ -36,7 +36,7 @@ public struct VersionInfo(int majorVersion, int minorVersion, int patchVersion, 
         if (e1.Contains('.') && !e2.Contains('.')) return true;
         if (!e1.Contains('.') && e2.Contains('.')) return false;
         var n1 = int.Parse(e1.Split('.')[1]);
-        var n2 = int.Parse(e2.Split('.')[2]);
+        var n2 = int.Parse(e2.Split('.')[1]);
         return n1 > n2;
     }
 

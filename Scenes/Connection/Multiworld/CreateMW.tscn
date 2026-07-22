@@ -10,6 +10,7 @@
 [node name="CreateMW" type="Window" unique_id=1794311022 node_paths=PackedStringArray("Address", "Port", "Password", "MultiworldName", "ListAdder")]
 oversampling_override = 1.0
 size = Vector2i(420, 650)
+visible = false
 theme = ExtResource("1_ax4sc")
 script = ExtResource("2_on6j5")
 Address = NodePath("Panel/ScrollContainer/MarginContainer/VBoxContainer2/Info/AddressEdit")

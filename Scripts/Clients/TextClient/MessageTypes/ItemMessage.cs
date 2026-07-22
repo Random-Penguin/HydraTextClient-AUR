@@ -86,8 +86,7 @@ public partial class ItemMessage : MessageScene
                 Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Trap));
                 break;
             case TextClient.ShowOnlyYou:
-                var isRandomPeople = !SlotView.ContainsSlot(FinderName) && !SlotView.ContainsSlot(ReceiverName);
-                Visible = !(!SaveType<bool>.Load(saveId, true) && isRandomPeople);
+                Visible = !(!SaveType<bool>.Load(saveId, true) && (SlotView.ContainsSlot(FinderName) || SlotView.ContainsSlot(ReceiverName)));
                 break;
             case SaveIdDifferentPerson or SaveIdSamePerson: return true;
         }

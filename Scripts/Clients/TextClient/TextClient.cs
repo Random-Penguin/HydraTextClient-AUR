@@ -194,7 +194,7 @@ public partial class TextClient : Control
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.NeverExclude) && !SaveType<bool>.Load(ShowUseful, true)) return;
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.None) && !SaveType<bool>.Load(ShowNormal, true)) return;
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.Trap) && !SaveType<bool>.Load(ShowTrap, true)) return;
-            var leader = ConnectionController.LeaderClient;
+            var leader = ConnectionController.LeaderClient!;
             var receiver = leader.PlayerNames[itemPacket.ReceivingPlayer];
             var finder = leader.PlayerNames[itemPacket.FindingPlayer];
             if (SaveType<bool>.Load(ShowOnlyYou, false) && !SlotView.ContainsSlot(receiver)

@@ -1,59 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Godot;
-using HydraTextClient.Scripts.Controllers;
 using static HydraTextClient.Scripts.Utility.Loaders.Directories;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;
 
-public static class GamePortraitLoader
+public class GamePortraitLoader : ImageLoader
 {
-    public static event Action? OnReloadImages;
-    private static Dictionary<string, ImageTexture> GamePortraitImages = [];
-    private static HashSet<string> BaseList = [];
-    public static string[] GameList = [];
+    public static GamePortraitLoader Singleton = new();
+    public override string ImageFolder => GamePortraits;
+    private HashSet<string> BaseList = [];
+    public string[] GameList = [];
 
-    static GamePortraitLoader() => ReloadImages();
+    public string GameAt(int i) => GameList[i];
+    public override void ReloadImagesResolved() => GameList = BaseList.Order().ToArray();
 
-    public static void ReloadImages()
+    public override void ImageWasSet(string path, string image, ImageTexture img)
     {
-        GD.Print("Loading Portraits");
-        if (!Directory.Exists(GamePortraits)) Directory.CreateDirectory(GamePortraits);
-        LoadDirectory(GamePortraits);
-        GameList = BaseList.Order().ToArray();
-        OnReloadImages?.Invoke();
+        BaseList.Add(image);
+        GD.Print($"Loaded image [{path.Replace(ImageFolder, ".")}] for game [{image}]");
     }
 
-    private static void LoadDirectory(string dir)
-    {
-        foreach (var file in Directory.GetFiles(dir))
-        {
-            try
-            {
-                var gameName = string.Join(".", file.Replace("\\", "/").Split("/")[^1].Split('.')[..^1]);
-                if (GamePortraitImages.ContainsKey(gameName)) continue;
-                GamePortraitImages[CleanName(gameName)] = ImageTexture.CreateFromImage(Image.LoadFromFile(file));
-                BaseList.Add(gameName);
-                GD.Print($"Loaded image [{file.Replace(dir, ".")}] for game [{gameName}]");
-            }
-            catch (Exception e) { MainController.ShowError($"Error Loading a Portrait [{file}]", e); }
-        }
-
-        foreach (var subDir in Directory.GetDirectories(dir)) LoadDirectory(subDir);
-    }
-
-    public static bool TryGet(string gameName, out ImageTexture img)
-        => GamePortraitImages.TryGetValue(CleanName(gameName), out img);
-
-    public static Texture2D GetOrDef(string gameName, Texture2D def)
-    {
-        if (!GamePortraitImages.ContainsKey(CleanName(gameName))) return def;
-        return GamePortraitImages[CleanName(gameName)];
-    }
-
-    public static ImageTexture GetImage(string name) => GamePortraitImages[name.ToLower()];
-    public static string GameAt(int i) => GameList[i];
-    private static string CleanName(string name) => name.ToLower().Replace(":", "");
+    public override string NameModify(string name) => name.ToLower().Replace(":", "");
+    public override string PathToNameModify(string path) => Path.GetFileNameWithoutExtension(path);
 }

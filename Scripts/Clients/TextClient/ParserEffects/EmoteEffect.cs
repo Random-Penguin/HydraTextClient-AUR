@@ -17,7 +17,7 @@ public class EmoteEffect : MessageParserEffect
             return;
         }
         
-        if (!EmoteLoader.TryGet(args[0], out var img))
+        if (!EmoteLoader.Singleton.TryGet(args[0], out var img))
         {
             label.AddText($"[{args[0]}]");
             return;

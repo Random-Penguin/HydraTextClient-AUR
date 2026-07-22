@@ -60,8 +60,8 @@ public static class GlobalThemeSettings
                    .AddButton(
                         "Reload Emotes and Portraits", () =>
                         {
-                            EmoteLoader.ReloadImages();
-                            GamePortraitLoader.ReloadImages();
+                            EmoteLoader.Singleton.ReloadImages();
+                            GamePortraitLoader.Singleton.ReloadImages();
                         }, 2
                     )
                    .AddSeparator(2)

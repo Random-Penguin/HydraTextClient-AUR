@@ -18,7 +18,7 @@ public partial class EmotePicker : WindowSetter
 	public override void _Ready()
 	{
 		UpdateEmotes();
-		EmoteLoader.OnReloadImages += UpdateEmotes;
+		EmoteLoader.Singleton.OnReloadImages += UpdateEmotes;
 	}
 
 	public void PickEmote(string emote) => EmitSignalEmotePicked($"{{{{e;{emote}}}}}");
@@ -40,7 +40,7 @@ public partial class EmotePicker : WindowSetter
 		}
 		
 		EmoteButtons.Clear();
-		var emotes = EmoteLoader.GetImages();
+		var emotes = EmoteLoader.Singleton.GetImages();
 		foreach (var emote in emotes.Keys.Order())
 		{
 			Button button = new();

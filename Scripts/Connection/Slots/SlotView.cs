@@ -84,7 +84,7 @@ public partial class SlotView : MarginContainer
         foreach (var player in OrderedSlots)
         {
             LeaderChanger.AddIconItem(
-                GamePortraitLoader.GetOrDef(
+                GamePortraitLoader.Singleton.GetOrDef(
                     games[ConnectionController.HasReceipt(player) ? ConnectionController.GetReceipt(player) : player],
                     UnknownGame
                 ), player

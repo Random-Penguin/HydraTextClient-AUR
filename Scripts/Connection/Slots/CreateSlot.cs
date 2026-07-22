@@ -9,8 +9,7 @@ namespace HydraTextClient.Scripts.Connection.Slots;
 
 public partial class CreateSlot : WindowSetter
 {
-    [ExportGroup("Internal")]
-    [Export] private LineEdit SlotName;
+    [ExportGroup("Internal")] [Export] private LineEdit SlotName;
     [Export] private LineEdit WorldSlotName;
     [Export] private LineEdit WorldPassword;
     [Export] private OptionButton GameImages;
@@ -20,7 +19,7 @@ public partial class CreateSlot : WindowSetter
     public override void _Ready()
     {
         SetGameImages();
-        GamePortraitLoader.OnReloadImages += SetGameImages;
+        GamePortraitLoader.Singleton.OnReloadImages += SetGameImages;
         GameImages.GetPopup().AddThemeConstantOverride("icon_max_width", 14);
         CloseCalled += Clear;
     }
@@ -28,7 +27,7 @@ public partial class CreateSlot : WindowSetter
     public SlotGameData GenSlotData() => new()
     {
         Name = SlotName.Text,
-        Game = GameImages.Selected is 0 ? "Unknown" : GamePortraitLoader.GameAt(GameImages.Selected - 1),
+        Game = GameImages.Selected is 0 ? "Unknown" : GamePortraitLoader.Singleton.GameAt(GameImages.Selected - 1),
         ProcessCommands = SlotCommands.Text.Replace("\r", "").Split('\n'),
     };
 
@@ -37,22 +36,23 @@ public partial class CreateSlot : WindowSetter
         GameImages.Clear();
         GameImages.AddIconItem(UnknownImage, "Unknown");
 
-        foreach (var game in GamePortraitLoader.GameList) GameImages.AddIconItem(GamePortraitLoader.GetImage(game), game);
+        foreach (var game in GamePortraitLoader.Singleton.GameList)
+            GameImages.AddIconItem(GamePortraitLoader.Singleton.GetImage(game), game);
     }
 
     public void EditPortrait(string slotName)
     {
         Clear();
         var data = SaveType<SlotGameData>.Load(slotName, new SlotGameData());
-        
+
         SlotName.Text = slotName;
         var mwName = ConnectionController.GetMultiworldName(slotName);
         if (mwName != slotName) WorldSlotName.Text = mwName;
         WorldPassword.Text = ConnectionController.GetMultiworldPassword(slotName, true);
-        
-        if (GamePortraitLoader.GameList.Contains(data.Game))
+
+        if (GamePortraitLoader.Singleton.GameList.Contains(data.Game))
         {
-            GameImages.Selected = Array.IndexOf(GamePortraitLoader.GameList, data.Game) + 1;
+            GameImages.Selected = Array.IndexOf(GamePortraitLoader.Singleton.GameList, data.Game) + 1;
         }
         else GameImages.Selected = 0;
         SlotCommands.Text = string.Join('\n', data.ProcessCommands);
@@ -60,6 +60,7 @@ public partial class CreateSlot : WindowSetter
     }
 
     public void AddOverride(string _) => AddOverride();
+
     public void AddOverride()
     {
         var data = GenSlotData();

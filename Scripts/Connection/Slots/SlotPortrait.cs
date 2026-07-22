@@ -143,7 +143,7 @@ public partial class SlotPortrait : TextureRect
         }
 
         SlotNameLabel.Text = SlotName;
-        Portrait.Texture = GamePortraitLoader.GetOrDef(GameName = data.Game, UnknownPortrait);
+        Portrait.Texture = GamePortraitLoader.Singleton.GetOrDef(GameName = data.Game, UnknownPortrait);
     }
 
     public void SetScale(float scale)

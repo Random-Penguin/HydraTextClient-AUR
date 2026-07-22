@@ -58,7 +58,7 @@ public abstract partial class RichLabelInteractions : RichTextLabel
         switch (kind.ToLower())
         {
             case "text": margin.AddChild(CreateLabel(text)); break;
-            case "emote": margin.AddChild(CreateImage(EmoteLoader.GetOrDef(text, CustomAssets.GetFallback))); break;
+            case "emote": margin.AddChild(CreateImage(EmoteLoader.Singleton.GetOrDef(text, CustomAssets.GetFallback))); break;
             case "player":
                 var hasAlias = ConnectionController.GetPlayerInfo(
                     int.Parse(text), out var name, out var alias, out var game

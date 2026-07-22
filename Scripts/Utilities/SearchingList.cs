@@ -42,6 +42,20 @@ public partial class SearchingList : Control
             EmitSignalOnItemCreated(List, i, item);
         }
     }
+    
+    protected void SetItemsSearch(string[] searchRes)
+    {
+        List.Clear();
+        for (int i = 0, j = 0; i < Items.Count; i++)
+        {
+            var item = Items[i];
+            if (!VisibilitySetter(searchRes, item)) continue;
+            List.AddItem(item);
+            List.SetItemSelectable(j, false);
+            EmitSignalOnItemCreated(List, j, item);
+            j++;
+        }
+    }
 
     public void RemoveItems(params string[] items)
     {
@@ -56,7 +70,8 @@ public partial class SearchingList : Control
     {
         var results = text.Trim() is "" ? Items.ToArray()
             : Search.SearchAll(text, Items.ToArray()).Select(res => res.Target).ToArray();
-        for (var i = 0; i < List.ItemCount; i++) List.SetItemDisabled(i, !VisibilitySetter(results, Items[i]));
+        
+        SetItemsSearch(results);
     }
 
     public void SetupBox(Action<CheckBox> action) => action(Box);

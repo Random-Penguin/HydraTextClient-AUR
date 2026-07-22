@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
@@ -26,7 +27,7 @@ public partial class SlotUtility : HSplitContainer
             var size = (int)d;
             ItemList.List.FixedIconSize = new Vector2I(size, size);
         };
-        
+
         client.OnLocationsChecked += locPack =>
         {
             LocationList.RemoveItems(
@@ -35,7 +36,7 @@ public partial class SlotUtility : HSplitContainer
         };
 
         Inventory.SetupInventory(client);
-        
+
         ItemList.SetupBox(box =>
             {
                 box.Visible = true;
@@ -48,16 +49,14 @@ public partial class SlotUtility : HSplitContainer
             }
         );
 
-        ItemList.VisibilitySetter = (results, item) =>
-        {
-            return results.Contains(item) && (!ShowUnobtainedItems || !Inventory.RawItemNames.Contains(item));
-        };
+        ItemList.VisibilitySetter = (results, item) => Enumerable.Contains(results, item)
+                                                       && (!ShowUnobtainedItems || !Enumerable.Contains(
+                                                           Inventory.RawItemNames, item
+                                                       ));
+
         var game = client.PlayerGames[client.PlayerSlot];
-        ItemList.OnItemCreated += (list, index, item) => CustomAssets.ItemImage(
-            game, item, game, asset =>
-            {
-                list.CallDeferred("set_item_icon", index, asset);
-            }
+        ItemList.OnItemCreated += (list, index, item) => list.SetItemIcon(
+            index, CustomAssets.ItemImage(game, item, game, asset => list.SetItemIcon(index, asset))
         );
         ItemList.SetItems(client.Items.Select(kv => kv.Key).ToArray());
         ItemList.List.FixedIconSize = new Vector2I(fontSize, fontSize);
@@ -65,16 +64,18 @@ public partial class SlotUtility : HSplitContainer
         LocationList.SetItems(
             client.Locations.Select(kv => kv.Key).Where(loc => client.MissingLocations.Contains(loc)).ToArray()
         );
-        
-        
+
+
         ItemList.OnItemPressed += s => CallDeferred("CreateDialog", "Hint Item", $"Hint for\n{s}?", $"!hint {s}");
-        LocationList.OnItemPressed += s => CallDeferred("CreateDialog", "Hint Location", $"Hint for whats at\n{s}?", $"!hint_location {s}");
+        LocationList.OnItemPressed += s => CallDeferred(
+            "CreateDialog", "Hint Location", $"Hint for whats at\n{s}?", $"!hint_location {s}"
+        );
     }
 
     public void CreateDialog(string title, string text, string command)
     {
         var popup = HintPopup.Instantiate<HintPopup>();
-        popup.Set(Client, title, text,command);
+        popup.Set(Client, title, text, command);
         AddChild(popup);
         popup.Show();
     }

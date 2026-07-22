@@ -89,11 +89,10 @@ public partial class MainController : Control
         GlobalThemeSettings.Init();
         MainContainer.CurrentTab = 0;
 
-        if (Path.GetFileNameWithoutExtension(System.Environment.ProcessPath)! is "_OLD_HYDRA_DELETE_ME") Quit();
+        if (Path.GetFileNameWithoutExtension(System.Environment.ProcessPath)! is "_OLD_HYDRA_DONT_USE_WILL_AUTODELETE") Quit();
         foreach (var old in Directory.GetFiles(Path.GetDirectoryName(System.Environment.ProcessPath)!))
         {
-            if (Path.GetFileName(old) is "_OLD_HYDRA_DELETE_ME"
-                && File.GetAttributes(old).HasFlag(FileAttributes.Hidden)) File.Delete(old);
+            if (Path.GetFileName(old) is "_OLD_HYDRA_DONT_USE_WILL_AUTODELETE") File.Delete(old);
         }
         if (SaveType<bool>.Load(CheckForUpdate, false) && RunAutoUpdater()) return;
 

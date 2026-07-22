@@ -14,7 +14,7 @@ namespace HydraTextClient.Scripts.Utility.Popups;
 
 public partial class AutoUpdater : WindowSetter
 {
-    public const string GithubReleasesPath = "https://github.com/SWCreeperKing/HydraTextClient_Rewrite/releases/tag/";
+    public const string GithubReleasesPath = "https://github.com/SWCreeperKing/HydraTextClient_Rewrite/releases/download/";
     public HttpClient Client;
 
     public const string GithubVersionPath
@@ -95,31 +95,28 @@ public partial class AutoUpdater : WindowSetter
             var zipType = CurrentVersion.FileHashes[ExternalAppController.GetFileSha(selfFile)];
             var zipPath = $"{Path.GetDirectoryName(System.Environment.ProcessPath)!}/{zipType}";
 
-            using var response = Client.GetStreamAsync($"{GithubReleasesPath}{MaxVersion.VersionText}/{zipType}")
-                                       .GetAwaiter().GetResult();
-            var file = File.Create(zipPath);
-            response.CopyToAsync(file).Wait();
-            response.Flush();
-            response.Close();
-            file.Flush();
-            file.Close();
+            var response = Client.GetByteArrayAsync($"{GithubReleasesPath}{MaxVersion.VersionText}/{zipType}").GetAwaiter().GetResult();
+            if (File.Exists(zipPath)) File.Delete(zipPath);
+            File.WriteAllBytes(zipPath, response);
 
             // extract
-            File.SetAttributes(selfFile, FileAttributes.Hidden);
-            File.Move(selfFile, $"{Path.GetDirectoryName(selfFile)}/_OLD_HYDRA_DELETE_ME");
+            File.Move(selfFile, $"{Path.GetDirectoryName(selfFile)}/_OLD_HYDRA_DONT_USE_WILL_AUTODELETE");
 
-            using var zip = ZipFile.Open(zipPath, ZipArchiveMode.Read);
-            var entry = zip.GetEntry(VersioningHelperPopup.FileTypesReverse[zipType]);
-            if (entry is null)
+            using (var zip = ZipFile.Open(zipPath, ZipArchiveMode.Read))
             {
-                MainController.ShowError(
-                    $"Item [{zipType}] in filetypereverse gave [{VersioningHelperPopup.FileTypesReverse[zipType]}], not present in zip"
-                );
-                Close();
-                return;
-            }
+                var entry = zip.GetEntry(VersioningHelperPopup.FileTypesReverse[zipType]);
+                if (entry is null)
+                {
+                    MainController.ShowError(
+                        $"Item [{zipType}] in filetypereverse gave [{VersioningHelperPopup.FileTypesReverse[zipType]}], not present in zip"
+                    );
+                    Close();
+                    return;
+                }
 
-            entry!.ExtractToFile(selfFile);
+                entry!.ExtractToFile(selfFile);
+            }
+            
             File.Delete(zipPath);
             MainController.QuitHydra();
         }

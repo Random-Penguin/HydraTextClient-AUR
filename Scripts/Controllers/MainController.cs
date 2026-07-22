@@ -94,7 +94,7 @@ public partial class MainController : Control
         {
             if (Path.GetFileName(old) is "_OLD_HYDRA_DONT_USE_WILL_AUTODELETE") File.Delete(old);
         }
-        if (SaveType<bool>.Load(CheckForUpdate, false) && RunAutoUpdater()) return;
+        if (SaveType<bool>.Load(CheckForUpdate, true) && RunAutoUpdater()) return;
 
         if (SaveType<bool>.Load("Main/HasPorted", !File.Exists(Directories.LegacyData))) return;
         Porter.Startup();

@@ -128,13 +128,14 @@ title_alignment = 1
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 placeholder_text = "Run apps on connect
+WARNING: if connection gets dropped it will close the games attached to it
 {{slot}} => slot name
 {{add}} => address
 {{port}} => port
 {{pass}} => password
 {{ap}} => path to ap
 this runs using C#'s Process
-ex: {{ap}}/archipelago.exe \"universal tracker\" {{add}} {{port}} {{slot}}"
+ex: {{ap}}/ArchipelagoLauncher.exe \"universal tracker\" {{add}} {{port}} {{slot}}"
 wrap_mode = 1
 autowrap_mode = 2
 scroll_fit_content_height = true

@@ -31,6 +31,13 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
     - Can set a game portrait image
     - Can set a list of programs that can ran on connect (very untested)
       - WARNING: if connection gets dropped it will close the games attached to it
+      - {{slot}} => slot name
+      - {{add}} => address
+      - {{port}} => port
+      - {{pass}} => password
+      - {{ap}} => path to ap
+      - this runs using C#'s Process
+      - ex: {{ap}}/ArchipelagoLauncher.exe "universal tracker" {{add}} {{port}} {{slot}}
   - Change the scale of the slot name text and portrait
   - Can have up to 7 slots connected at a time
     - The first Client that connects is designated as the 'Leader' client

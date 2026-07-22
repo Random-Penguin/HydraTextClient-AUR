@@ -7,6 +7,7 @@ using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
+using static HydraTextClient.Scripts.Clients.TextClient.TextClient;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
@@ -67,28 +68,26 @@ public partial class ItemMessage : MessageScene
 
     public override bool CanReload(string saveId)
     {
-        if (saveId is PlayerConnect) return true;
+        if (saveId is PlayerConnect or SaveIdDifferentPerson or SaveIdSamePerson) return true;
         if (IdToConstant.TryGetValue(saveId, out var constant))
             return constant.IsPlayerColor() || constant.IsItemColor() || constant is LocationColor;
 
-        switch (saveId)
+        if (saveId is ShowProgressive or ShowUseful or ShowNormal or ShowTrap or ShowOnlyYou)
         {
-            case TextClient.ShowProgressive:
-                Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Advancement));
-                break;
-            case TextClient.ShowUseful:
-                Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.NeverExclude));
-                break;
-            case TextClient.ShowNormal:
-                Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.None));
-                break;
-            case TextClient.ShowTrap:
-                Visible = !(!SaveType<bool>.Load(saveId, true) && Flags.HasFlag(ItemFlags.Trap));
-                break;
-            case TextClient.ShowOnlyYou:
-                Visible = !(!SaveType<bool>.Load(saveId, true) && (SlotView.ContainsSlot(FinderName) || SlotView.ContainsSlot(ReceiverName)));
-                break;
-            case SaveIdDifferentPerson or SaveIdSamePerson: return true;
+            var isAdvancement = Flags.HasFlag(ItemFlags.Advancement);
+            var isNeverExclude = Flags.HasFlag(ItemFlags.NeverExclude) && !Flags.HasFlag(ItemFlags.Advancement);
+            var isTrap = Flags.HasFlag(ItemFlags.Trap);
+            var isNormal = Flags is ItemFlags.None;
+
+            var showAdvancement = SaveType<bool>.Load(ShowProgressive, true) && isAdvancement;
+            var showNeverExclude = SaveType<bool>.Load(ShowUseful, true) && isNeverExclude;
+            var showTrap = SaveType<bool>.Load(ShowTrap, true) && isTrap;
+            var showNormal = SaveType<bool>.Load(ShowNormal, true) && isNormal;
+
+            Visible = showAdvancement || showNeverExclude || showTrap || showNormal;
+            var isRelatedToYou = SlotView.ContainsSlot(FinderName) || SlotView.ContainsSlot(ReceiverName);
+            var showRelatedToYou = SaveType<bool>.Load(ShowOnlyYou, false);
+            if (showRelatedToYou && !isRelatedToYou) Visible = false;
         }
 
         if (saveId == ThisFilter.UID && SaveType<FilterType>.TryGet(saveId, out var filter))

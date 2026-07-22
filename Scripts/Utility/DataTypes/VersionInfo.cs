@@ -30,6 +30,7 @@ public struct VersionInfo(int majorVersion, int minorVersion, int patchVersion, 
         if (i1.PatchVersion != i2.PatchVersion) return i1.PatchVersion > i2.PatchVersion;
         var e1 = i1.ExtVersion;
         var e2 = i2.ExtVersion;
+        if (e1 is "" || e2 is "") return e1 is "";
         if (e1 == e2) return false;
         if (e1[1] != e2[1]) return e1[1] > e2[1];
         if (e1.Contains('.') && !e2.Contains('.')) return true;

@@ -57,11 +57,13 @@ public static class GlobalThemeSettings
                    .AddButton("Check For Updates", CheckForUpdates, 1)
                    .AddButton("Open Emotes Directory", () => OS.ShellOpen(Directories.Emotes), 2)
                    .AddButton("Open Portrait Directory", () => OS.ShellOpen(Directories.GamePortraits), 2)
+                   .AddButton("Open Game Item Override Directory", () => OS.ShellOpen(Directories.GameItemImageOverrides), 2)
                    .AddButton(
-                        "Reload Emotes and Portraits", () =>
+                        "Reload Emotes, Portraits, and Items", () =>
                         {
                             EmoteLoader.Singleton.ReloadImages();
                             GamePortraitLoader.Singleton.ReloadImages();
+                            GameItemImageLoader.Reload();
                         }, 2
                     )
                    .AddSeparator(2)

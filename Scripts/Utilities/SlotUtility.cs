@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;

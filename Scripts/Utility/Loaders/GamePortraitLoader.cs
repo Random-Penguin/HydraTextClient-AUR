@@ -14,7 +14,12 @@ public class GamePortraitLoader : ImageLoader
     public string[] GameList = [];
 
     public string GameAt(int i) => GameList[i];
-    public override void ReloadImagesResolved() => GameList = BaseList.Order().ToArray();
+
+    public override void ReloadImagesResolved()
+    {
+        GameList = BaseList.Order().ToArray();
+        GD.Print("Loading Game Portraits");
+    }
 
     public override void ImageWasSet(string path, string image, ImageTexture img)
     {

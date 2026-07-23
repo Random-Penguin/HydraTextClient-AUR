@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using Godot;
@@ -9,9 +10,9 @@ namespace HydraTextClient.Scripts.Utility.Loaders;
 public abstract class ImageLoader
 {
     public abstract string ImageFolder { get; }
-    public virtual bool LoadSubDirectories { get; }
+    public virtual bool LoadSubDirectories => true;
     public event Action? OnReloadImages;
-    private Dictionary<string, ImageTexture> Images = [];
+    private ConcurrentDictionary<string, ImageTexture> Images = [];
 
     protected ImageLoader() => ReloadImages();
 
@@ -27,15 +28,20 @@ public abstract class ImageLoader
     {
         foreach (var file in Directory.GetFiles(dir))
         {
+            var fileName = NameModify(PathToNameModify(file));
+            if (PreprocessStep(file)) continue;
+            if (Images.ContainsKey(fileName)) continue;
+
             try
             {
-                var fileName = NameModify(PathToNameModify(file));
-                if (Images.ContainsKey(fileName)) continue;
-                ImageWasSet(file, fileName, Images[fileName] = ImageTexture.CreateFromImage(Image.LoadFromFile(file)));
+                var image = ImageTexture.CreateFromImage(Image.LoadFromFile(file));
+                Images[fileName] = image;
+                ImageWasSet(file, fileName, image);
             }
             catch (Exception e) { MainController.ShowError($"Error Loading File [{file}]", e); }
         }
 
+        if (!LoadSubDirectories) return;
         foreach (var subDir in Directory.GetDirectories(dir)) LoadDirectory(subDir);
     }
 
@@ -44,10 +50,13 @@ public abstract class ImageLoader
     public Texture2D GetOrDef(string name, Texture2D def)
         => !Images.TryGetValue(NameModify(name), out var value) ? def : value;
 
-    public Dictionary<string, ImageTexture> GetImages() => Images;
+    public ConcurrentDictionary<string, ImageTexture> GetImages() => Images;
     public ImageTexture GetImage(string name) => Images[NameModify(name)];
-    public abstract void ReloadImagesResolved();
-    public abstract void ImageWasSet(string path, string image, ImageTexture img);
+    public virtual void ReloadImagesResolved() { }
+    public virtual void ImageWasSet(string path, string image, ImageTexture img) { }
     public virtual string NameModify(string name) => name;
     public virtual string PathToNameModify(string path) => Path.GetFileNameWithoutExtension(path);
+
+    public virtual bool PreprocessStep(string path) // return true to skipp file
+        => Path.GetExtension(path) switch { ".jpg" or ".png" => false, _ => true, };
 }

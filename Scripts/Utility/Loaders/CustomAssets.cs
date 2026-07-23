@@ -32,18 +32,20 @@ public partial class CustomAssets : Control
 
     public static ImageTexture CreateSprite(string file) => ImageTexture.CreateFromImage(Image.LoadFromFile(file));
 
-    public static Texture2D ItemImage(string itemGameName, string itemName, string selfGame, Action<Texture2D> callback, out bool isFallback)
+    public static Texture2D ItemImage(string itemGameName, string itemName, string selfGame, Action<Texture2D> callback,
+        out bool isFallback)
         => ItemImage(new AssetItem(itemGameName, itemName), selfGame, callback, out isFallback);
 
-    private static Texture2D ItemImage(AssetItem location, string selfGame, Action<Texture2D> callback, out bool isFallback)
+    private static Texture2D ItemImage(AssetItem location, string selfGame, Action<Texture2D> callback,
+        out bool isFallback)
     {
         try
         {
-            if (ItemSprites.TryGetValue(location.Uid, out var sprite))
-            {
-                isFallback = false;
-                return sprite;
-            }
+            isFallback = false;
+            if (GameItemImageLoader.TryGet(location.GameName, location.ItemName, out var spriteOverride))
+                return spriteOverride;
+
+            if (ItemSprites.TryGetValue(location.Uid, out var sprite)) return sprite;
             isFallback = true;
             Task.Run(() =>
                 {
@@ -66,7 +68,7 @@ public partial class CustomAssets : Control
                     return Task.CompletedTask;
                 }
             );
-            
+
             return Singleton.Fallback;
         }
         catch (Exception e)

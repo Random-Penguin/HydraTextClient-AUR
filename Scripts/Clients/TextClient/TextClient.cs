@@ -15,7 +15,6 @@ using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
-using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Clients.TextClient;
 

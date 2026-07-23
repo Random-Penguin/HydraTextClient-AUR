@@ -1,4 +1,4 @@
-Not tested, probs VERY unstable, and because of that I am not making a true release. it also hasn't caught up in features yet
+Not tested, probably VERY unstable, and because of that I am not making a true release. it also hasn't caught up in features yet
 
 # Install
 - Hydra itself:
@@ -9,20 +9,20 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - make sure you have the ap launcher installed
   - grab [universal tracker](https://discord.com/channels/731205301247803413/1367270230635839539) and place it in your custom worlds folder
   - grab the HydraUTBridge.apworld from [releases](https://github.com/SWCreeperKing/HydraTextClient_Rewrite/releases/latest) and place it also in your custom worlds folder
-  - make sure that in hydra `Settings -> Theme` that your arcihpelago directory is set 
+  - make sure that in hydra `Settings -> Theme` that your archipelago directory is set 
 
 ### Support me and hydra's development on [Patreon](https://www.patreon.com/SW_CreeperKing)
 
 ## Features
 
-- Connetions
+- Connections
   - Save Multiworld address, ports, passwords and change b/t them at will
-    - Contains slotname overrides
+    - Contains slot name overrides
     - Contains slot password overrides
     - Caches current/max check counts
     - Caches hints
     - Caches item received history
-    - Supports multiple deathlink groups
+    - Supports multiple DeathLink groups
   - Can delete/edit/set/clear the cache of a multiworld
   - Save Slot names to be used across worlds
     - Saves slot name
@@ -71,7 +71,7 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
 - Utilities
   - Displays inventory (view an item to see who sent you those items)
   - Can view the history of all items received (based on the order you received them)
-  - View all items in your game, clicking on one gives you a hint propmpt
+  - View all items in your game, clicking on one gives you a hint prompt
   - View all missing locations in your game, click on one gives you a hint location prompt
 - Players
   - Can view every player in the multiworld as well as their status (connected/not connected/goaled)
@@ -80,7 +80,7 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
   - Hovering hover a name will show their game
 - Item Filter
   - Clicking on an item (almost anywhere) or the `Add Filter` button in the settings -> Item Filter opens up a popup to add an item filter
-  - If an item was clicked, it will auto fill the information
+  - If an item was clicked, it will autofill the information
   - Can show/hide items filtered from the Item Log in the text client
   - Can show/hide items filtered from the Hint Table
   - Can mark an item as special
@@ -98,6 +98,16 @@ Not tested, probs VERY unstable, and because of that I am not making a true rele
 
 ## Extra Info
 
+- Custom Assets image overrides
+  - this feature allows you to override/add item images for a game's items
+  - the format follows the same as Custom Assets does so hydra can be used to test them before merging
+  - Hydra's format is less restrictive than Custom Assets, so be mindful
+  - Format (hydra is non-case-sensitive, **Custom Assets IS case-sensitive**):
+    - Game Name (folder)
+      - in the folder you have images that have the item name
+      - Custom Assets item formatting `Game Name_Item Name`
+      - aliases.json, allows you to assign multiple items to 1 image (not required)
+  - Requires Hydra restart to reapply images to icons that already exist (like the item filter)
 - Text Client: How Item Log and Hint Log filter deletes items
   - If an item/hint is blocked by your settings/filters they will not be added at all
   - If a setting/filter is updated, any messages in the text client will be hidden/reshown

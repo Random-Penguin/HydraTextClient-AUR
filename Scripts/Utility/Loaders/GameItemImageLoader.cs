@@ -22,7 +22,7 @@ public static class GameItemImageLoader
             GD.Print($"Loading [{gameName}] assets");
             GameImages[gameName] = new ItemImageLoader(folder, gameName);
             var aliases = $"{folder}/aliases.json";
-            if (!File.Exists(aliases)) return;
+            if (!File.Exists(aliases)) continue;
             var aliasDict = GameImageAliases[gameName] = [];
             foreach (var alias in JsonConvert.DeserializeObject<AliasGroups>(File.ReadAllText(aliases)).Aliases)
             foreach (var item in alias.ItemNames)

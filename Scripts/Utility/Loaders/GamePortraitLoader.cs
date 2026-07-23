@@ -23,7 +23,7 @@ public class GamePortraitLoader : ImageLoader
 
     public override void ImageWasSet(string path, string image, ImageTexture img)
     {
-        BaseList.Add(image);
+        BaseList.Add(Path.GetFileNameWithoutExtension(path));
         GD.Print($"Loaded image [{path.Replace(ImageFolder, ".")}] for game [{image}]");
     }
 

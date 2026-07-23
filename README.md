@@ -31,11 +31,14 @@ Not tested, probably VERY unstable, and because of that I am not making a true r
     - Can set a game portrait image
     - Can set a list of programs that can ran on connect (very untested)
       - WARNING: if connection gets dropped it will close the games attached to it
+      - WARNING: some applications might not close if hydra crashes
       - {{slot}} => slot name
       - {{add}} => address
       - {{port}} => port
       - {{pass}} => password
       - {{ap}} => path to ap
+      - if {{mw}} is at the front then the process will only close when you disconnect all slots from the multiworld
+      - if {{hydra}} is at the front then the process will only close when hydra closes
       - this runs using C#'s Process
       - ex: {{ap}}/ArchipelagoLauncher.exe "universal tracker" {{add}} {{port}} {{slot}}
   - Change the scale of the slot name text and portrait

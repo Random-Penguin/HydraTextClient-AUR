@@ -9,7 +9,6 @@
 [node name="Create" type="Window" unique_id=1459984325 node_paths=PackedStringArray("SlotName", "WorldSlotName", "WorldPassword", "GameImages", "SlotCommands")]
 oversampling_override = 1.0
 size = Vector2i(850, 630)
-visible = false
 theme = ExtResource("1_osnw7")
 script = ExtResource("2_ty5pc")
 SlotName = NodePath("Panel/ScrollContainer/MarginContainer/VBoxContainer2/VBoxContainer/SlotNameEdit")
@@ -129,13 +128,7 @@ custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 placeholder_text = "Run apps on connect
 WARNING: if connection gets dropped it will close the games attached to it
-{{slot}} => slot name
-{{add}} => address
-{{port}} => port
-{{pass}} => password
-{{ap}} => path to ap
-this runs using C#'s Process
-ex: {{ap}}/ArchipelagoLauncher.exe \"universal tracker\" {{add}} {{port}} {{slot}}"
+Read the readme for further info (too long to put here)"
 wrap_mode = 1
 autowrap_mode = 2
 scroll_fit_content_height = true

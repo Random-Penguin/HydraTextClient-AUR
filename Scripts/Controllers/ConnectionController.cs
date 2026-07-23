@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ public partial class ConnectionController : Control
 
     public static double GetConnectionCooldown => ConnectionCooldown;
     public static bool IsConnecting => ClientTryConnecting;
+    public static ConcurrentBag<int> ProcessIds = []; 
     private static double ConnectionCooldown;
     private static bool ClientTryConnecting;
 
@@ -156,6 +158,8 @@ public partial class ConnectionController : Control
         if (Clients.Count != 0) return;
         OnFullDisconnection?.Invoke();
         if (SaveType<bool>.Load(GlobalThemeSettings.ClearDataOnFullDisconnect, true)) DataClearCall?.Invoke();
+        if (ProcessIds.IsEmpty) return;
+        foreach (var id in ProcessIds) ExternalAppController.EndProcess(id);
     }
 
     private void RemoveClient(string name)

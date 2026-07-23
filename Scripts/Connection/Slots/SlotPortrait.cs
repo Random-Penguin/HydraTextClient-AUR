@@ -74,11 +74,11 @@ public partial class SlotPortrait : TextureRect
         {
             var mw = ConnectionController.GetCurrentMultiworld;
             if (mw is null) return;
-            
+
             var player = mw.GetSlotName(slot);
             var thisPlayer = mw.GetSlotName(SlotName);
             if (thisPlayer != player) return;
-            
+
             var data = SaveType<SlotGameData>.Load(SlotName, null, false);
             if (data is null) return;
             var commands = data.ProcessCommands.Select(command => command.Trim()).Where(command => command is not "")
@@ -90,23 +90,40 @@ public partial class SlotPortrait : TextureRect
                                                               )
                                                           ).Replace("{{slot}}", slot)
                                                          .Replace("{{pass}}", mw.GetPassword(slot)).Split(' ')
-                                ).Where(args => args.Length > 0).Select(args => new ReadOnlyEntry(
-                                        args[0], string.Join(' ', args.Length > 1 ? args[1..] : [])
-                                    )
+                                ).Where(args => args.Any(arg => arg is not ("{{mw}}" or "{{hydra}}")))
+                               .Select(args =>
+                                    {
+                                        var context = args[0];
+                                        args = args.Where(arg => arg is not ("{{mw}}" or "{{hydra}}")).ToArray();
+                                        return new ReadOnlyEntry(
+                                            args[0], string.Join(' ', args.Length > 1 ? args[1..] : []), context
+                                        );
+                                    }
                                 ).ToArray();
-            
+
             if (commands.Length == 0) return;
 
             var popup = RunOnCommandPopup.Instantiate<RunOnConnect>();
-            popup.SetupEntries(commands, toRun =>
-            {
-                foreach (var entry in toRun)
+            popup.SetupEntries(
+                commands, toRun =>
                 {
-                    SaveType<string>.Save($"PROG:HASH/{entry.Executable}", entry.Hash, false);
-                    var id = ExternalAppController.StartProcess(slot, entry);
-                    ProcessIds.Add(id);
+                    foreach (var entry in toRun)
+                    {
+                        SaveType<string>.Save($"PROG:HASH/{entry.Executable}", entry.Hash, false);
+                        var id = ExternalAppController.StartProcess(slot, entry);
+                        if (id is -1 or 404) return;
+                        switch (((ReadOnlyEntry)entry).Context)
+                        {
+                            case "{{mw}}":
+                                ConnectionController.ProcessIds.Add(id);
+                                break;
+                            case "{{hydra}}":
+                                break;
+                            default: ProcessIds.Add(id); break;
+                        }
+                    }
                 }
-            });
+            );
             GetParent().GetParent().CallDeferred("add_child", popup);
             popup.CallDeferred("show");
         };
@@ -115,15 +132,15 @@ public partial class SlotPortrait : TextureRect
         {
             var mw = ConnectionController.GetCurrentMultiworld;
             if (mw is null) return;
-            
+
             var player = mw.GetSlotName(slot);
             var thisPlayer = mw.GetSlotName(SlotName);
             if (thisPlayer != player) return;
-            
+
             if (ProcessIds.IsEmpty) return;
             foreach (var id in ProcessIds) ExternalAppController.EndProcess(id);
         };
-        
+
         CheckCountPanel.Visible = false;
         SetFontSize((int)SaveType<double>.Load("Connection/SlotsMenu/PortraitFontSize", 14));
         SetScale((float)SaveType<double>.Load("Connection/SlotsMenu/PortraitScale", 1f));

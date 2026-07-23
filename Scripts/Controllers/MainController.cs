@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using Godot;
 using HydraTextClient.Scripts.Consoles.Godot;
@@ -16,7 +17,7 @@ public partial class MainController : Control
     public const string WindowSaveId = "window_nodes/MAIN_WINDOW";
     public const string WindowBackGroundImage = "Theme/BackgroundImage";
     public const string WindowBackGroundImageAlpha = "Theme/BackgroundImageAlpha";
-    public const string CheckForUpdate = "Main/CheckForUpdates";
+    public const string CheckForUpdate = "Main/CheckForUpdates"; 
 
     [Export] private string VersionNumber;
     [Export] private PackedScene ErrorWindow;
@@ -104,6 +105,7 @@ public partial class MainController : Control
     public override void _Notification(int what)
     {
         if (what != NotificationWMCloseRequest) return;
+        ExternalAppController.CloseAll();
         SaveType<Vector2I>.Save($"{WindowSaveId}_pos", GetWindow().Position, true);
         Save();
         OnExit?.Invoke();

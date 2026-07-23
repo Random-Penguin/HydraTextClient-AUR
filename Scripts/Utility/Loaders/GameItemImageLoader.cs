@@ -39,11 +39,15 @@ public static class GameItemImageLoader
     public static bool TryGet(string gameName, string itemName, out ImageTexture img)
     {
         img = null;
-        if (GameImageAliases.TryGetValue(gameName.ToLower(), out var aliasGroup)
-            && aliasGroup.TryGetValue(itemName.ToLower(), out var alias)) itemName = alias;
+        gameName = gameName.ToLower().Replace(":", "");
+        itemName = itemName.ToLower();
+        if (GameImageAliases.TryGetValue(gameName, out var aliasGroup)
+            && aliasGroup.TryGetValue(itemName, out var alias)) itemName = alias.ToLower();
 
-        return GameImages.TryGetValue(gameName.ToLower().Replace(":", ""), out var imgLoader)
-               && imgLoader.TryGet(itemName.ToLower(), out img);
+        if (GameImages.TryGetValue(gameName, out var imgLoader))
+            return imgLoader.TryGet(itemName, out img) || imgLoader.TryGet(gameName, out img);
+
+        return false;
     }
 }
 

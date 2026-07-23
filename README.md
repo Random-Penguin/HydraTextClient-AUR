@@ -9,7 +9,7 @@ Not tested, probably VERY unstable, and because of that I am not making a true r
   - make sure you have the ap launcher installed
   - grab [universal tracker](https://discord.com/channels/731205301247803413/1367270230635839539) and place it in your custom worlds folder
   - grab the HydraUTBridge.apworld from [releases](https://github.com/SWCreeperKing/HydraTextClient_Rewrite/releases/latest) and place it also in your custom worlds folder
-  - make sure that in hydra `Settings -> Theme` that your archipelago directory is set 
+  - make sure that in hydra `Settings -> Main Settings` that your archipelago directory is set 
 
 ### Support me and hydra's development on [Patreon](https://www.patreon.com/SW_CreeperKing)
 

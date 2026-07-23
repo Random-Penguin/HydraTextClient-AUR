@@ -54,7 +54,7 @@ public partial class CircleTracker : Control
         if (apDir is "" || !Directory.Exists(apDir))
         {
             MainController.ShowError(
-                apDir is "" ? "Archipelago Directory not set, set it in the Settings/Theme"
+                apDir is "" ? "Archipelago Directory not set, set it in the Settings/Main Settings"
                     : "Invalid Archipelago Directory"
             );
             return false;

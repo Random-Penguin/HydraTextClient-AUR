@@ -34,6 +34,7 @@ script = ExtResource("1_luaa6")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1299910046]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/ScrollContainer" unique_id=500699236]
 layout_mode = 2

@@ -17,7 +17,7 @@ public partial class ServerMessage : AnimatedMessageScene
     public string Text;
     public string TheCopyText;
 
-    public override void SetPacket(IMessagePacket packetBase)
+    public override void SetInternalPacket(IMessagePacket packetBase)
     {
         if (!ConnectionController.HasLeaderClient) return;
         var leader = ConnectionController.LeaderClient!;
@@ -108,6 +108,7 @@ public partial class ServerMessage : AnimatedMessageScene
     }
 
     public override string CopyText() => TheCopyText;
+    public override void RemoveEvents() { }
 
     public override Dictionary<string, Action<RichTextLabel, string[]>> GetCompileEffects()
     {

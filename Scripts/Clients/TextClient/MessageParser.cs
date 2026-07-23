@@ -18,7 +18,11 @@ public static class MessageParser
 
         foreach (var group in Effects.Keys)
         {
-            foreach (var effect in Effects[group]) { GD.Print($"effects loaded: [{group}]:[{effect}]"); }
+            foreach (var effect in Effects[group])
+            {
+                effect.AddValueUpdater();
+                GD.Print($"effects loaded: [{group}]:[{effect}]"); 
+            }
         }
     }
 
@@ -46,6 +50,8 @@ public abstract class MessageParserEffect
     public virtual string Group => "default";
     public abstract string Key { get; }
     public abstract void Effect(RichTextLabel label, string[] args, Action? reloadFunction = null);
+    // public abstract void AddValueUpdater();
+    public virtual void AddValueUpdater() {}
 }
 
 public readonly struct CallablePrintObj(Action<RichTextLabel, string[]> callable, string[] args) : IPrintableObj

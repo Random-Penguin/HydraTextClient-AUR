@@ -12,7 +12,6 @@ using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
-using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 
@@ -29,8 +28,8 @@ public partial class TextClient : Control
     public const string ShowFoundHints = "TextClient/show_found_hints";
     public const string ShowGamePortraits = "TextClient/show_portraits";
     public const string ShowTimestamps = "TextClient/show_timestamps";
-    [Export] private Godot.Collections.Dictionary<MessageType, ChildLimiter> Containers = [];
-    [Export] private Godot.Collections.Dictionary<MessageType, PackedScene> MessageScenes = [];
+    [Export] private Dictionary<MessageType, ChildLimiter> Containers = [];
+    [Export] private Dictionary<MessageType, PackedScene> MessageScenes = [];
     [Export] private Array<ScrollFix> ScrollFixes = [];
     [Export] private Array<ChildLimiter> UniqueLimiters = [];
     [Export] private LineEdit SendMessageEdit;
@@ -164,13 +163,6 @@ public partial class TextClient : Control
             }
         );
 
-        SaveType<HexColor>.OnSaveEvent += (id, _) => ReloadUi(id);
-        SaveType<string>.OnSaveEvent += (id, _) => ReloadUi(id);
-        SaveType<double>.OnSaveEvent += (id, _) => ReloadUi(id);
-        SaveType<bool>.OnSaveEvent += (id, _) => ReloadUi(id);
-
-        ConnectionController.OnClientConnection += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);
-        ConnectionController.OnClientRemoved += (_, _, _) => ReloadUi(MessageScene.PlayerConnect);
         ConnectionController.DataClearCall += () => CallDeferred("RemoveMessages");
     }
 
@@ -243,17 +235,6 @@ public partial class TextClient : Control
     public void ScrollToBottom()
     {
         foreach (var scrollFix in ScrollFixes) scrollFix.ScrollToBottom();
-    }
-
-    public void ReloadUi(string id)
-    {
-        foreach (var container in UniqueLimiters)
-            container.ForEach(control =>
-                {
-                    if (control is not MessageScene msg) return;
-                    msg.ReloadUi(id);
-                }
-            );
     }
 
     public void RemoveMessages()

@@ -17,7 +17,7 @@ public partial class ClientMessage : AnimatedMessageScene
     private string Player;
     private int PlayerSlot;
 
-    public override void SetPacket(IMessagePacket packetBase)
+    public override void SetInternalPacket(IMessagePacket packetBase)
     {
         if (packetBase.GetPacket() is not ChatPrintJsonPacket packet) return;
         if (!ConnectionController.HasLeaderClient) return;
@@ -27,6 +27,8 @@ public partial class ClientMessage : AnimatedMessageScene
         MessageText = packet.Message.Sanitize();
         Player = $"{{{{player;{PlayerSlot = packet.Slot}}}}}";
 
+        SaveType<bool>.AddIndividualEvent(TextClient.ShowGamePortraits, CallReload);
+        GamePortraitLoader.Singleton.OnReloadImages += CallReload;
         Reload();
         RunBounceAnimation();
     }
@@ -52,4 +54,9 @@ public partial class ClientMessage : AnimatedMessageScene
     }
 
     public override string CopyText() => $"\"{MessageText}\"\n-# -{PlayerEffect.PlayerName(PlayerSlot, out _)}";
+    public override void RemoveEvents()
+    {
+        SaveType<bool>.RemoveIndividualEvent(TextClient.ShowGamePortraits, CallReload);
+        GamePortraitLoader.Singleton.OnReloadImages -= CallReload;
+    }
 }

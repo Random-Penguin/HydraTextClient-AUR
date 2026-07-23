@@ -1,5 +1,4 @@
 ﻿using Godot;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 
@@ -29,10 +28,4 @@ public abstract partial class AnimatedMessageScene : MessageScene
     }
 
     public void RunBounceAnimation() => RunAnimation = true;
-
-    public override bool CanReload(string saveId)
-    {
-        return saveId is PlayerConnect or TextClient.FontSizeId or TextClient.ShowGamePortraits
-               || IdToConstant.ContainsKey(saveId);
-    }
 }

@@ -17,12 +17,10 @@ public partial class ChildLimiter : VBoxContainer
             Math.Max((int)SaveType<double>.Load(QueueSaveId, 200), 20),
             list => list.FirstOrDefault(item => !item.Visible, null)
         );
-        SaveType<double>.OnSaveEvent += (s, d) =>
-        {
-            if (s is not QueueSaveId) return;
-            Limiter.SetLimit(Math.Max((int)d, 20), c => CallDeferred("RemoveTheChild", c));
-        };
+        SaveType<double>.AddIndividualEvent(QueueSaveId, SetLimit);
     }
+
+    private void SetLimit(double d) => Limiter.SetLimit(Math.Max((int)d, 20), c => CallDeferred("RemoveTheChild", c));
 
     public void EmptyLimiter()
     {
@@ -38,6 +36,14 @@ public partial class ChildLimiter : VBoxContainer
 
     public void RemoveFromLimiter(Control child) => Limiter.Remove(child, c => CallDeferred("RemoveTheChild", c));
     public void AddTheChild(Control child) => AddChild(child);
-    public void RemoveTheChild(Control child) => child.GetParent().RemoveChild(child);
+
+    public void RemoveTheChild(Control child)
+    {
+        child.GetParent().RemoveChild(child);
+        child.QueueFree();
+    }
+
     public void ForEach(Action<Control> action) => Limiter.ForEach(action);
+
+    protected override void Dispose(bool disposing) => SaveType<double>.RemoveIndividualEvent(QueueSaveId, SetLimit);
 }

@@ -23,7 +23,7 @@ public partial class HintMessage : MessageScene
     public string LocationName;
     public bool IsFound;
 
-    public override void SetPacket(IMessagePacket packetBase)
+    public override void SetInternalPacket(IMessagePacket packetBase)
     {
         if (packetBase.GetPacket() is not HintPrintJsonPacket hint) return;
         if (!ConnectionController.HasLeaderClient) return;
@@ -39,29 +39,26 @@ public partial class HintMessage : MessageScene
             ["loc"] = hint.GetLocationEffectText(), ["found"] = hint.GetFoundEffectText(),
         };
 
+        SaveType<string>.AddIndividualEvent(SaveId, CallReload);
+        SaveType<bool>.AddIndividualEvent(TextClient.ShowFoundHints, CallReload);
         Reload();
     }
 
     public override void Reload()
     {
+        if (!SaveType<bool>.Load(SaveId, true) && HasBeenFound)
+        {
+            Visible = false;
+            return;
+        }
+        Visible = true;
+
         var final = SaveType<string>.Load(SaveId, Default).CompileSimpleText(CachedReplacement);
 
         UpdateFontSize(Message);
 
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
-    }
-
-    public override bool CanReload(string saveId)
-    {
-        if (saveId is PlayerConnect) return true;
-        if (IdToConstant.TryGetValue(saveId, out var constant))
-            return constant.IsPlayerColor() || constant.IsItemColor()
-                                            || constant is FoundColor or NotFoundColor or LocationColor;
-
-        if (saveId is TextClient.ShowFoundHints) Visible = !(!SaveType<bool>.Load(saveId, true) && HasBeenFound);
-        
-        return saveId is SaveId;
     }
 
     public override string CopyText() => SaveType<string>.Load(
@@ -75,4 +72,10 @@ public partial class HintMessage : MessageScene
             ["entrance"] = HasBeenFound ? "(Found)" : "(Not Found)", ["item"] = ItemName,
         }
     );
+
+    public override void RemoveEvents()
+    {
+        SaveType<string>.RemoveIndividualEvent(SaveId, CallReload);
+        SaveType<bool>.RemoveIndividualEvent(TextClient.ShowFoundHints, CallReload);
+    }
 }

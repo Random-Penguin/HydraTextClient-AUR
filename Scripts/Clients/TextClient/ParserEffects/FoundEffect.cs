@@ -1,12 +1,16 @@
 ﻿using System;
 using Godot;
 using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.DataTypes;
+using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 
 public class FoundEffect : MessageParserEffect
 {
+    public static event Action? OnUpdate;
     public override string Key => "found";
+
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
         label.PushContext();
@@ -14,4 +18,8 @@ public class FoundEffect : MessageParserEffect
         label.AddText("Found");
         label.PopContext();
     }
+
+    public override void AddValueUpdater() => SaveType<HexColor>.AddIndividualEvent(
+        ColorIdConstants.ColorConstant.FoundColor.SaveId(), _ => OnUpdate?.Invoke()
+    );
 }

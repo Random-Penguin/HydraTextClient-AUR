@@ -4,6 +4,7 @@ using Godot;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
@@ -12,6 +13,8 @@ namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 
 public class PlayerEffect : MessageParserEffect
 {
+    public static event Action? OnUpdate;
+    
     public const string SaveIdNoAlias = "Clients/TextClient/TextEffects/PlayerNoAlias";
     public const string DefaultNoAlias = "{{name}}";
 
@@ -65,6 +68,19 @@ public class PlayerEffect : MessageParserEffect
         label.PushColor(color);
         label.AddText(player);
         label.PopContext();
+    }
+
+    public override void AddValueUpdater()
+    {
+        ConnectionController.OnClientConnection += (_, _, _) => OnUpdate?.Invoke();
+        ConnectionController.OnClientLeaderChanged += (_, _) => OnUpdate?.Invoke();
+        ConnectionController.OnClientRemoved += (_, _, _) => OnUpdate?.Invoke();
+        SaveType<string>.AddIndividualEvents( _ => OnUpdate?.Invoke(), SaveIdNoAlias, SaveIdWithAlias);
+        SaveType<HexColor>.OnSaveEvent += (id, _) =>
+        {
+            if (!ColorIdConstants.IdToConstant.TryGetValue(id, out var constant)) return;
+            if (constant.IsPlayerColor()) OnUpdate?.Invoke();
+        };
     }
 
     public static string PlayerName(int slot, out string rawName)

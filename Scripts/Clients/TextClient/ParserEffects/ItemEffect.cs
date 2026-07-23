@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Godot;
 using HydraTextClient.Scripts.Settings.ItemFilter;
 using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
@@ -18,10 +18,9 @@ public class ItemEffect : MessageParserEffect
     public const string SaveId = "Clients/TextClient/TextEffects/ItemMessageEffect";
     public const string FallbackSaveId = "Clients/TextClient/TextEffects/ItemMessageHideFallback";
     public const string Default = "[{{img}}{{name}}]";
-
-    private static ConcurrentDictionary<string, Texture2D> CustomAssetsItemCache = [];
-
     public override string Key => "item";
+
+    public static event Action? OnUpdate;
 
     public override void Effect(RichTextLabel label, string[] args, Action? reloadFunction = null)
     {
@@ -55,7 +54,6 @@ public class ItemEffect : MessageParserEffect
 
         args[0] = args[0][2..^2];
         args[1] = args[1][2..^2];
-        var id = $"{args[0]};{args[1]}";
 
         label.PushContext();
         if (args.Length > 2 && int.TryParse(args[2], out var flagsRaw))
@@ -82,8 +80,10 @@ public class ItemEffect : MessageParserEffect
                 {
                     ["img"] = (l, _) =>
                     {
-                        var img = CustomAssets.ItemImage(args[0], args[1], args[0], _ => reloadFunction(), out var isFallback);
-                        if (isFallback && SaveType<bool>.Load(FallbackSaveId ,false)) return;
+                        var img = CustomAssets.ItemImage(
+                            args[0], args[1], args[0], _ => reloadFunction(), out var isFallback
+                        );
+                        if (isFallback && SaveType<bool>.Load(FallbackSaveId, false)) return;
                         l.AddImage(img, 0, 20);
                     },
                     ["name"] = (l, _) => l.AddText(args[1]),
@@ -91,5 +91,16 @@ public class ItemEffect : MessageParserEffect
             )
         );
         label.PopContext();
+    }
+
+    public override void AddValueUpdater()
+    {
+        SaveType<string>.AddIndividualEvent(SaveId, _ => OnUpdate?.Invoke());
+        SaveType<bool>.AddIndividualEvent(FallbackSaveId, _ => OnUpdate?.Invoke());
+        SaveType<HexColor>.OnSaveEvent += (id, _) =>
+        {
+            if (!ColorIdConstants.IdToConstant.TryGetValue(id, out var constant)) return;
+            if (constant.IsItemColor()) OnUpdate?.Invoke();
+        };
     }
 }

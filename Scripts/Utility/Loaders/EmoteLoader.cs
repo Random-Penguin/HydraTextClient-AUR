@@ -1,12 +1,15 @@
 ﻿using System.IO;
 using Godot;
+using HydraTextClient.Scripts.Settings;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;
 
 public class EmoteLoader : ImageLoader
 {
-    public static EmoteLoader Singleton = new EmoteLoader(); 
-    
+    public static EmoteLoader Singleton = new();
+
+    private EmoteLoader() => GlobalThemeSettings.OnImageLoadersReload += ReloadImages;
+
     public override string ImageFolder => Directories.Emotes;
     public override void ReloadImagesResolved() => GD.Print("Loading Emotes");
 

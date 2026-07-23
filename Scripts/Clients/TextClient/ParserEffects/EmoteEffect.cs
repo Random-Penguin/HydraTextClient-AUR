@@ -7,8 +7,9 @@ namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 
 public class EmoteEffect : MessageParserEffect
 {
+    public static event Action? OnUpdate;
     public override string Key => "e";
-    
+
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
         if (args.Length != 1)
@@ -16,7 +17,7 @@ public class EmoteEffect : MessageParserEffect
             label.AddText("[Invalid Emote Tag]");
             return;
         }
-        
+
         if (!EmoteLoader.Singleton.TryGet(args[0], out var img))
         {
             label.AddText($"[{args[0]}]");
@@ -28,4 +29,6 @@ public class EmoteEffect : MessageParserEffect
         label.AddImage(img, 20, 20);
         label.PopContext();
     }
+
+    public override void AddValueUpdater() => EmoteLoader.Singleton.OnReloadImages += () => OnUpdate?.Invoke();
 }

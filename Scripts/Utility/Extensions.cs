@@ -24,13 +24,15 @@ public static class Extensions // sorted alphabetically for the memes
 
     extension(ColorConstant constant)
     {
-        public Color Color() => SaveType<HexColor>.Load(ConstantToId[constant], ConstantToDefaultColor[constant]);
+        public Color Color() => SaveType<HexColor>.Load(constant.SaveId(), constant.DefaultColor());
+        public Color DefaultColor() => ConstantToDefaultColor[constant];
+        public string SaveId() => ConstantToId[constant];
 
         public void Save(Color color, bool broadcast = true)
-            => SaveType<HexColor>.Save(ConstantToId[constant], color, broadcast);
+            => SaveType<HexColor>.Save(constant.SaveId(), color, broadcast);
 
         public HexColor Load(bool broadcast = false)
-            => SaveType<HexColor>.Load(ConstantToId[constant], ConstantToDefaultColor[constant], broadcast);
+            => SaveType<HexColor>.Load(constant.SaveId(), constant.DefaultColor(), broadcast);
 
         public bool IsPlayerColor()
             => constant is PlayerConnected or PlayerListedNonConnected or PlayerNonConnected or ServerColor;

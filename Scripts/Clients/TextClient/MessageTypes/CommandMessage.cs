@@ -6,7 +6,7 @@ public partial class CommandMessage : MessageScene
 {
     public string Text;
 
-    public override void SetPacket(IMessagePacket packetBase)
+    public override void SetInternalPacket(IMessagePacket packetBase)
     {
         if (packetBase.GetPacket() is not CommandResultPrintJsonPacket result) return;
         Text = result.Data[0].Text;
@@ -19,6 +19,6 @@ public partial class CommandMessage : MessageScene
         Message.Text = Text;
     }
 
-    public override bool CanReload(string saveIde) => false;
     public override string CopyText() => Text;
+    public override void RemoveEvents() { }
 }

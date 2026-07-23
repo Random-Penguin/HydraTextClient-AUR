@@ -34,6 +34,7 @@ public partial class ConsoleController : TabContainer
 		{
 			if (!Consoles.Remove(name, out var cons)) return;
 			CallDeferred("remove_child", cons.GetParent());
+			cons.QueueFree();
 		};
 	}
 	

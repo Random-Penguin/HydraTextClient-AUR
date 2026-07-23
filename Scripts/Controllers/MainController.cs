@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.IO;
 using Godot;
 using HydraTextClient.Scripts.Consoles.Godot;

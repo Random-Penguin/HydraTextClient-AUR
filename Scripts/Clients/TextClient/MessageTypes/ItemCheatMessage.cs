@@ -16,7 +16,7 @@ public partial class ItemCheatMessage : MessageScene
     public string ItemName;
     public string LocationName;
 
-    public override void SetPacket(IMessagePacket packetBase)
+    public override void SetInternalPacket(IMessagePacket packetBase)
     {
         if (packetBase.GetPacket() is not ItemCheatPrintJsonPacket item) return;
         ItemName = item.ItemName;
@@ -41,15 +41,6 @@ public partial class ItemCheatMessage : MessageScene
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
 
-    public override bool CanReload(string saveId)
-    {
-        if (saveId is PlayerConnect or ItemEffect.SaveId or ItemEffect.FallbackSaveId) return true;
-        if (IdToConstant.TryGetValue(saveId, out var constant))
-            return constant.IsPlayerColor() || constant.IsItemColor() || constant is LocationColor;
-
-        return saveId is SaveId;
-    }
-
     public override string CopyText() => SaveType<string>.Load(SaveId, Default).CompileSimpleText(
         new Dictionary<string, string>
         {
@@ -57,4 +48,6 @@ public partial class ItemCheatMessage : MessageScene
             ["item"] = ItemName,
         }
     );
+
+    public override void RemoveEvents() { }
 }

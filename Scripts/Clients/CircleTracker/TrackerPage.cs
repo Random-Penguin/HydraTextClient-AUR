@@ -55,26 +55,29 @@ public partial class TrackerPage : Control
         CalculateCircles();
         OnItemsReceived = (_, _) => CallDeferred("CalculateCircles");
         client.ItemHandler.OnNewItemsReceived += OnItemsReceived;
-        OnStopCalled += () => client.ItemHandler.OnNewItemsReceived -= OnItemsReceived;
 
         OnLocationsChecked = _ => QueueUpdate();
         client.CheckedLocationsUpdated += OnLocationsChecked;
-        OnStopCalled += () => client.CheckedLocationsUpdated -= OnLocationsChecked;
 
         OnHintsUpdated = _ => QueueUpdate();
         client.HintsTrackedEvent += OnHintsUpdated;
-        OnStopCalled += () => client.HintsTrackedEvent -= OnHintsUpdated;
 
         OnBoolSaveDataUpdated = (id, _) =>
         {
             if (id is ShowEmptyCircles or ShowFutureCircles) QueueUpdate();
         };
         SaveType<bool>.OnSaveEvent += OnBoolSaveDataUpdated;
-        OnStopCalled += () => SaveType<bool>.OnSaveEvent -= OnBoolSaveDataUpdated;
         
         OnFilterDataUpdated = (_, _) => QueueUpdate();
         SaveType<FilterType>.OnSaveEvent += OnFilterDataUpdated;
-        OnStopCalled += () => SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
+        OnStopCalled += () =>
+        {
+            client.CheckedLocationsUpdated -= OnLocationsChecked;
+            client.HintsTrackedEvent -= OnHintsUpdated;
+            client.ItemHandler.OnNewItemsReceived -= OnItemsReceived;
+            SaveType<bool>.OnSaveEvent -= OnBoolSaveDataUpdated;
+            SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
+        };
     }
 
     public override void _Process(double delta)

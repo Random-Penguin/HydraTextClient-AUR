@@ -18,6 +18,7 @@ public static class GlobalThemeSettings
     public const string AlwaysOnTop = "Main/AlwaysOnTop";
     public const string DisplayNewItemsPopup = "Main/NewItemsPopupDisplay";
     public const string ClearDataOnFullDisconnect = "Main/NewItemsPopupDisplay";
+    public static event Action? OnImageLoadersReload;
 
     public static void Init()
     {
@@ -33,7 +34,7 @@ public static class GlobalThemeSettings
             "Main Settings", tab =>
             {
                 tab.AddBrowseFile(
-                        "Set Archipelago Folder", FileDialog.FileModeEnum.OpenDir, [], 
+                        "Set Archipelago Folder", FileDialog.FileModeEnum.OpenDir, [],
                         extraConfig: (button, dialog) =>
                         {
                             button.Pressed += () =>
@@ -57,15 +58,10 @@ public static class GlobalThemeSettings
                    .AddButton("Check For Updates", CheckForUpdates, 1)
                    .AddButton("Open Emotes Directory", () => OS.ShellOpen(Directories.Emotes), 2)
                    .AddButton("Open Portrait Directory", () => OS.ShellOpen(Directories.GamePortraits), 2)
-                   .AddButton("Open Game Item Override Directory", () => OS.ShellOpen(Directories.GameItemImageOverrides), 2)
                    .AddButton(
-                        "Reload Emotes, Portraits, and Items", () =>
-                        {
-                            EmoteLoader.Singleton.ReloadImages();
-                            GamePortraitLoader.Singleton.ReloadImages();
-                            GameItemImageLoader.Reload();
-                        }, 2
+                        "Open Game Item Override Directory", () => OS.ShellOpen(Directories.GameItemImageOverrides), 2
                     )
+                   .AddButton("Reload Image Loaders", () => OnImageLoadersReload?.Invoke(), 2)
                    .AddSeparator(2)
                    .AddText("Sites to download portraits", 2)
                    .AddButton("SteamGridDB.com", () => OS.ShellOpen("https://www.steamgriddb.com/"), 2)

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Godot;
+using HydraTextClient.Scripts.Settings;
 using static HydraTextClient.Scripts.Utility.Loaders.Directories;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;
@@ -13,6 +14,8 @@ public class GamePortraitLoader : ImageLoader
     private HashSet<string> BaseList = [];
     public string[] GameList = [];
 
+    private GamePortraitLoader() => GlobalThemeSettings.OnImageLoadersReload += ReloadImages;
+    
     public string GameAt(int i) => GameList[i];
 
     public override void ReloadImagesResolved()

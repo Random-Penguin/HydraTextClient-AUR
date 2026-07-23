@@ -5,7 +5,6 @@ using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 
@@ -22,7 +21,7 @@ public partial class DeathLinkMessage : MessageScene
     public int PlayerSlot;
     public string Groups;
 
-    public override void SetPacket(IMessagePacket packetBase)
+    public override void SetInternalPacket(IMessagePacket packetBase)
     {
         if (packetBase is not DeathLinkPacket dl) return;
         if (!ConnectionController.HasLeaderClient) return;
@@ -41,7 +40,7 @@ public partial class DeathLinkMessage : MessageScene
 
         if (PlayerSlot is not -1)
             PlayerSlot = leader.PlayerNames.Contains(Player) ? Array.IndexOf(leader.PlayerNames, Player) : -1;
-        
+
         CachedReplacement = new Dictionary<string, string>
         {
             ["player"] = PlayerSlot is -1 ? dl.Player : $"{{{{player;{PlayerSlot}}}}}",
@@ -57,6 +56,7 @@ public partial class DeathLinkMessage : MessageScene
             CachedReplacement["cause"] = LastCause.CompileSimpleText(CachedReplacement);
         }
 
+        SaveType<string>.AddIndividualEvents(CallReload, SaveIdMessage, SaveIdUnknown);
         Reload();
     }
 
@@ -77,14 +77,6 @@ public partial class DeathLinkMessage : MessageScene
         );
     }
 
-    public override bool CanReload(string saveId)
-    {
-        if (saveId is PlayerConnect) return true;
-        if (IdToConstant.TryGetValue(saveId, out var constant)) return constant.IsPlayerColor();
-
-        return saveId is SaveIdMessage or SaveIdUnknown;
-    }
-
     public override string CopyText()
     {
         Dictionary<string, string> compile =
@@ -99,4 +91,7 @@ public partial class DeathLinkMessage : MessageScene
         else compile["cause"] = LastCause.CompileSimpleText(compile);
         return SaveType<string>.Load(SaveIdMessage, DefaultMessage).CompileSimpleText(compile);
     }
+
+    public override void RemoveEvents()
+        => SaveType<string>.RemoveIndividualEvents(CallReload, SaveIdMessage, SaveIdUnknown);
 }

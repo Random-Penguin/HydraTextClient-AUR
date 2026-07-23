@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Godot;
+using HydraTextClient.Scripts.Settings;
 using Newtonsoft.Json;
 using static HydraTextClient.Scripts.Utility.Loaders.Directories;
 
@@ -11,7 +12,12 @@ public static class GameItemImageLoader
 {
     private static ConcurrentDictionary<string, ItemImageLoader> GameImages = [];
     private static ConcurrentDictionary<string, ConcurrentDictionary<string, string>> GameImageAliases = [];
-    static GameItemImageLoader() => Reload();
+
+    static GameItemImageLoader()
+    {
+        Reload();
+        GlobalThemeSettings.OnImageLoadersReload += Reload;
+    }
 
     public static void Reload()
     {
@@ -33,7 +39,7 @@ public static class GameItemImageLoader
     public static bool TryGet(string gameName, string itemName, out ImageTexture img)
     {
         img = null;
-        if (GameImageAliases.TryGetValue(gameName, out var aliasGroup)
+        if (GameImageAliases.TryGetValue(gameName.ToLower(), out var aliasGroup)
             && aliasGroup.TryGetValue(itemName.ToLower(), out var alias)) itemName = alias;
 
         return GameImages.TryGetValue(gameName.ToLower().Replace(":", ""), out var imgLoader)

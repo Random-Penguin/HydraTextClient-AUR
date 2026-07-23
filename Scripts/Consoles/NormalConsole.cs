@@ -31,12 +31,13 @@ public partial class NormalConsole : RichTextLabel
 
         AutowrapMode = TextServer.AutowrapMode.Off;
         SelectionEnabled = true;
-        SaveType<double>.OnSaveEvent += (s, d) =>
-        {
-            if (s is not ChildLimiter.QueueSaveId) return;
-            Messages.SetLimit((int)d);
-            CallDeferred("Update");
-        };
+        SaveType<double>.AddIndividualEvent(ChildLimiter.QueueSaveId, SetLimit);
+    }
+
+    private void SetLimit(double d)
+    {
+        Messages.SetLimit((int)d);
+        CallDeferred("Update");
     }
 
     private void AddLine(string text)
@@ -53,21 +54,23 @@ public partial class NormalConsole : RichTextLabel
 
         StringBuilder sb = new();
         SlotLogs.WriteLine($"{DateTime.Now:[HH:mm:ss]} [{(error ? "ERROR" : "Info")}] [{Name}] {split[0]}");
-        sb.Append(GetTimestamp()).Append("[color=").Append(error ? "red" : "white").Append(']').Append(split[0].Replace("[", "[lb]"));
+        sb.Append(GetTimestamp()).Append("[color=").Append(error ? "red" : "white").Append(']')
+          .Append(split[0].Replace("[", "[lb]"));
         if (split.Length > 1)
         {
             sb.Append('\n').Append(BLOCK).Append(string.Join($"\n{BLOCK}", split.Skip(1)).Replace("[", "[lb]"));
             SlotLogs.WriteLine($"\n{BLOCK}{string.Join($"\n{BLOCK}", split.Skip(1))}");
         }
         if (error) SlotLogs.Flush();
-        
+
         CallDeferred("AddLine", sb.ToString());
     }
 
     public void WriteError(Exception err) => WriteLine($"{err.Message}\n{err.StackTrace}", true);
     public void WriteError(string err) => WriteLine(err, true);
-
     public string GetTimestamp() => $"[color=darkgray]{DateTime.Now:[HH:mm:ss]}[/color] ";
-
     public void Update() => Text = string.Join("\n", Messages.GetCollection);
+
+    protected override void Dispose(bool disposing)
+        => SaveType<double>.RemoveIndividualEvent(ChildLimiter.QueueSaveId, SetLimit);
 }

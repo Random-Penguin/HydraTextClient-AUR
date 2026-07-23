@@ -4,7 +4,6 @@ using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 
@@ -18,7 +17,7 @@ public partial class TrapLinkMessage : MessageScene
     public int PlayerSlot;
     public string Copy;
 
-    public override void SetPacket(IMessagePacket packetBase)
+    public override void SetInternalPacket(IMessagePacket packetBase)
     {
         if (packetBase is not TrapLinkPacket tl) return;
         if (!ConnectionController.HasLeaderClient) return;
@@ -44,6 +43,7 @@ public partial class TrapLinkMessage : MessageScene
             ["trap"] = Trap,
         };
 
+        SaveType<string>.AddIndividualEvent(SaveIdMessage, CallReload);
         Reload();
     }
 
@@ -57,13 +57,6 @@ public partial class TrapLinkMessage : MessageScene
         );
     }
 
-    public override bool CanReload(string saveId)
-    {
-        if (saveId is PlayerConnect) return true;
-        if (IdToConstant.TryGetValue(saveId, out var constant)) return constant.IsPlayerColor();
-        return saveId is SaveIdMessage;
-    }
-
     public override string CopyText() => SaveType<string>.Load(SaveIdMessage, Default).CompileSimpleText(
         new Dictionary<string, string>
         {
@@ -71,4 +64,6 @@ public partial class TrapLinkMessage : MessageScene
             ["trap"] = Trap,
         }
     );
+
+    public override void RemoveEvents() => SaveType<string>.RemoveIndividualEvent(SaveIdMessage, CallReload);
 }

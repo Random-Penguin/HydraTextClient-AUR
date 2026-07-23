@@ -188,5 +188,10 @@ public partial class MainController : Control
     public static void CheckForUpdates() => Singleton.RunAutoUpdater();
     public void UpdateDiscord() => DRPC.CheckDiscord();
     public void Quit() => GetTree().CallDeferred("quit");
-    public static void QuitHydra() => Singleton.GetTree().CallDeferred("quit");
+
+    public static void QuitHydra()
+    {
+        Save();
+        Singleton.GetTree().CallDeferred("quit");
+    }
 }

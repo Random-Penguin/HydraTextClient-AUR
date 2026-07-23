@@ -40,7 +40,7 @@ public static class GameItemImageLoader
     {
         img = null;
         gameName = gameName.ToLower().Replace(":", "");
-        itemName = itemName.ToLower();
+        itemName = itemName.ToLower().Replace(":", "");
         if (GameImageAliases.TryGetValue(gameName, out var aliasGroup)
             && aliasGroup.TryGetValue(itemName, out var alias)) itemName = alias.ToLower();
 
@@ -56,7 +56,7 @@ public class ItemImageLoader(string dir, string gameName) : ImageLoader
     public string GameName = gameName;
     public override string ImageFolder => dir;
     public override bool LoadSubDirectories => false;
-    public override string NameModify(string name) => name.ToLower().Replace($"{GameName}_", "");
+    public override string NameModify(string name) => name.ToLower().Replace(":", "").Replace($"{GameName}_", "");
 }
 
 public struct AliasGroups(Alias[] aliases)

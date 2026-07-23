@@ -67,7 +67,7 @@ public partial class TrackerPage : Control
             if (id is ShowEmptyCircles or ShowFutureCircles) QueueUpdate();
         };
         SaveType<bool>.OnSaveEvent += OnBoolSaveDataUpdated;
-        
+
         OnFilterDataUpdated = (_, _) => QueueUpdate();
         SaveType<FilterType>.OnSaveEvent += OnFilterDataUpdated;
         OnStopCalled += () =>
@@ -87,58 +87,68 @@ public partial class TrackerPage : Control
         UpdateQueue.Clear();
         Label.Clear();
 
-        if (recompile)
-        {
-            StringBuilder sb = new();
-            var font = (int)SaveType<double>.Load(GlobalThemeSettings.GlobalFontSize, 20d);
-            List<ulong> recordedLocations = [];
-            var localHints = Client.Hints.Where(hint => hint.FindingPlayer == Client.PlayerSlot).ToArray();
-            var hints = localHints.ToDictionary(hint => hint.LocationId, hint => hint.GetItemEffectText());
-            var priority = localHints.Where(hint => hint.Status is HintStatus.Priority).Select(hint => hint.LocationId)
-                                     .ToArray();
-            var firstEnd = SaveType<bool>.Load(ShowFutureCircles, false);
-            foreach (var (circle, locations) in Circles.OrderBy(kv => kv.Key))
-            {
-                var uniqueLocations = locations.Except(recordedLocations).ToArray();
-                recordedLocations.AddRange(uniqueLocations);
-                uniqueLocations = uniqueLocations.Where(id => Client.MissingRawLocations.Contains((long)id)).ToArray();
-
-                if (uniqueLocations.Length == 0 && !SaveType<bool>.Load(ShowEmptyCircles, true)) continue;
-
-                sb.Append("[center][font_size=").Append(font * (uniqueLocations.Length == 0 ? 1 : 2))
-                  .Append("]Circle #").Append($"{circle:###,###}").Append("[/font_size]");
-
-                if (uniqueLocations.Length != 0)
-                    sb.Append(" (").Append($"{uniqueLocations.Length:###,###}").Append(") locations");
-
-                sb.Append("[/center]\n");
-
-                if (CircleItems[circle].Length != 0)
-                    sb.Append("[center]").Append(CircleItems[circle]).Append("[/center]\n");
-                
-                if (uniqueLocations.Length == 0) continue;
-                var orderedLocations = uniqueLocations
-                                      .OrderByDescending(id => priority.Contains((long)id))
-                                      .ThenBy(id => Client.Locations[(long)id]).ToArray();
-
-                sb.Append("[table=2][cell bg=#00000069] Locations [/cell][cell bg=#00000069] Hinted Items [/cell]");
-                for (var i = 0; i < orderedLocations.Length; i++)
-                {
-                    var id = orderedLocations[i];
-                    sb.Append(i % 2 == 0 ? "[cell bg=#00000044]" : "[cell]").Append(" {{loc;").Append(id).Append(';')
-                      .Append(Client.PlayerSlot).Append("}}[/cell]").Append(i % 2 == 0 ? "[cell bg=#00000044] " : "[cell] ");
-                    if (hints.TryGetValue((long)id, out var item)) sb.Append(item);
-                    sb.Append(" [/cell]");
-                }
-                sb.Append("[/table]\n");
-                if (!firstEnd) break;
-            }
-
-            if (sb.ToString().Trim() is "") sb.Append("Super BK :(\nEither that or there was an error from UT");
-            CompiledMessage = sb.ToString().CompileRichText(GetCompileEffects(), true);
-        }
+        if (recompile) { CompiledMessage = RenderCirclePage().CompileRichText(GetCompileEffects(), true); }
 
         Label.ApplyCompiledPrintableObjs(CompiledMessage);
+    }
+
+    public string RenderCirclePage()
+    {
+        StringBuilder sb = new();
+        var font = (int)SaveType<double>.Load(GlobalThemeSettings.GlobalFontSize, 20d);
+        List<ulong> recordedLocations = [];
+        var localHints = Client.Hints.Where(hint => hint.FindingPlayer == Client.PlayerSlot).ToArray();
+        var hints = localHints.ToDictionary(hint => hint.LocationId, hint => hint.GetItemEffectText());
+        var hintImportance = localHints.ToDictionary(hint => hint.LocationId, hint => hint.Status is HintStatus.Priority);
+        var priority = localHints.Where(hint => hint.Status is HintStatus.Priority).Select(hint => hint.LocationId)
+                                 .ToArray();
+        var firstEnd = SaveType<bool>.Load(ShowFutureCircles, false);
+        foreach (var (circle, locations) in Circles.OrderBy(kv => kv.Key))
+        {
+            var uniqueLocations = locations.Except(recordedLocations).ToArray();
+            recordedLocations.AddRange(uniqueLocations);
+            uniqueLocations = uniqueLocations.Where(id => Client.MissingRawLocations.Contains((long)id)).ToArray();
+
+            if (uniqueLocations.Length == 0 && !SaveType<bool>.Load(ShowEmptyCircles, true)) continue;
+
+            sb.Append("[center][font_size=").Append(font * (uniqueLocations.Length == 0 ? 1 : 2))
+              .Append("]Circle #").Append($"{circle:###,###}").Append("[/font_size]");
+
+            if (uniqueLocations.Length != 0)
+                sb.Append(" (").Append($"{uniqueLocations.Length:###,###}").Append(") locations");
+
+            sb.Append("[/center]\n");
+
+            if (CircleItems[circle].Length != 0)
+                sb.Append("[center]").Append(CircleItems[circle]).Append("[/center]\n");
+
+            if (uniqueLocations.Length == 0) continue;
+            var orderedLocations = uniqueLocations
+                                  .OrderByDescending(id => priority.Contains((long)id))
+                                  .ThenBy(id => Client.Locations[(long)id]).ToArray();
+
+            sb.Append("[table=2][cell bg=#00000069] Locations [/cell][cell bg=#00000069] Hinted Items [/cell]");
+            var important = false;
+            for (var i = 0; i < orderedLocations.Length; i++)
+            {
+                var id = orderedLocations[i];
+                sb.Append(i % 2 == 0 ? "[cell bg=#00000044]" : "[cell]").Append(" {{loc;").Append(id).Append(';')
+                  .Append(Client.PlayerSlot).Append("}}[/cell]")
+                  .Append(i % 2 == 0 ? "[cell bg=#00000044] " : "[cell] ");
+                if (hints.TryGetValue((long)id, out var item))
+                {
+                    sb.Append(item);
+                    important = important || hintImportance[(long)id];
+                }
+                else important = true;
+                sb.Append(" [/cell]");
+            }
+            sb.Append("[/table]\n");
+            if (!firstEnd && important) break;
+        }
+
+        if (sb.ToString().Trim() is "") sb.Append("Super BK :(\nEither that or there was an error from UT");
+        return sb.ToString();
     }
 
     public void CalculateCircles()

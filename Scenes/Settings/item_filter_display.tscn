@@ -32,11 +32,14 @@ layout_mode = 2
 text = " Add Filter "
 script = ExtResource("1_luaa6")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer" unique_id=500699236]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1299910046]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/ScrollContainer" unique_id=500699236]
 layout_mode = 2
 fit_content = true
 script = ExtResource("1_2hoc3")
 FontSizeOverrideName = "Item Filter Font Size"
 FontSizeOverrideId = "ItemFilter"
 
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="VBoxContainer/RichTextLabel" method="OpenEmptyFilter"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="VBoxContainer/ScrollContainer/RichTextLabel" method="OpenEmptyFilter"]

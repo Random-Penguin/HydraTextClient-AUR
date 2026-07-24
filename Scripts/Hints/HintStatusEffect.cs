@@ -2,6 +2,8 @@
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.DataTypes;
+using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
 namespace HydraTextClient.Scripts.Hints;
@@ -18,6 +20,7 @@ namespace HydraTextClient.Scripts.Hints;
 /// </summary>
 public class HintStatusEffect : MessageParserEffect
 {
+    public static event Action? OnUpdate;
     public override string Group => "hinttable";
     public override string Key => "hintstatus";
 
@@ -40,4 +43,9 @@ public class HintStatusEffect : MessageParserEffect
         label.AddText(statusName);
         label.PopContext();
     }
+
+    public override void AddValueUpdater() => SaveType<HexColor>.AddIndividualEvents(
+        _ => OnUpdate?.Invoke(), NoPriority.SaveId(), Avoid.SaveId(), Priority.SaveId(), FoundColor.SaveId(),
+        Unspecified.SaveId()
+    );
 }

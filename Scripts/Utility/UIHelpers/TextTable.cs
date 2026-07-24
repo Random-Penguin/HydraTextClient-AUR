@@ -52,11 +52,7 @@ public abstract partial class TextTable : RichLabelInteractions
         var id = $"{SaveId}{FontSizeOverrideId}";
         SettingsCreator.Tab("Theme", tab => tab.AddSpinBox(FontSizeOverrideName, id, 20d, 1, c => c.MinValue = 1));
 
-        SaveType<double>.OnSaveEvent += (newId, val) =>
-        {
-            if (newId != id) return;
-            this.SetFontSizeOverride(val);
-        };
+        SaveType<double>.AddIndividualEvent(id, this.SetFontSizeOverride);
         this.SetFontSizeOverride(SaveType<double>.Load(id, 20));
     }
 
@@ -109,5 +105,8 @@ public abstract partial class TextTable : RichLabelInteractions
     public abstract string GetData(int row, int col);
     public abstract void RefreshUi(bool recompile);
     public void QueueUiRefresh(bool recompile) => QueueRefreshUi.Add(recompile);
-
+    public void CallReload() => QueueUiRefresh(false);
+    public void CallReload(bool _) => CallReload();
+    public void CallReload(string _) => CallReload();
+    public void CallReload(double _) => CallReload();
 }

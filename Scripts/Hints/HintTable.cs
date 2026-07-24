@@ -47,20 +47,15 @@ public partial class HintTable : TextTable
 
     public override void _Ready()
     {
-        SaveType<HexColor>.OnSaveEvent += (id, _) =>
-        {
-            if (!IdToConstant.TryGetValue(id, out var constant)) return;
-            if (!constant.IsPlayerColor() && !constant.IsItemColor() && constant is not (ColorConstant.FoundColor
-                    or ColorConstant.NotFoundColor or ColorConstant.LocationColor)) return;
-            QueueUiRefresh(false);
-        };
-
-        SaveType<string>.OnSaveEvent += (id, _) =>
-        {
-            if (id is not (PlayerEffect.SaveIdNoAlias or PlayerEffect.SaveIdWithAlias or ItemEffect.SaveId)) return;
-            QueueUiRefresh(false);
-        };
-
+        EntranceEffect.OnUpdate += CallReload;
+        ItemEffect.OnUpdate += CallReload;
+        LocationEffect.OnUpdate += CallReload;
+        PlayerEffect.OnUpdate += CallReload;
+        HintStatusEffect.OnUpdate += CallReload;
+        SaveType<string>.AddIndividualEvents(
+            CallReload, PlayerEffect.SaveIdNoAlias, PlayerEffect.SaveIdWithAlias, ItemEffect.SaveId
+        );
+        SaveType<bool>.AddIndividualEvent(ItemEffect.FallbackSaveId, CallReload);
         SaveType<FilterType>.OnSaveEvent += (_, _) => QueueUiRefresh(true);
         SaveType<FilterType>.OnDeleteEvent += (_, _) => QueueUiRefresh(true);
 
@@ -103,11 +98,6 @@ public partial class HintTable : TextTable
             : TextServer.AutowrapMode.Off;
         SaveType<bool>.OnSaveEvent += (key, b) =>
         {
-            if (key is ItemEffect.FallbackSaveId)
-            {
-                QueueUiRefresh(false);
-                return;
-            }
             if (key is "hint_table/word_wrap")
                 AutowrapMode = b ? TextServer.AutowrapMode.WordSmart : TextServer.AutowrapMode.Off;
             if (!key.StartsWith("hint_table/show_")) return;

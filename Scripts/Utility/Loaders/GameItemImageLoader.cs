@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using Godot;
@@ -12,6 +13,7 @@ public static class GameItemImageLoader
 {
     private static ConcurrentDictionary<string, ItemImageLoader> GameImages = [];
     private static ConcurrentDictionary<string, ConcurrentDictionary<string, string>> GameImageAliases = [];
+    public static event Action? OnReload;
 
     static GameItemImageLoader()
     {
@@ -34,6 +36,7 @@ public static class GameItemImageLoader
             foreach (var item in alias.ItemNames)
                 aliasDict.TryAdd(item.ToLower(), alias.AliasName.ToLower());
         }
+        OnReload?.Invoke();
     }
 
     public static bool TryGet(string gameName, string itemName, out ImageTexture img)

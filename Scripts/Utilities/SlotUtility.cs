@@ -21,12 +21,9 @@ public partial class SlotUtility : HSplitContainer
     {
         Client = client;
         var fontSize = (int)SaveType<double>.Load(GlobalThemeSettings.GlobalFontSize, 20d);
-        SaveType<double>.OnSaveEvent += (s, d) =>
-        {
-            if (s is not GlobalThemeSettings.GlobalFontSize) return;
-            var size = (int)d;
-            ItemList.List.FixedIconSize = new Vector2I(size, size);
-        };
+        SaveType<double>.AddIndividualEvent(
+            GlobalThemeSettings.GlobalFontSize, d => ItemList.List.FixedIconSize = new Vector2I((int)d, (int)d)
+        );
 
         client.OnLocationsChecked += locPack =>
         {
@@ -83,4 +80,6 @@ public partial class SlotUtility : HSplitContainer
         AddChild(popup);
         popup.Show();
     }
+
+    protected override void Dispose(bool disposing) => Inventory.QueueFree();
 }

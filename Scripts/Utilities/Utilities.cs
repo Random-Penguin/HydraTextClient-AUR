@@ -29,5 +29,6 @@ public partial class Utilities : TabContainer
         var page = UtilityPages[name];
         UtilityPages.Remove(name);
         RemoveChild(page);
+        page.QueueFree();
     }
 }

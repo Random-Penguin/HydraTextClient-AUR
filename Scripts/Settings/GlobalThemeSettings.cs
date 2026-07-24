@@ -23,11 +23,7 @@ public static class GlobalThemeSettings
     public static void Init()
     {
         SetAlwaysOnTop(SaveType<bool>.Load(AlwaysOnTop, false));
-        SaveType<double>.OnSaveEvent += (s, d) =>
-        {
-            if (s is GlobalFontSize) LoadGlobalFont(d);
-        };
-
+        SaveType<double>.AddIndividualEvent(GlobalFontSize, LoadGlobalFont);
         CreateSettings();
 
         SettingsCreator.Tab(

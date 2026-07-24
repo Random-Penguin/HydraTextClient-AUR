@@ -16,7 +16,7 @@ public partial class MainController : Control
     public const string WindowSaveId = "window_nodes/MAIN_WINDOW";
     public const string WindowBackGroundImage = "Theme/BackgroundImage";
     public const string WindowBackGroundImageAlpha = "Theme/BackgroundImageAlpha";
-    public const string CheckForUpdate = "Main/CheckForUpdates"; 
+    public const string CheckForUpdate = "Main/CheckForUpdates";
 
     [Export] private string VersionNumber;
     [Export] private PackedScene ErrorWindow;
@@ -57,30 +57,18 @@ public partial class MainController : Control
         var mainPopupBox = (StyleBoxFlat)GlobalTheme.GetStylebox("panel", "Panel");
         mainPopupBox.BgColor = ColorIdConstants.ColorConstant.PopupBackground.Load();
 
-        SaveType<HexColor>.OnSaveEvent += (id, val) =>
-        {
-            if (!ColorIdConstants.IdToConstant.TryGetValue(id, out var constant)) return;
-            switch (constant)
-            {
-                case ColorIdConstants.ColorConstant.UiBackground: mainBackgroundBox.BgColor = val; break;
-                case ColorIdConstants.ColorConstant.PopupBackground: mainPopupBox.BgColor = val; break;
-            }
-        };
+        SaveType<HexColor>.AddIndividualEvent(
+            ColorIdConstants.ColorConstant.UiBackground.SaveId(), val => mainBackgroundBox.BgColor = val
+        );
+        SaveType<HexColor>.AddIndividualEvent(
+            ColorIdConstants.ColorConstant.PopupBackground.SaveId(), val => mainPopupBox.BgColor = val
+        );
 
         LoadBackgroundImage(SaveType<string>.Load(WindowBackGroundImage, "", false));
         LoadBackgroundImageTransparency(SaveType<double>.Load(WindowBackGroundImageAlpha, 255));
 
-        SaveType<string>.OnSaveEvent += (id, val) =>
-        {
-            if (id is not WindowBackGroundImage) return;
-            LoadBackgroundImage(val);
-        };
-
-        SaveType<double>.OnSaveEvent += (id, val) =>
-        {
-            if (id is not WindowBackGroundImageAlpha) return;
-            LoadBackgroundImageTransparency(val);
-        };
+        SaveType<string>.AddIndividualEvent(WindowBackGroundImage, LoadBackgroundImage);
+        SaveType<double>.AddIndividualEvent(WindowBackGroundImageAlpha, LoadBackgroundImageTransparency);
     }
 
     public override void _Ready()
@@ -89,7 +77,8 @@ public partial class MainController : Control
         GlobalThemeSettings.Init();
         MainContainer.CurrentTab = 0;
 
-        if (Path.GetFileNameWithoutExtension(System.Environment.ProcessPath)! is "_OLD_HYDRA_DONT_USE_WILL_AUTODELETE") Quit();
+        if (Path.GetFileNameWithoutExtension(System.Environment.ProcessPath)! is "_OLD_HYDRA_DONT_USE_WILL_AUTODELETE")
+            Quit();
         foreach (var old in Directory.GetFiles(Path.GetDirectoryName(System.Environment.ProcessPath)!))
         {
             if (Path.GetFileName(old) is "_OLD_HYDRA_DONT_USE_WILL_AUTODELETE") File.Delete(old);

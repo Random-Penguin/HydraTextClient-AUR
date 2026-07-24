@@ -4,6 +4,7 @@ using System.Linq;
 using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Settings.ItemFilter;
@@ -44,6 +45,7 @@ public partial class PlayerInventory : TextTable
 
         OnFilterDataUpdated = (_, _) => QueueUiRefresh(true);
         SaveType<FilterType>.OnSaveEvent += OnFilterDataUpdated;
+        ItemEffect.OnUpdate += CallReload;
     }
 
     public override void _PhysicsProcess(double delta) => Client?.UpdateItemHandler();
@@ -115,5 +117,9 @@ public partial class PlayerInventory : TextTable
         popup.Show();
     }
 
-    protected override void Dispose(bool disposing) => SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
+    protected override void Dispose(bool disposing)
+    {
+        SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
+        ItemEffect.OnUpdate -= CallReload;
+    }
 }

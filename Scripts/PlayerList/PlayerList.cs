@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Godot;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
@@ -20,18 +21,7 @@ public partial class PlayerList : MarginContainer
 
     public override void _Ready()
     {
-        SaveType<HexColor>.OnSaveEvent += (s, _) =>
-        {
-            if (!ColorIdConstants.IdToConstant.TryGetValue(s, out var constant)) return;
-            if (!constant.IsPlayerColor()) return;
-            RefreshPlayerText();
-        };
-
-        SaveType<string>.OnSaveEvent += (s, _) =>
-        {
-            if (s.StartsWith("Clients/TextClient/TextEffects/")) RefreshPlayerText();
-        };
-
+        PlayerEffect.OnUpdate += RefreshPlayerText;
         ConnectionController.OnClientRemoved += (_, _, _) => RefreshPlayerText();
         ConnectionController.OnFullDisconnection += Reset;
 
@@ -144,7 +134,7 @@ public partial class PlayerList : MarginContainer
         {
             foreach (var action in CheckFunctions) ConnectionController.OnCheckCountUpdated -= action;
         }
-        
+
         Items = null;
         CheckFunctions = null;
     }

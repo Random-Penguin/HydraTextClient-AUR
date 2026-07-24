@@ -9,6 +9,7 @@ using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Settings.ItemFilter;
@@ -50,7 +51,6 @@ public partial class TrackerPage : Control
         Entry = entry;
 
         ProcessId = ExternalAppController.StartProcess(name, entry);
-        OnStopCalled += () => ExternalAppController.EndProcess(ProcessId);
 
         CalculateCircles();
         OnItemsReceived = (_, _) => CallDeferred("CalculateCircles");
@@ -70,14 +70,10 @@ public partial class TrackerPage : Control
 
         OnFilterDataUpdated = (_, _) => QueueUpdate();
         SaveType<FilterType>.OnSaveEvent += OnFilterDataUpdated;
-        OnStopCalled += () =>
-        {
-            client.CheckedLocationsUpdated -= OnLocationsChecked;
-            client.HintsTrackedEvent -= OnHintsUpdated;
-            client.ItemHandler.OnNewItemsReceived -= OnItemsReceived;
-            SaveType<bool>.OnSaveEvent -= OnBoolSaveDataUpdated;
-            SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
-        };
+        EntranceEffect.OnUpdate += CallReload;
+        ItemEffect.OnUpdate += CallReload;
+        LocationEffect.OnUpdate += CallReload;
+        OnStopCalled += QueueFree;
     }
 
     public override void _Process(double delta)
@@ -180,6 +176,7 @@ public partial class TrackerPage : Control
 
     public void Stop() => EmitSignalOnStopCalled();
     public void QueueUpdate(bool recompile = true) => UpdateQueue.Enqueue(recompile);
+    public void CallReload() => QueueUpdate(false);
 
     private Dictionary<string, Action<RichTextLabel, string[]>> GetCompileEffects()
     {
@@ -188,4 +185,17 @@ public partial class TrackerPage : Control
     }
 
     public void Failure(string text) => Label.Text = $"[color=red]{text}[/color]";
+
+    protected override void Dispose(bool disposing)
+    {
+        EntranceEffect.OnUpdate -= CallReload;
+        ItemEffect.OnUpdate -= CallReload;
+        LocationEffect.OnUpdate -= CallReload;
+        ExternalAppController.EndProcess(ProcessId);
+        Client.CheckedLocationsUpdated -= OnLocationsChecked;
+        Client.HintsTrackedEvent -= OnHintsUpdated;
+        Client.ItemHandler.OnNewItemsReceived -= OnItemsReceived;
+        SaveType<bool>.OnSaveEvent -= OnBoolSaveDataUpdated;
+        SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
+    }
 }

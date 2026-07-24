@@ -95,6 +95,7 @@ public class ItemEffect : MessageParserEffect
 
     public override void AddValueUpdater()
     {
+        GameItemImageLoader.OnReload += () => OnUpdate?.Invoke();
         SaveType<string>.AddIndividualEvent(SaveId, _ => OnUpdate?.Invoke());
         SaveType<bool>.AddIndividualEvent(FallbackSaveId, _ => OnUpdate?.Invoke());
         SaveType<HexColor>.OnSaveEvent += (id, _) =>

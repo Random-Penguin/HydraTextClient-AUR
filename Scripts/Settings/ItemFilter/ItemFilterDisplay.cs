@@ -26,25 +26,7 @@ public partial class ItemFilterDisplay : TextTable
         RefreshUi(true);
         SaveType<FilterType>.OnSaveEvent += (_, _) => QueueUiRefresh(true);
         SaveType<FilterType>.OnDeleteEvent += (_, _) => QueueUiRefresh(true);
-
-        SaveType<HexColor>.OnSaveEvent += (id, _) =>
-        {
-            if (!IdToConstant.TryGetValue(id, out var constant)) return;
-            if (!constant.IsItemColor()) return;
-            QueueUiRefresh(false);
-        };
-
-        SaveType<string>.OnSaveEvent += (id, _) =>
-        {
-            if (id is not ItemEffect.SaveId) return;
-            QueueUiRefresh(false);
-        };
-
-        SaveType<bool>.OnSaveEvent += (id, _) =>
-        {
-            if (id is not ItemEffect.FallbackSaveId) return;
-            QueueUiRefresh(false);
-        };
+        ItemEffect.OnUpdate += CallReload;
     }
 
     public override void RefreshUi(bool recompile)

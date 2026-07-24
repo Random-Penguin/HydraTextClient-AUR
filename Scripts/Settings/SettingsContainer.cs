@@ -57,12 +57,7 @@ public partial class SettingsContainer : HSplitContainer
         colorPicker.Color = colorConstant.Color();
         colorPicker.PopupClosed += () => colorConstant.Save(colorPicker.Color);
 
-        SaveType<HexColor>.OnSaveEvent += (id, color) =>
-        {
-            if (id != ColorIdConstants.ConstantToId[colorConstant]) return;
-            colorPicker.Color = color;
-        };
-
+        SaveType<HexColor>.AddIndividualEvent(colorConstant.SaveId(), color => colorPicker.Color = color);
         this[col].AddChild(CreateBoxWithLabel(colorPicker, text, true));
         return this;
     }

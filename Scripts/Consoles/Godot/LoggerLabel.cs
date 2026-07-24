@@ -21,12 +21,11 @@ public partial class LoggerLabel :RichTextLabel
         };
         Logger = new AppLogger(this);
         Logger._LogMessage("Logger Init", false);
-        SaveType<double>.OnSaveEvent += (s, d) =>
+        SaveType<double>.AddIndividualEvent(ChildLimiter.QueueSaveId, d =>
         {
-            if (s is not ChildLimiter.QueueSaveId) return;
             Logger.SetSize((int)d);
             CallDeferred("Update");
-        };
+        });
     }
 
     public override void _Process(double delta)

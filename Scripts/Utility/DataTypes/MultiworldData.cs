@@ -27,6 +27,7 @@ public class MultiworldData
         CheckCounts.Clear();
         SlotNames.Clear();
         Hints.Clear();
+        HiddenHints.Clear();
         ItemHistory.Clear();
     }
 

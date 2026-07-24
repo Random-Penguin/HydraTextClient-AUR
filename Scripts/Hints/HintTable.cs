@@ -101,6 +101,8 @@ public partial class HintTable : TextTable
             QueueUiRefresh(true);
         };
 
+        SaveType<int>.AddIndividualEvent("hint_table/show_client", _ => QueueUiRefresh(true));
+        
         HintChangePopup.IndexPressed += l =>
         {
             var hint = CurrentlySelectedHint;

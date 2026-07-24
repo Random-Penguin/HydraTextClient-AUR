@@ -109,4 +109,5 @@ public abstract partial class TextTable : RichLabelInteractions
     public void CallReload(bool _) => CallReload();
     public void CallReload(string _) => CallReload();
     public void CallReload(double _) => CallReload();
+    public void CallReload(int _) => CallReload();
 }

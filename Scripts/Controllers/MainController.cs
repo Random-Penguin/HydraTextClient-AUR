@@ -8,6 +8,7 @@ using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.Popups;
+using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
 namespace HydraTextClient.Scripts.Controllers;
 
@@ -52,17 +53,13 @@ public partial class MainController : Control
         window.Title = $"Hydra Text Client {VersionNumber}";
 
         var mainBackgroundBox = (StyleBoxFlat)GetThemeStylebox("panel");
-        mainBackgroundBox.BgColor = ColorIdConstants.ColorConstant.UiBackground.Load();
+        mainBackgroundBox.BgColor = UiBackground.Load();
 
         var mainPopupBox = (StyleBoxFlat)GlobalTheme.GetStylebox("panel", "Panel");
-        mainPopupBox.BgColor = ColorIdConstants.ColorConstant.PopupBackground.Load();
+        mainPopupBox.BgColor = PopupBackground.Load();
 
-        SaveType<HexColor>.AddIndividualEvent(
-            ColorIdConstants.ColorConstant.UiBackground.SaveId(), val => mainBackgroundBox.BgColor = val
-        );
-        SaveType<HexColor>.AddIndividualEvent(
-            ColorIdConstants.ColorConstant.PopupBackground.SaveId(), val => mainPopupBox.BgColor = val
-        );
+        SaveType<HexColor>.AddIndividualEvent(UiBackground.SaveId(), val => mainBackgroundBox.BgColor = val);
+        SaveType<HexColor>.AddIndividualEvent(PopupBackground.SaveId(), val => mainPopupBox.BgColor = val);
 
         LoadBackgroundImage(SaveType<string>.Load(WindowBackGroundImage, "", false));
         LoadBackgroundImageTransparency(SaveType<double>.Load(WindowBackGroundImageAlpha, 255));
@@ -116,12 +113,11 @@ public partial class MainController : Control
 
     public void LoadBackgroundImage(string path)
     {
-        if (path is "")
+        if (path is "" || !File.Exists(path))
         {
             BackgroundImage.Visible = false;
             return;
         }
-        if (!File.Exists(path)) return;
         BackgroundImage.Texture = ImageTexture.CreateFromImage(Image.LoadFromFile(path));
         BackgroundImage.Visible = true;
     }

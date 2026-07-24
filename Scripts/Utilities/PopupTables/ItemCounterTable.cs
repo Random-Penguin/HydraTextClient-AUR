@@ -22,6 +22,7 @@ public partial class ItemCounterTable : TextTable
     }
 
     public override void RefreshUi(bool recompile) { }
+    public override void RunDispose(bool disposing) { }
 
     public override string GetData(int row, int col)
     {

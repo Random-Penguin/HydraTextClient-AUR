@@ -122,7 +122,19 @@ public partial class SettingsContainer : HSplitContainer
         fileDialog.FileNameFilter = fileTarget;
         fileDialog.Filters = fileExt;
         fileDialog.FileMode = mode;
+        
+        button.Pressed += () => fileDialog.CurrentPath = SaveType<string>.Load(saveId, "");
 
+        switch (mode)
+        {
+            case FileDialog.FileModeEnum.OpenFile:
+                fileDialog.FileSelected += dir => SaveType<string>.Save(saveId, dir, true);
+                break;
+            case FileDialog.FileModeEnum.OpenDir:
+                fileDialog.DirSelected += dir => SaveType<string>.Save(saveId, dir, true);
+                break;
+        }
+        
         button.Pressed += fileDialog.Show;
         var name = Path.GetFileName(SaveType<string>.Load(saveId, ""));
         if (name is "") name = "Not Selected";

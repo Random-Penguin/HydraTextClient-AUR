@@ -35,5 +35,6 @@ public partial class SendersTable : TextTable
     }
 
     public override void RefreshUi(bool recompile) { }
+    public override void RunDispose(bool disposing) { }
     public override void OnMetaClicked(string key, string[] text) { }
 }

@@ -33,6 +33,8 @@ public partial class ItemFilterDisplay : TextTable
         UpdateData(recompile);
     }
 
+    public override void RunDispose(bool disposing) { }
+
     public override string GetData(int row, int col)
     {
         var filter = FilterTypes[row];

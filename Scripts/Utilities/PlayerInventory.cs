@@ -117,7 +117,7 @@ public partial class PlayerInventory : TextTable
         popup.Show();
     }
 
-    protected override void Dispose(bool disposing)
+    public override void RunDispose(bool disposing)
     {
         SaveType<FilterType>.OnSaveEvent -= OnFilterDataUpdated;
         ItemEffect.OnUpdate -= CallReload;

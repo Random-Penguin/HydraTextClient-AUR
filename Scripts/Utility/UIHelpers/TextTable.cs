@@ -48,11 +48,14 @@ public abstract partial class TextTable : RichLabelInteractions
     private void Init()
     {
         HasInit = true;
+        
+        GlobalThemeSettings.OnFontUpdate += CallReload;
+        
         if (FontSizeOverrideId is "" || FontSizeOverrideName is "") return;
         var id = $"{SaveId}{FontSizeOverrideId}";
+        SaveType<double>.AddIndividualEvent(id, this.SetFontSizeOverride);
         SettingsCreator.Tab("Theme", tab => tab.AddSpinBox(FontSizeOverrideName, id, 20d, 1, c => c.MinValue = 1));
 
-        SaveType<double>.AddIndividualEvent(id, this.SetFontSizeOverride);
         this.SetFontSizeOverride(SaveType<double>.Load(id, 20));
     }
 
@@ -110,4 +113,16 @@ public abstract partial class TextTable : RichLabelInteractions
     public void CallReload(string _) => CallReload();
     public void CallReload(double _) => CallReload();
     public void CallReload(int _) => CallReload();
+
+    protected override void Dispose(bool disposing)
+    {
+        GlobalThemeSettings.OnFontUpdate += CallReload;
+        RunDispose(disposing);
+        
+        if (FontSizeOverrideId is "" || FontSizeOverrideName is "") return;
+        var id = $"{SaveId}{FontSizeOverrideId}";
+        SaveType<double>.RemoveIndividualEvent(id, this.SetFontSizeOverride);
+    }
+
+    public abstract void RunDispose(bool disposing);
 }

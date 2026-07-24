@@ -102,7 +102,7 @@ public partial class HintTable : TextTable
         };
 
         SaveType<int>.AddIndividualEvent("hint_table/show_client", _ => QueueUiRefresh(true));
-        
+
         HintChangePopup.IndexPressed += l =>
         {
             var hint = CurrentlySelectedHint;
@@ -142,7 +142,7 @@ public partial class HintTable : TextTable
                        {
                            if (!SaveType<bool>.Load("hint_table/show_hidden", false)
                                && (mw!.HiddenHints.TryGetValue(hint.GetHash(), out var isVisible)
-                                    && isVisible)) return false;
+                                   && isVisible)) return false;
 
                            // not obvious, remove hints where finder and receiver are not in hydra
                            var order1 = GetOrderSlot(hint.FindingPlayer);
@@ -192,6 +192,8 @@ public partial class HintTable : TextTable
             };
         }
     }
+
+    public override void RunDispose(bool disposing) { }
 
     public override string GetColumnText(int columnNum)
     {

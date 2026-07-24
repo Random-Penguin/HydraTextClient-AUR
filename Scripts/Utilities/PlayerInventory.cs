@@ -7,7 +7,7 @@ using Godot;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
-using HydraTextClient.Scripts.Settings.ItemFilter;
+using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utilities.Popups;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;

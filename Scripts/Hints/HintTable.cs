@@ -9,15 +9,13 @@ using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
-using HydraTextClient.Scripts.Settings.ItemFilter;
+using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utility;
-using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using HydraTextClient.Scripts.Utility.UtilityEffects;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
 namespace HydraTextClient.Scripts.Hints;
 
@@ -29,7 +27,7 @@ public partial class HintTable : TextTable
     public const string GlobalCopyFormat = "Theme/HintTable/CopyFormat";
 
     public override string[] Columns
-        => ["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"];
+        => ["", "", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"];
 
     public override long DataSize => SortedHints.Length;
 
@@ -60,8 +58,7 @@ public partial class HintTable : TextTable
         SaveType<FilterType>.OnDeleteEvent += (_, _) => QueueUiRefresh(true);
 
         SettingsCreator.Tab(
-            "Hints",
-            tab =>
+            "Hints", tab =>
             {
                 tab.AddLineEdit(
                     "Copy Hint Text Format (Progression Items)", GlobalCopyFormatProgressive,
@@ -138,12 +135,13 @@ public partial class HintTable : TextTable
                        }
                    )
                   .SelectMany(kv => kv.Value)
-                  .DistinctBy(hint => HashCode.Combine(
-                           hint.FindingPlayer, hint.LocationId, hint.ReceivingPlayer, hint.Entrance, hint.ItemFlags
-                       )
-                   )
+                  .DistinctBy(hint => hint.GetHash())
                   .Where(hint =>
                        {
+                           if (!SaveType<bool>.Load("hint_table/show_hidden", false)
+                               && (mw!.HiddenHints.TryGetValue(hint.GetHash(), out var isVisible)
+                                    && isVisible)) return false;
+
                            // not obvious, remove hints where finder and receiver are not in hydra
                            var order1 = GetOrderSlot(hint.FindingPlayer);
                            return !(GetOrderSlot(hint.ReceivingPlayer) == order1 && order1 == 1);
@@ -196,7 +194,7 @@ public partial class HintTable : TextTable
     public override string GetColumnText(int columnNum)
     {
         var columnText = Columns[columnNum];
-        if (columnNum is 0 or > 4) return columnText;
+        if (columnNum is < 2 or > 5) return columnText;
 
         StringBuilder sb = new();
         sb.Append("[url=\"sortorder_").Append(columnText).Append("\"]").Append(columnText);
@@ -217,13 +215,17 @@ public partial class HintTable : TextTable
     public override string GetData(int row, int col)
     {
         var hint = SortedHints[row];
+        var mw = ConnectionController.GetCurrentMultiworld;
+        if (col is 0 && mw is null) return "???";
         return col switch
         {
-            0 => $"{{{{click;Copy;{row}}}}}",
-            1 or 3 => $"{{{{player;{(col is 1 ? hint.ReceivingPlayer : hint.FindingPlayer)}}}}}",
-            2 => hint.GetItemEffectText(), 4 =>
+            0 =>
+                $"{{{{vis;{!(mw!.HiddenHints.TryGetValue(hint.GetHash(), out var isVisible) && isVisible)};{row}}}}}",
+            1 => $"{{{{click;Copy;{row}}}}}",
+            2 or 4 => $"{{{{player;{(col is 2 ? hint.ReceivingPlayer : hint.FindingPlayer)}}}}}",
+            3 => hint.GetItemEffectText(), 5 =>
                 $"{{{{hintstatus;{hint.Status switch { Found => '4', NoPriority => '1', Avoid => '2', Priority => '3', _ => '0' }};{row};{ConnectionController.IsConnected(hint.ReceivingPlayer)}}}}}",
-            5 => $"{{{{loc;{hint.LocationId};{hint.FindingPlayer}}}}}", 6 => $"{{{{entrance;{hint.Entrance}}}}}",
+            6 => $"{{{{loc;{hint.LocationId};{hint.FindingPlayer}}}}}", 7 => $"{{{{entrance;{hint.Entrance}}}}}",
             _ => "Error",
         };
     }
@@ -269,22 +271,48 @@ public partial class HintTable : TextTable
                 HintChangePopup.Popup(new Rect2I((Vector2I)HintChangePopup.GetMousePosition(), HintChangePopup.Size));
                 break;
             case TextTableClickEffect.ClickedEventMsg:
-                var hint = SortedHints[int.Parse(text[0])];
-                var rawCopy = SaveType<string>.Load(
-                    hint.ItemFlags.HasFlag(Advancement) ? GlobalCopyFormatProgressive : GlobalCopyFormat,
-                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
-                );
+                switch (text[1])
+                {
+                    case "Hide": break;
+                    case "Show": break;
+                    case "Copy":
+                        var hint = SortedHints[int.Parse(text[0])];
+                        var rawCopy = SaveType<string>.Load(
+                            hint.ItemFlags.HasFlag(Advancement) ? GlobalCopyFormatProgressive : GlobalCopyFormat,
+                            "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
+                        );
 
-                DisplayServer.ClipboardSet(
-                    rawCopy.CompileSimpleText(
-                        new Dictionary<string, string>
-                        {
-                            ["finder"] = PlayerEffect.PlayerName(hint.FindingPlayer, out _),
-                            ["receiver"] = PlayerEffect.PlayerName(hint.ReceivingPlayer, out _),
-                            ["loc"] = hint.LocationName, ["entrance"] = hint.EntranceName, ["item"] = hint.ItemName,
-                        }
-                    ).Replace("\\n", "\n")
-                );
+                        DisplayServer.ClipboardSet(
+                            rawCopy.CompileSimpleText(
+                                new Dictionary<string, string>
+                                {
+                                    ["finder"] = PlayerEffect.PlayerName(hint.FindingPlayer, out _),
+                                    ["receiver"] = PlayerEffect.PlayerName(hint.ReceivingPlayer, out _),
+                                    ["loc"] = hint.LocationName, ["entrance"] = hint.EntranceName,
+                                    ["item"] = hint.ItemName,
+                                }
+                            ).Replace("\\n", "\n")
+                        );
+                        break;
+                }
+                break;
+        }
+    }
+
+    public override void OnVariantMetaClicked(Variant meta)
+    {
+        if (meta.VariantType is not Variant.Type.PackedInt32Array) return;
+        var mw = ConnectionController.GetCurrentMultiworld;
+        if (mw is null) return;
+        var arr = (int[])meta;
+        var hint = SortedHints[arr[0]];
+        switch (arr[1])
+        {
+            case 0:
+                var current = mw!.HiddenHints.TryGetValue(hint.GetHash(), out var isVisible) && isVisible;
+                mw!.HiddenHints[hint.GetHash()] = !current;
+                GD.Print($"toggle: [{arr[0]}]:[{mw!.HiddenHints[hint.GetHash()]}]");
+                QueueUiRefresh(true);
                 break;
         }
     }

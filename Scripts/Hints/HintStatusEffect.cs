@@ -49,3 +49,20 @@ public class HintStatusEffect : MessageParserEffect
         Unspecified.SaveId()
     );
 }
+
+// {{vis;t/f;row}}
+public class HintVisibilityEffect : MessageParserEffect
+{
+    public override string Group => "hinttable";
+    public override string Key => "vis";
+    public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
+    {
+        if (args.Length < 2) return;
+        var state = args[0].ToLower()[0] == 't';
+        label.PushContext();
+        label.PushMeta((int[])[int.Parse(args[1]), 0]);
+        label.PushColor(state ? Colors.Red : Colors.LimeGreen);
+        label.AddText(state ? "Hide" : "Show");
+        label.PopContext();
+    }
+}

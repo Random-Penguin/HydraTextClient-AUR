@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Godot;
-using HydraTextClient.Scripts.Settings.ItemFilter;
+using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;

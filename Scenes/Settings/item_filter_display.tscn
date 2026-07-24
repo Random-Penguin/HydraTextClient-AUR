@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://utog84qrsmp8"]
 
-[ext_resource type="Script" uid="uid://ckcool0286m1w" path="res://Scripts/Settings/ItemFilter/ItemFilterDisplay.cs" id="1_2hoc3"]
+[ext_resource type="Script" uid="uid://ckcool0286m1w" path="res://Scripts/Utilities/ItemFilter/ItemFilterDisplay.cs" id="1_2hoc3"]
 [ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="1_luaa6"]
 
 [node name="ItemFilterDisplay" type="Control" unique_id=1407271342]

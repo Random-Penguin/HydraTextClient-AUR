@@ -62,6 +62,10 @@ text = "Show Avoid"
 layout_mode = 2
 text = "Word Wrap"
 
+[node name="CheckBox7" type="CheckBox" parent="VBoxContainer/FlowContainer" unique_id=555118024]
+layout_mode = 2
+text = "Show Hidden Hints"
+
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1701859526]
 layout_mode = 2
 size_flags_vertical = 3
@@ -87,6 +91,7 @@ Controls = {
 "show_avoid": NodePath("../VBoxContainer/FlowContainer/CheckBox5"),
 "show_client": NodePath("../VBoxContainer/FlowContainer/OptionButton"),
 "show_found": NodePath("../VBoxContainer/FlowContainer/CheckBox"),
+"show_hidden": NodePath("../VBoxContainer/FlowContainer/CheckBox7"),
 "show_nopriority": NodePath("../VBoxContainer/FlowContainer/CheckBox4"),
 "show_priority": NodePath("../VBoxContainer/FlowContainer/CheckBox2"),
 "show_unspecified": NodePath("../VBoxContainer/FlowContainer/CheckBox3"),

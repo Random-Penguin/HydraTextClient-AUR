@@ -10,7 +10,7 @@ using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
-using HydraTextClient.Scripts.Settings.ItemFilter;
+using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;

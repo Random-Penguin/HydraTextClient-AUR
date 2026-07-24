@@ -16,6 +16,7 @@ public class MultiworldData
     public ConcurrentDictionary<string, int> CheckCountsChecked = [];
     public ConcurrentDictionary<string, int> CheckCounts = [];
     public ConcurrentDictionary<string, Hint[]> Hints = [];
+    public ConcurrentDictionary<int, bool> HiddenHints = [];
     public ConcurrentDictionary<string, int> ItemHistory = [];
 
     public void ClearCache()

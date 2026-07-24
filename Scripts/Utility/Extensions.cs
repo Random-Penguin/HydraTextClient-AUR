@@ -8,7 +8,7 @@ using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
-using HydraTextClient.Scripts.Settings.ItemFilter;
+using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
@@ -65,6 +65,10 @@ public static class Extensions // sorted alphabetically for the memes
         public string UID => FilterType.MakeUID(hint.ItemName, hint.ItemGame, hint.ItemFlags);
         public string EntranceName => hint.Entrance == "" ? "Vanilla" : hint.Entrance;
         public string GetItemEffectText() => $"{{{{item;``{hint.ItemGame}``;``{hint.ItemName}``;{(int)hint.ItemFlags}}}}}";
+
+        public int GetHash() => HashCode.Combine(
+            hint.FindingPlayer, hint.LocationId, hint.ReceivingPlayer, hint.Entrance, hint.ItemFlags
+        );
 
         public int SortNumber()
         {

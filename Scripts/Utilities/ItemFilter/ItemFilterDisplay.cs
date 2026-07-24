@@ -4,14 +4,11 @@ using Archipelago.MultiClient.Net.Enums;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
-using HydraTextClient.Scripts.Utility;
-using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using HydraTextClient.Scripts.Utility.UtilityEffects;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants;
 
-namespace HydraTextClient.Scripts.Settings.ItemFilter;
+namespace HydraTextClient.Scripts.Utilities.ItemFilter;
 
 public partial class ItemFilterDisplay : TextTable
 {

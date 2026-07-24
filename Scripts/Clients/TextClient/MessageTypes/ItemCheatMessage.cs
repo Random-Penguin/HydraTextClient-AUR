@@ -3,8 +3,6 @@ using Archipelago.MultiClient.Net.Packets;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 

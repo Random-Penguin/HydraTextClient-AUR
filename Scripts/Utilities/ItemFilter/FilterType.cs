@@ -2,7 +2,7 @@
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
 
-namespace HydraTextClient.Scripts.Settings.ItemFilter;
+namespace HydraTextClient.Scripts.Utilities.ItemFilter;
 
 public struct FilterType(string itemName, string gameName, ItemFlags itemFlags)
 {

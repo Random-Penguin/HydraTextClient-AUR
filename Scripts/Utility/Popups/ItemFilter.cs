@@ -1,6 +1,6 @@
 using Archipelago.MultiClient.Net.Enums;
 using Godot;
-using HydraTextClient.Scripts.Settings.ItemFilter;
+using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Utility.Popups;

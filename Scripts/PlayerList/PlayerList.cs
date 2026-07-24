@@ -3,9 +3,6 @@ using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
-using HydraTextClient.Scripts.Utility;
-using HydraTextClient.Scripts.Utility.DataTypes;
-using HydraTextClient.Scripts.Utility.Loaders;
 using static Archipelago.MultiClient.Net.Enums.ArchipelagoClientState;
 
 namespace HydraTextClient.Scripts.PlayerList;

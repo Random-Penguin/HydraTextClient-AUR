@@ -1,8 +1,9 @@
-using Godot;
 using System;
 using System.Collections.Generic;
+using Godot;
 using HydraTextClient.Scripts.Consoles;
-using HydraTextClient.Scripts.Controllers;
+
+namespace HydraTextClient.Scripts.Controllers;
 
 public partial class ConsoleController : TabContainer
 {

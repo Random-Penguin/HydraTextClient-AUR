@@ -2,9 +2,9 @@
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
 
-namespace HydraTextClient.Scripts.Settings.ItemFilter.Effects;
+namespace HydraTextClient.Scripts.Utilities.ItemFilter.Effects;
 
-// {log;t/f;row}
+// {{log;t/f;row}}
 public class ItemFilterEffectsItemLog : MessageParserEffect
 {
     public override string Group => "itemfilter";
@@ -21,7 +21,7 @@ public class ItemFilterEffectsItemLog : MessageParserEffect
     }
 }
 
-// {table;t/f;row}
+// {{table;t/f;row}}
 public class ItemFilterEffectsHintTable : MessageParserEffect
 {
     public override string Group => "itemfilter";
@@ -38,7 +38,7 @@ public class ItemFilterEffectsHintTable : MessageParserEffect
     }
 }
 
-// {special;t/f;row}
+// {{special;t/f;row}}
 public class ItemFilterEffectsSpecial : MessageParserEffect
 {
     public override string Group => "itemfilter";

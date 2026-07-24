@@ -6,8 +6,6 @@ using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Hints;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.Loaders;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants;
-using static HydraTextClient.Scripts.Utility.ColorIdConstants.ColorConstant;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 

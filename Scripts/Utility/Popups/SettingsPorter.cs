@@ -4,7 +4,7 @@ using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Hints;
 using HydraTextClient.Scripts.Settings;
-using HydraTextClient.Scripts.Settings.ItemFilter;
+using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using Newtonsoft.Json;

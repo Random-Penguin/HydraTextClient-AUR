@@ -63,7 +63,7 @@ public static class GlobalThemeSettings
                    .AddButton("SteamGridDB.com", () => OS.ShellOpen("https://www.steamgriddb.com/"), 2)
                    .AddButton("IGDB.com", () => OS.ShellOpen("https://www.igdb.com/"), 2)
                    .AddButton(
-                        "mk-404's Archipelaog Library",
+                        "mk-404's Archipelago Library",
                         () => OS.ShellOpen("https://mk-404.github.io/Archipelago-Games-Library/"), 2
                     );
             }, int.MinValue

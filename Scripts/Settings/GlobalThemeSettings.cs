@@ -30,14 +30,10 @@ public static class GlobalThemeSettings
             "Main Settings", tab =>
             {
                 tab.AddBrowseFile(
-                        "Set Archipelago Folder", FileDialog.FileModeEnum.OpenDir, [],
-                        extraConfig: (button, dialog) =>
+                        "Set Archipelago Folder", ApDir, FileDialog.FileModeEnum.OpenDir, [],
+                        extraConfig: (button, dialog, clear) =>
                         {
-                            button.Pressed += () =>
-                            {
-                                var curSaved = SaveType<string>.Load(ApDir, "");
-                                if (curSaved is not "") dialog.CurrentPath = curSaved;
-                            };
+                            button.Pressed += () => dialog.CurrentPath = SaveType<string>.Load(ApDir, "");
                             dialog.DirSelected += dir => SaveType<string>.Save(ApDir, dir, true);
                         }
                     )
@@ -94,14 +90,13 @@ public static class GlobalThemeSettings
                    )
                   .AddSeparator(1)
                   .AddBrowseFile(
-                       "Set Background Image", FileDialog.FileModeEnum.OpenFile, ["*.png", "*.jpg"], col: 1,
-                       extraConfig: (button, dialog) =>
+                       "Set Background Image", WindowBackGroundImage, FileDialog.FileModeEnum.OpenFile,
+                       ["*.png", "*.jpg"], col: 1,
+                       extraConfig: (button, dialog, clear) =>
                        {
-                           button.Pressed += () =>
-                           {
-                               var curSaved = SaveType<string>.Load(WindowBackGroundImage, "");
-                               if (curSaved is not "") dialog.CurrentPath = curSaved;
-                           };
+                           button.Pressed += () => dialog.CurrentPath = SaveType<string>.Load(
+                               WindowBackGroundImage, ""
+                           );
                            dialog.FileSelected += dir => SaveType<string>.Save(WindowBackGroundImage, dir, true);
                        }
                    ).AddSpinBox(

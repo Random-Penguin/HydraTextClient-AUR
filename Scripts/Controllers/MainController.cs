@@ -116,8 +116,14 @@ public partial class MainController : Control
 
     public void LoadBackgroundImage(string path)
     {
-        if (path is "" || !File.Exists(path)) return;
+        if (path is "")
+        {
+            BackgroundImage.Visible = false;
+            return;
+        }
+        if (!File.Exists(path)) return;
         BackgroundImage.Texture = ImageTexture.CreateFromImage(Image.LoadFromFile(path));
+        BackgroundImage.Visible = true;
     }
 
     public void LoadBackgroundImageTransparency(double val)

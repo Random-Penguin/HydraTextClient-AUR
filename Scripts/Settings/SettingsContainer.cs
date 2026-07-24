@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Godot;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
@@ -58,7 +59,7 @@ public partial class SettingsContainer : HSplitContainer
         colorPicker.PopupClosed += () => colorConstant.Save(colorPicker.Color);
 
         SaveType<HexColor>.AddIndividualEvent(colorConstant.SaveId(), color => colorPicker.Color = color);
-        this[col].AddChild(CreateBoxWithLabel(colorPicker, text, true));
+        this[col].AddChild(CreateBoxWithLabel(colorPicker, text, true, out _));
         return this;
     }
 
@@ -72,7 +73,7 @@ public partial class SettingsContainer : HSplitContainer
         edit.Text = SaveType<string>.Load(saveId, def);
         edit.TextChanged += s => SaveType<string>.Save(saveId, s, true);
 
-        this[columnIndex].AddChild(CreateBoxWithLabel(edit, text, false));
+        this[columnIndex].AddChild(CreateBoxWithLabel(edit, text, false, out _));
         return this;
     }
 
@@ -83,7 +84,7 @@ public partial class SettingsContainer : HSplitContainer
         box.AllowGreater = true;
         extraConfig?.Invoke(box);
         Saver.BuildSavable(box, saveId, def);
-        this[col].AddChild(CreateBoxWithLabel(box, text, true));
+        this[col].AddChild(CreateBoxWithLabel(box, text, true, out _));
         return this;
     }
 
@@ -96,14 +97,24 @@ public partial class SettingsContainer : HSplitContainer
         return this;
     }
 
-    public SettingsContainer AddBrowseFile(string text, FileDialog.FileModeEnum mode, string[] fileExt,
-        string fileTarget = "", int col = 0, Action<Button, FileDialog>? extraConfig = null)
+    public SettingsContainer AddBrowseFile(string text, string saveId, FileDialog.FileModeEnum mode, string[] fileExt,
+        string fileTarget = "", int col = 0, Action<Button, FileDialog, Button>? extraConfig = null)
     {
+        var contentType = mode switch
+        {
+            FileDialog.FileModeEnum.OpenFile => "File", FileDialog.FileModeEnum.OpenFiles => "Files",
+            FileDialog.FileModeEnum.OpenDir => "Folder", _ => "Items"
+        };
+        
         Button button = new();
         button.Text = text;
 
+        Button clear = new();
+        clear.Text = $"Clear {contentType}";
+        clear.Pressed += () => SaveType<string>.Save(saveId, "", true);
+
         FileDialog fileDialog = new();
-        extraConfig?.Invoke(button, fileDialog);
+        extraConfig?.Invoke(button, fileDialog, clear);
         fileDialog.Visible = false;
         fileDialog.Access = FileDialog.AccessEnum.Filesystem;
         fileDialog.ShowHiddenFiles = true;
@@ -113,18 +124,36 @@ public partial class SettingsContainer : HSplitContainer
         fileDialog.FileMode = mode;
 
         button.Pressed += fileDialog.Show;
+        var name = Path.GetFileName(SaveType<string>.Load(saveId, ""));
+        if (name is "") name = "Not Selected";
 
-        this[col].AddChild(button);
+        var box = CreateBoxWithLabel(
+            button,
+            $"Selected {contentType}: [{name}]",
+            false, out var label
+        );
+        box.AddChild(clear);
+
         this[col].AddChild(fileDialog);
+        this[col].AddChild(box);
+
+        SaveType<string>.AddIndividualEvent(
+            saveId, file =>
+            {
+                var name = Path.GetFileName(file);
+                if (name is "") name = "Not Selected";
+                label.Text = label.Text[..label.Text.IndexOf('[')] + $"[{name}]";
+            }
+        );
         return this;
     }
 
-    public BoxContainer CreateBoxWithLabel(Control obj, string text, bool isHorizontal)
+    public BoxContainer CreateBoxWithLabel(Control obj, string text, bool isHorizontal, out Label label)
     {
         BoxContainer container = isHorizontal ? new HBoxContainer() : new VBoxContainer();
         container.SizeFlagsHorizontal = SizeFlags.Expand;
 
-        Label label = new();
+        label = new Label();
         label.Text = isHorizontal ? $": {text}" : $"{text}:";
 
         if (!isHorizontal) container.AddChild(label);

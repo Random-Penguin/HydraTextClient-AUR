@@ -110,6 +110,7 @@ Not tested, probably VERY unstable, and because of that I am not making a true r
       - in the folder you have images that have the item name
       - Custom Assets item formatting `Game Name_Item Name`
       - aliases.json, allows you to assign multiple items to 1 image (not required)
+      - `game name.png` will act as a default image for all the game's items
   - Requires Hydra restart to reapply images to icons that already exist (like the item filter)
 - Text Client: How Item Log and Hint Log filter deletes items
   - If an item/hint is blocked by your settings/filters they will not be added at all

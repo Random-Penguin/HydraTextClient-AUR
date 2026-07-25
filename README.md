@@ -89,9 +89,12 @@ Not tested, probably VERY unstable, and because of that I am not making a true r
   - Can mark an item as special
     - Special Items are treated higher than progression items and can have their own colors
 - Misc Settings/Features
+  - Ability to change the default font
+    - Accepted formats: \*.ttf, \*.ttc, \*.otf, \*.otc, \*.woff, \*.woff2, \*.pfb, \*.pfm 
   - Change Color Themes
   - Import/Export Color themes from/to clipboard
   - Set Background image and alpha (transparency/opacity)
+    - Accepted formats: \*.png, \*.jpg, \*.bmp, \*.dds, \*.exr, \*.jpeg, \*.tga, \*.svg, \*.svgz, \*.webp 
   - Change some Font Sizes
   - Discord Rich Presence
 - Autoupdater

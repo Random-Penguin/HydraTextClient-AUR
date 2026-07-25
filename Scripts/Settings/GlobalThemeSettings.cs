@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
-using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;

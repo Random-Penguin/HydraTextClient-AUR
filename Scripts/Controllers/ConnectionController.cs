@@ -224,9 +224,9 @@ public partial class ConnectionController : Control
 
     public static void TryConnect(string name)
     {
-        SlotView.SetPortraitStatus(name, ConnectionStatus.NotConnected);
         if (CurrentMultiworld is null) return;
         if (ClientTryConnecting) return;
+        SlotView.SetPortraitStatus(name, ConnectionStatus.NotConnected);
         var mw = SaveType<MultiworldData>.Load(CurrentMultiworld, null);
         if (mw is null) return;
 

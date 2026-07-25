@@ -63,7 +63,7 @@ public abstract partial class RichLabelInteractions : RichTextLabel
                 var hasAlias = ConnectionController.GetPlayerInfo(
                     int.Parse(text), out var name, out var alias, out var game
                 );
-                margin.AddChild(CreateLabel($"Player: {name}\n{(hasAlias ? $"Alias: {alias}\n" : "")}Game: {game}"));
+                margin.AddChild(CreateLabel($"Slot: #{int.Parse(text):###,###}\nPlayer: {name}\n{(hasAlias ? $"Alias: {alias}\n" : "")}Game: {game}"));
                 break;
         }
 

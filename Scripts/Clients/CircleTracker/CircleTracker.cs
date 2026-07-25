@@ -7,6 +7,7 @@ using Godot;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Clients.CircleTracker;
 
@@ -17,7 +18,7 @@ public partial class CircleTracker : Control
     [Export] private VBoxContainer ButtonContainer;
     [Export] private TabContainer PageContainer;
 
-    public Dictionary<string, Button> Buttons = [];
+    public Dictionary<string, ButtonAnimation> Buttons = [];
     public Dictionary<string, TrackerPage> Pages = [];
     public ConcurrentDictionary<string, ApClient> Clients = []; // easy access
 
@@ -29,7 +30,7 @@ public partial class CircleTracker : Control
 
     public void AddButton(string name, ApClient client)
     {
-        Button button = new();
+        ButtonAnimation button = new();
         button.Pressed += () => button.Disabled = OpenTracker(name);
         button.Text = name;
         Buttons.Add(name, button);

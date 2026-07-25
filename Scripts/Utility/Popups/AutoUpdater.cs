@@ -7,6 +7,7 @@ using System.Net;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility.DataTypes;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 using Newtonsoft.Json;
 using HttpClient = System.Net.Http.HttpClient;
 
@@ -85,7 +86,7 @@ public partial class AutoUpdater : WindowSetter
         return CurrentVersion != MaxVersion;
     }
 
-    public void Update(Button sender)
+    public void Update(ButtonAnimation sender)
     {
         sender.Disabled = true;
         try

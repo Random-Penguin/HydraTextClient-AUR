@@ -275,30 +275,22 @@ public partial class HintTable : TextTable
                 HintChangePopup.Popup(new Rect2I((Vector2I)HintChangePopup.GetMousePosition(), HintChangePopup.Size));
                 break;
             case TextTableClickEffect.ClickedEventMsg:
-                switch (text[1])
-                {
-                    case "Hide": break;
-                    case "Show": break;
-                    case "Copy":
-                        var hint = SortedHints[int.Parse(text[0])];
-                        var rawCopy = SaveType<string>.Load(
-                            hint.ItemFlags.HasFlag(Advancement) ? GlobalCopyFormatProgressive : GlobalCopyFormat,
-                            "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
-                        );
+                var hint = SortedHints[int.Parse(text[0])];
+                var rawCopy = SaveType<string>.Load(
+                    hint.ItemFlags.HasFlag(Advancement) ? GlobalCopyFormatProgressive : GlobalCopyFormat,
+                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
+                );
 
-                        DisplayServer.ClipboardSet(
-                            rawCopy.CompileSimpleText(
-                                new Dictionary<string, string>
-                                {
-                                    ["finder"] = PlayerEffect.PlayerName(hint.FindingPlayer, out _),
-                                    ["receiver"] = PlayerEffect.PlayerName(hint.ReceivingPlayer, out _),
-                                    ["loc"] = hint.LocationName, ["entrance"] = hint.EntranceName,
-                                    ["item"] = hint.ItemName,
-                                }
-                            ).Replace("\\n", "\n")
-                        );
-                        break;
-                }
+                DisplayServer.ClipboardSet(
+                    rawCopy.CompileSimpleText(
+                        new Dictionary<string, string>
+                        {
+                            ["finder"] = PlayerEffect.PlayerName(hint.FindingPlayer, out _),
+                            ["receiver"] = PlayerEffect.PlayerName(hint.ReceivingPlayer, out _),
+                            ["loc"] = hint.LocationName, ["entrance"] = hint.EntranceName, ["item"] = hint.ItemName,
+                        }
+                    ).Replace("\\n", "\n")
+                );
                 break;
         }
     }

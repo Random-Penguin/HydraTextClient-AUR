@@ -3,6 +3,7 @@ using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.Popups;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 
 namespace HydraTextClient.Scripts.Clients.TextClient;
 
@@ -13,7 +14,7 @@ public partial class EmotePicker : WindowSetter
 	
 	[Signal] public delegate void EmotePickedEventHandler(string emote);
 
-	private ConcurrentBag<Button> EmoteButtons = [];
+	private ConcurrentBag<ButtonAnimation> EmoteButtons = [];
 	
 	public override void _Ready()
 	{
@@ -43,7 +44,7 @@ public partial class EmotePicker : WindowSetter
 		var emotes = EmoteLoader.Singleton.GetImages();
 		foreach (var emote in emotes.Keys.Order())
 		{
-			Button button = new();
+			ButtonAnimation button = new();
 			button.Icon = emotes[emote];
 			button.Text = emote;
 			button.VerticalIconAlignment = VerticalAlignment.Top;

@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d1unnc4t8u5xh" path="res://Scenes/Utilities/Popups/HintPopup.tscn" id="2_0m8we"]
 [ext_resource type="Script" uid="uid://vu1absk21f82" path="res://Scripts/Utilities/PlayerInventory.cs" id="2_02inb"]
 [ext_resource type="PackedScene" uid="uid://deiabdossqvll" path="res://Scenes/Utilities/Popups/InventorySenders.tscn" id="3_80wbg"]
+[ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="3_a8rg6"]
 [ext_resource type="PackedScene" uid="uid://duftnvs8wyydo" path="res://Scenes/Utilities/SearchingList.tscn" id="3_mknbs"]
 [ext_resource type="PackedScene" uid="uid://lhi65rdnf4eg" path="res://Scenes/Utilities/Popups/InventoryCounter.tscn" id="4_p40g0"]
 [ext_resource type="PackedScene" uid="uid://cbwouwen0n4nl" path="res://Scenes/Utilities/Popups/InventoryHistory.tscn" id="5_3y6xe"]
@@ -32,6 +33,7 @@ layout_mode = 2
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1978777269]
 layout_mode = 2
 text = "View Item History"
+script = ExtResource("3_a8rg6")
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1911284563]
 layout_mode = 2

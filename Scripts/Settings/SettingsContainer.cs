@@ -90,7 +90,7 @@ public partial class SettingsContainer : HSplitContainer
 
     public SettingsContainer AddButton(string text, Action clicked, int col = 0)
     {
-        Button buttonAction = new();
+        ButtonAnimation buttonAction = new();
         buttonAction.Text = text;
         buttonAction.Pressed += clicked;
         this[col].AddChild(buttonAction);
@@ -98,7 +98,7 @@ public partial class SettingsContainer : HSplitContainer
     }
 
     public SettingsContainer AddBrowseFile(string text, string saveId, FileDialog.FileModeEnum mode, string[] fileExt,
-        string fileTarget = "", int col = 0, Action<Button, FileDialog, Button>? extraConfig = null)
+        string fileTarget = "", int col = 0, Action<ButtonAnimation, FileDialog, ButtonAnimation>? extraConfig = null)
     {
         var contentType = mode switch
         {
@@ -106,10 +106,10 @@ public partial class SettingsContainer : HSplitContainer
             FileDialog.FileModeEnum.OpenDir => "Folder", _ => "Items"
         };
         
-        Button button = new();
+        ButtonAnimation button = new();
         button.Text = text;
 
-        Button clear = new();
+        ButtonAnimation clear = new();
         clear.Text = $"Clear {contentType}";
         clear.Pressed += () => SaveType<string>.Save(saveId, "", true);
 

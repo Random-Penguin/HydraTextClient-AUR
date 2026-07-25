@@ -28,7 +28,7 @@ public partial class ListAdder : FoldableContainer
 
         HBoxContainer container = new();
         Label label = new();
-        Button button = new();
+        ButtonAnimation button = new();
 
         label.Text = group;
         label.SizeFlagsHorizontal = SizeFlags.ExpandFill;

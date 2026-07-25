@@ -8,7 +8,6 @@ public partial class ButtonAnimation : Button
     private Vector2 SmolScale = new(.9f, .7f);
     private Vector2 NormalScale = new(1, 1);
 
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         PivotOffset = Size * new Vector2(.5f, 1);

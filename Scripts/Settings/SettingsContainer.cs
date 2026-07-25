@@ -97,6 +97,19 @@ public partial class SettingsContainer : HSplitContainer
         return this;
     }
 
+    public SettingsContainer AddDropdown(string text, string saveId, string[] items, bool textToTheRight = true, int def = 0, int col = 0)
+    {
+        OptionButton button = new();
+        button.Text = text;
+
+        foreach (var item in items) button.AddItem(item);
+        
+        Saver.BuildSavable(button, saveId, def);
+        
+        this[col].AddChild(CreateBoxWithLabel(button, text, textToTheRight, out _));
+        return this;
+    }
+
     public SettingsContainer AddBrowseFile(string text, string saveId, FileDialog.FileModeEnum mode, string[] fileExt,
         string fileTarget = "", int col = 0, Action<ButtonAnimation, FileDialog, ButtonAnimation>? extraConfig = null)
     {
@@ -105,7 +118,7 @@ public partial class SettingsContainer : HSplitContainer
             FileDialog.FileModeEnum.OpenFile => "File", FileDialog.FileModeEnum.OpenFiles => "Files",
             FileDialog.FileModeEnum.OpenDir => "Folder", _ => "Items"
         };
-        
+
         ButtonAnimation button = new();
         button.Text = text;
 
@@ -122,19 +135,17 @@ public partial class SettingsContainer : HSplitContainer
         fileDialog.FileNameFilter = fileTarget;
         fileDialog.Filters = fileExt;
         fileDialog.FileMode = mode;
-        
+
         button.Pressed += () => fileDialog.CurrentPath = SaveType<string>.Load(saveId, "");
 
         switch (mode)
         {
             case FileDialog.FileModeEnum.OpenFile:
-                fileDialog.FileSelected += dir => SaveType<string>.Save(saveId, dir, true);
-                break;
+                fileDialog.FileSelected += dir => SaveType<string>.Save(saveId, dir, true); break;
             case FileDialog.FileModeEnum.OpenDir:
-                fileDialog.DirSelected += dir => SaveType<string>.Save(saveId, dir, true);
-                break;
+                fileDialog.DirSelected += dir => SaveType<string>.Save(saveId, dir, true); break;
         }
-        
+
         button.Pressed += fileDialog.Show;
         var name = Path.GetFileName(SaveType<string>.Load(saveId, ""));
         if (name is "") name = "Not Selected";

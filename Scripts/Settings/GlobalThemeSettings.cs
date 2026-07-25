@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
+using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -15,7 +16,7 @@ namespace HydraTextClient.Scripts.Settings;
 public static class GlobalThemeSettings
 {
     public static event Action? OnFontUpdate;
-    
+
     private static readonly string[] ImageFormats =
     [
         "*.png", "*.jpg", "*.bmp", "*.dds", "*.exr", "*.jpeg", "*.tga", "*.svg", "*.svgz", "*.webp",
@@ -52,12 +53,12 @@ public static class GlobalThemeSettings
         SetBoldFont(SaveType<string>.Load(BoldFont, ""));
         SetItalicFont(SaveType<string>.Load(ItalicFont, ""));
         SetBoldItalicFont(SaveType<string>.Load(BoldItalicFont, ""));
-        
+
         SaveType<string>.AddIndividualEvent(NormalFont, SetNormalFont);
         SaveType<string>.AddIndividualEvent(BoldFont, SetBoldFont);
         SaveType<string>.AddIndividualEvent(ItalicFont, SetItalicFont);
         SaveType<string>.AddIndividualEvent(BoldItalicFont, SetBoldItalicFont);
-        
+
         SetAlwaysOnTop(SaveType<bool>.Load(AlwaysOnTop, false));
         SaveType<double>.AddIndividualEvent(GlobalFontSize, LoadGlobalFont);
         CreateSettings();
@@ -127,7 +128,7 @@ public static class GlobalThemeSettings
                            box.MaxValue = 255;
                            box.MinValue = 0;
                        }
-                   )
+                   ).AddDropdown("Background Image Stretch Mode", WindowBackGroundImageScale, ["Scale", "Tile"], col: 1)
                   .AddSeparator(1)
                   .AddSpinBox("Global Font Size", GlobalFontSize, 20d, 1, c => c.MinValue = 1)
                   .AddSpinBox("Text Client Font Size", TextClient.FontSizeId, 20d, 1)

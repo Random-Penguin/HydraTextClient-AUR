@@ -16,6 +16,7 @@ public partial class MainController : Control
 {
     public const string WindowSaveId = "window_nodes/MAIN_WINDOW";
     public const string WindowBackGroundImage = "Theme/BackgroundImage";
+    public const string WindowBackGroundImageScale = "Theme/BackgroundImageScaleMode";
     public const string WindowBackGroundImageAlpha = "Theme/BackgroundImageAlpha";
     public const string CheckForUpdate = "Main/CheckForUpdates";
 
@@ -66,6 +67,11 @@ public partial class MainController : Control
 
         SaveType<string>.AddIndividualEvent(WindowBackGroundImage, LoadBackgroundImage);
         SaveType<double>.AddIndividualEvent(WindowBackGroundImageAlpha, LoadBackgroundImageTransparency);
+
+        BackgroundImage.StretchMode = (TextureRect.StretchModeEnum)SaveType<int>.Load(WindowBackGroundImageScale, 0);
+        SaveType<int>.AddIndividualEvent(
+            WindowBackGroundImageScale, l => BackgroundImage.StretchMode = (TextureRect.StretchModeEnum)l
+        );
     }
 
     public override void _Ready()

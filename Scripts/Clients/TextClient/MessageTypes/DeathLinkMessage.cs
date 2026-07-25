@@ -13,8 +13,12 @@ public partial class DeathLinkMessage : MessageScene
     public const string SaveIdMessage = "Clients/TextClient/DeathLinkMessage";
     public const string DefaultMessage = "☠️ [{{groups}}] {{cause}}";
 
+    public const string Hint
+        = "{{groups}} - DeathLink groups attached to the DeathLink\n{{cause}} - cause message of the DeathLink";
+
     public const string SaveIdUnknown = "Clients/TextClient/DeathLinkUnknown";
     public const string DefaultUnknown = "{{player}} Died by an Unknown cause";
+    public const string HintUnknown = "{{player}} - player who sent the link";
 
     public string? LastCause;
     public string Player;

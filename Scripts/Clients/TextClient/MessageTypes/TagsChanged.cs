@@ -10,6 +10,7 @@ public partial class TagsChanged : MessageScene
 {
     public const string SaveId = "Clients/TextClient/TagsChangedMessage";
     public const string Default = "{{player}} changed tags to [{{tags}}]";
+    public const string Hint = "{{player}} - the player's tags that got changed\n{{tags}} - what the tags got changed to";
     public int PlayerSlot;
     public string Tags;
 

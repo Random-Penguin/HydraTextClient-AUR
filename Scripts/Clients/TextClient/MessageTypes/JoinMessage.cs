@@ -10,6 +10,7 @@ public partial class JoinMessage : MessageScene
 {
     public const string SaveId = "Clients/TextClient/JoinMessage";
     public const string Default = "{{player}} joined with [{{tags}}] tags";
+    public const string Hint = "{{player}} - player that joined\n{{tags}} - tags the player joined with";
     public int PlayerSlot;
     public string Tags;
 

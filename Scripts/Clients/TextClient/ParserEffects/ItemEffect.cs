@@ -18,6 +18,7 @@ public class ItemEffect : MessageParserEffect
     public const string SaveId = "Clients/TextClient/TextEffects/ItemMessageEffect";
     public const string FallbackSaveId = "Clients/TextClient/TextEffects/ItemMessageHideFallback";
     public const string Default = "[{{img}}{{name}}]";
+    public const string Hint = "{{img}} - Custom Assets/Fallback/Custom Item Image Override\n{{name}} - name of the item";
     public override string Key => "item";
 
     public static event Action? OnUpdate;

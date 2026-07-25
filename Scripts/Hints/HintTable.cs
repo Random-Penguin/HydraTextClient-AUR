@@ -25,6 +25,7 @@ public partial class HintTable : TextTable
     public override string[] EffectGroups => ["default", "hinttable"];
     public const string GlobalCopyFormatProgressive = "Theme/HintTable/CopyFormat/Progressive";
     public const string GlobalCopyFormat = "Theme/HintTable/CopyFormat";
+    public const string Hint = "{{receiver}} - player that receives the item\n{{item}} - item that was hinted for\n{{loc}} - where the item is\n{{finder}} - player who has the item\n{{entrance}} - entrance for Entrance Rando";
 
     public override string[] Columns
         => ["", "", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"];
@@ -62,10 +63,10 @@ public partial class HintTable : TextTable
             {
                 tab.AddLineEdit(
                     "Copy Hint Text Format (Progression Items)", GlobalCopyFormatProgressive,
-                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
+                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}", Hint
                 ).AddLineEdit(
                     "Copy Hint Text Format", GlobalCopyFormat,
-                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
+                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}", Hint
                 );
             }
         );

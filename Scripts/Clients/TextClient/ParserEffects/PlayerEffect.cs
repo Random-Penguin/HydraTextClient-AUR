@@ -17,9 +17,11 @@ public class PlayerEffect : MessageParserEffect
     
     public const string SaveIdNoAlias = "Clients/TextClient/TextEffects/PlayerNoAlias";
     public const string DefaultNoAlias = "{{name}}";
+    public const string HintNoAlias = "{{name}} - name of the player";
 
     public const string SaveIdWithAlias = "Clients/TextClient/TextEffects/PlayerWithAlias";
     public const string DefaultWithAlias = "{{alias}} ({{name}})";
+    public const string HintAlias = "{{alias}} - the player's alias\n{{name}} - player slot name";
 
     public override string Key => "player";
 

@@ -10,6 +10,7 @@ public partial class LeaveMessage : MessageScene
 {
     public const string SaveId = "Clients/TextClient/LeaveMessage";
     public const string Default = "{{player}} left";
+    public const string Hint = "{{player}} - player that left";
     public int PlayerSlot;
 
     public override void SetInternalPacket(IMessagePacket packetBase)

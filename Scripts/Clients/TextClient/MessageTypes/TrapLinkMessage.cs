@@ -11,7 +11,7 @@ public partial class TrapLinkMessage : MessageScene
 {
     public const string SaveIdMessage = "Clients/TextClient/TrapLinkMessage";
     public const string Default = "🪤 {{player}} triggered a(n) {{trap}}";
-
+    public const string Hint = "{{player}} - player who sent the link\n{{trap}} - the trap that was triggered";
     public string Trap;
     public string Player;
     public int PlayerSlot;

@@ -10,6 +10,7 @@ public partial class GoalMessage : MessageScene
 {
     public const string SaveId = "Clients/TextClient/GoalMessage";
     public const string Default = "{{player}} Goaled!";
+    public const string Hint = "{{player}} - player that goaled";
     public int PlayerSlot;
 
     public override void SetInternalPacket(IMessagePacket packetBase)

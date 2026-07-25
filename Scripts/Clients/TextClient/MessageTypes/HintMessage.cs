@@ -13,6 +13,7 @@ public partial class HintMessage : MessageScene
 {
     public const string SaveId = "Clients/TextClient/HintMessage";
     public const string Default = "{{receiver}}'s {{item}} is at {{loc}} in {{finder}}'s world ({{found}})";
+    public const string Hint = "{{receiver}} - player that receives the item\n{{item}} - item that was hinted for\n{{loc}} - where the item is\n{{finder}} - player who has the item\n{{found}} - if the item was found or not";
     private bool HasBeenFound;
     public ItemFlags Flags;
     private int FinderSlot;

@@ -10,6 +10,10 @@ public partial class ItemCheatMessage : MessageScene
 {
     public const string SaveId = "Clients/TextClient/ItemCheatMessage";
     public const string Default = "{{player}} was given {{item}} from {{server}} {{loc}}";
+
+    public const string Hint
+        = "{{player}} - player who received the cheated item\n{{item}} - item that was cheated\n{{server}} - server player\n{{loc}} - Cheat Console location";
+
     public int PlayerSlot;
     public string ItemName;
     public string LocationName;

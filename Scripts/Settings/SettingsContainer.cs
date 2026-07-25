@@ -59,11 +59,11 @@ public partial class SettingsContainer : HSplitContainer
         colorPicker.PopupClosed += () => colorConstant.Save(colorPicker.Color);
 
         SaveType<HexColor>.AddIndividualEvent(colorConstant.SaveId(), color => colorPicker.Color = color);
-        this[col].AddChild(CreateBoxWithLabel(colorPicker, text, true, out _));
+        this[col].AddChild(CreateBoxWithLabel(colorPicker, text, true, "", out _));
         return this;
     }
 
-    public SettingsContainer AddLineEdit(string text, string saveId, string def = "",
+    public SettingsContainer AddLineEdit(string text, string saveId, string def = "", string hint = "",
         int columnIndex = 0, Action<LineEdit>? extraConfig = null)
     {
         LineEdit edit = new();
@@ -73,7 +73,7 @@ public partial class SettingsContainer : HSplitContainer
         edit.Text = SaveType<string>.Load(saveId, def);
         edit.TextChanged += s => SaveType<string>.Save(saveId, s, true);
 
-        this[columnIndex].AddChild(CreateBoxWithLabel(edit, text, false, out _));
+        this[columnIndex].AddChild(CreateBoxWithLabel(edit, text, false, hint, out _));
         return this;
     }
 
@@ -84,7 +84,7 @@ public partial class SettingsContainer : HSplitContainer
         box.AllowGreater = true;
         extraConfig?.Invoke(box);
         Saver.BuildSavable(box, saveId, def);
-        this[col].AddChild(CreateBoxWithLabel(box, text, true, out _));
+        this[col].AddChild(CreateBoxWithLabel(box, text, true, "", out _));
         return this;
     }
 
@@ -97,16 +97,17 @@ public partial class SettingsContainer : HSplitContainer
         return this;
     }
 
-    public SettingsContainer AddDropdown(string text, string saveId, string[] items, bool textToTheRight = true, int def = 0, int col = 0)
+    public SettingsContainer AddDropdown(string text, string saveId, string[] items, bool textToTheRight = true,
+        int def = 0, int col = 0)
     {
         OptionButton button = new();
         button.Text = text;
 
         foreach (var item in items) button.AddItem(item);
-        
+
         Saver.BuildSavable(button, saveId, def);
-        
-        this[col].AddChild(CreateBoxWithLabel(button, text, textToTheRight, out _));
+
+        this[col].AddChild(CreateBoxWithLabel(button, text, textToTheRight, "", out _));
         return this;
     }
 
@@ -153,7 +154,7 @@ public partial class SettingsContainer : HSplitContainer
         var box = CreateBoxWithLabel(
             button,
             $"Selected {contentType}: [{name}]",
-            false, out var label
+            false, "", out var label
         );
         box.AddChild(clear);
 
@@ -171,13 +172,26 @@ public partial class SettingsContainer : HSplitContainer
         return this;
     }
 
-    public BoxContainer CreateBoxWithLabel(Control obj, string text, bool isHorizontal, out Label label)
+    public BoxContainer CreateBoxWithLabel(Control obj, string text, bool isHorizontal, string hint,
+        out EmptyRichLabelInteractor label)
     {
         BoxContainer container = isHorizontal ? new HBoxContainer() : new VBoxContainer();
         container.SizeFlagsHorizontal = SizeFlags.Expand;
 
-        label = new Label();
-        label.Text = isHorizontal ? $": {text}" : $"{text}:";
+        label = new EmptyRichLabelInteractor();
+        label.FitContent = true;
+        label.AutowrapMode = TextServer.AutowrapMode.Off;
+        if (isHorizontal) label.AddText($": {text}");
+        if (hint.Trim() is not "")
+        {
+            label.PushContext();
+            label.PushHint($"text {hint}");
+            label.PushColor(Colors.SlateGray);
+            label.AddText("(?)");
+            label.PopContext();
+            label.AddText(" ");
+        }
+        if (!isHorizontal) label.AddText($"{text}:");
 
         if (!isHorizontal) container.AddChild(label);
         container.AddChild(obj);

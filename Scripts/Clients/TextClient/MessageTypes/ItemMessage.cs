@@ -17,8 +17,15 @@ public partial class ItemMessage : MessageScene
     public const string SaveIdSamePerson = "Clients/TextClient/ItemMessageSamePerson";
     public const string DefaultSamePerson = "{{finder}} found their {{item}} at {{loc}}";
 
+    public const string HintSamePerson
+        = "{{finder}} - player who found their own item\n{{item}} - item they found\n{{loc}} - location of where the item was";
+
     public const string SaveIdDifferentPerson = "Clients/TextClient/ItemMessageDifferentPerson";
     public const string DefaultDifferentPerson = "{{finder}} found {{item}} for {{receiver}} at {{loc}}";
+
+    public const string HintDifferentPerson
+        = "{{finder}} - player who found the item\n{{item}} - item they found\n{{receiver}} - player who receives the item\n{{loc}} - location of where the item was";
+
     private bool FinderIsReceiver;
     private Action ReloadAction;
     private ItemFlags Flags;

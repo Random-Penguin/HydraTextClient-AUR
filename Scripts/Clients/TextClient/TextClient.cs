@@ -130,36 +130,54 @@ public partial class TextClient : Control
                    .AddCheckBox("Show Game Portraits", ShowGamePortraits, true)
                    .AddCheckBox("Hide Item Fallback Image", ItemEffect.FallbackSaveId)
                    .AddSeparator()
-                   .AddLineEdit("Join Message", JoinMessage.SaveId, JoinMessage.Default)
+                   .AddLineEdit("Join Message", JoinMessage.SaveId, JoinMessage.Default, JoinMessage.Hint)
                    .AddSeparator()
-                   .AddLineEdit("Leave Message", LeaveMessage.SaveId, LeaveMessage.Default)
+                   .AddLineEdit("Leave Message", LeaveMessage.SaveId, LeaveMessage.Default, LeaveMessage.Hint)
                    .AddSeparator()
-                   .AddLineEdit("Tags Changed", TagsChanged.SaveId, TagsChanged.Default)
+                   .AddLineEdit("Tags Changed", TagsChanged.SaveId, TagsChanged.Default, TagsChanged.Hint)
                    .AddSeparator()
-                   .AddLineEdit("Goal Message", GoalMessage.SaveId, GoalMessage.Default)
+                   .AddLineEdit("Goal Message", GoalMessage.SaveId, GoalMessage.Default, GoalMessage.Hint)
                    .AddSeparator()
-                   .AddLineEdit("Hint Message", HintMessage.SaveId, HintMessage.Default)
-                   .AddSeparator()
-                   .AddLineEdit("Trap Message", TrapLinkMessage.SaveIdMessage, TrapLinkMessage.Default)
-                   .AddSeparator()
-                   .AddLineEdit("Death Message", DeathLinkMessage.SaveIdMessage, DeathLinkMessage.DefaultMessage)
-                   .AddSeparator()
-                   .AddLineEdit("Unknown Death Cause", DeathLinkMessage.SaveIdUnknown, DeathLinkMessage.DefaultUnknown)
+                   .AddLineEdit("Hint Message", HintMessage.SaveId, HintMessage.Default, HintMessage.Hint)
                    .AddSeparator()
                    .AddLineEdit(
-                        "Item Message (Same Person)", ItemMessage.SaveIdSamePerson, ItemMessage.DefaultSamePerson
+                        "Trap Message", TrapLinkMessage.SaveIdMessage, TrapLinkMessage.Default, TrapLinkMessage.Hint
+                    )
+                   .AddSeparator()
+                   .AddLineEdit(
+                        "Death Message", DeathLinkMessage.SaveIdMessage, DeathLinkMessage.DefaultMessage,
+                        DeathLinkMessage.Hint
+                    )
+                   .AddSeparator()
+                   .AddLineEdit(
+                        "Unknown Death Cause", DeathLinkMessage.SaveIdUnknown, DeathLinkMessage.DefaultUnknown,
+                        DeathLinkMessage.HintUnknown
+                    )
+                   .AddSeparator()
+                   .AddLineEdit(
+                        "Item Message (Same Person)", ItemMessage.SaveIdSamePerson, ItemMessage.DefaultSamePerson,
+                        ItemMessage.HintSamePerson
                     ).AddSeparator()
                    .AddLineEdit(
                         "Item Message (Different Person)", ItemMessage.SaveIdDifferentPerson,
-                        ItemMessage.DefaultDifferentPerson
+                        ItemMessage.DefaultDifferentPerson, ItemMessage.HintDifferentPerson
                     ).AddSeparator()
-                   .AddLineEdit("Item Message (Cheated)", ItemCheatMessage.SaveId, ItemCheatMessage.Default)
+                   .AddLineEdit(
+                        "Item Message (Cheated)", ItemCheatMessage.SaveId, ItemCheatMessage.Default,
+                        ItemCheatMessage.Hint
+                    )
                    .AddSeparator()
-                   .AddLineEdit("Player Text (Without Alias)", PlayerEffect.SaveIdNoAlias, PlayerEffect.DefaultNoAlias)
+                   .AddLineEdit(
+                        "Player Text (Without Alias)", PlayerEffect.SaveIdNoAlias, PlayerEffect.DefaultNoAlias,
+                        PlayerEffect.HintNoAlias
+                    )
                    .AddSeparator()
-                   .AddLineEdit("Player Text (With Alias)", PlayerEffect.SaveIdWithAlias, PlayerEffect.DefaultWithAlias)
+                   .AddLineEdit(
+                        "Player Text (With Alias)", PlayerEffect.SaveIdWithAlias, PlayerEffect.DefaultWithAlias,
+                        PlayerEffect.HintAlias
+                    )
                    .AddSeparator()
-                   .AddLineEdit("Item Text", ItemEffect.SaveId, ItemEffect.Default);
+                   .AddLineEdit("Item Text", ItemEffect.SaveId, ItemEffect.Default, ItemEffect.Hint);
             }
         );
 

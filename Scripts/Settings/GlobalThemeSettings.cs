@@ -77,7 +77,10 @@ public static class GlobalThemeSettings
                    .AddButton("Open Save Directory", () => OS.ShellOpen(Directories.MainDirectory), 1)
                    .AddSeparator(1)
                    .AddCheckBox("Check For Updates on Start", CheckForUpdate, true, 1)
+                   .AddCheckBox("Update to Beta Branches", UpdateToBeta, false, 1)
+                   .AddText("Will still update to beta\nif you are on a beta branch", 1)
                    .AddButton("Check For Updates", CheckForUpdates, 1)
+                    
                    .AddButton("Open Emotes Directory", () => OS.ShellOpen(Directories.Emotes), 2)
                    .AddButton("Open Portrait Directory", () => OS.ShellOpen(Directories.GamePortraits), 2)
                    .AddButton(

@@ -19,6 +19,7 @@ public partial class MainController : Control
     public const string WindowBackGroundImageScale = "Theme/BackgroundImageScaleMode";
     public const string WindowBackGroundImageAlpha = "Theme/BackgroundImageAlpha";
     public const string CheckForUpdate = "Main/CheckForUpdates";
+    public const string UpdateToBeta = "Main/UpdateToBetaBranches";
 
     [Export] private string VersionNumber;
     [Export] private PackedScene ErrorWindow;

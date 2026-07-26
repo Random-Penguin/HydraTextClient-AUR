@@ -130,11 +130,15 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer" unique_id=351135448]
 layout_mode = 2
-size_flags_horizontal = 3
 bbcode_enabled = true
 text = " Player A"
 fit_content = true
+autowrap_mode = 0
 script = ExtResource("3_mu871")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1308333435]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1287203400]
 layout_mode = 2

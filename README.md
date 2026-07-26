@@ -1,5 +1,3 @@
-Not tested, probably VERY unstable, and because of that I am not making a true release. it also hasn't caught up in features yet
-
 # Install
 - Hydra itself:
   - (might need) [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)

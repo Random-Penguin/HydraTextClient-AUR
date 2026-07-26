@@ -1,5 +1,5 @@
 using Godot;
-using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Utility.Popups;
 
 namespace HydraTextClient.Scripts.Utility.UIHelpers;
 
@@ -12,26 +12,41 @@ public partial class PopoutWindow : Control
 	[Signal] public delegate void PoppedOutEventHandler();
 	[Signal] public delegate void PoppedInEventHandler();
 	
-	private Window Window;
-	private PanelContainer WindowContainer;
+	private WindowSetter Window;
+	private Control WindowContainer;
 	private LayoutPreset Preset;
 	private int LayoutMode;
 
 	public override void _Ready()
 	{
-		Window = new Window();
+		Window = new WindowSetter();
 		Window.Title = Title;
-		Window.InitialPosition = Window.WindowInitialPosition.Absolute;
-		Window.Visible = false;
-		Window.WrapControls = true;
-		Window.ForceNative = true;
-		Window.Theme = MainController.GlobalTheme;
-		Window.CloseRequested += Close;
+		Window.WindowPosition = Godot.Window.WindowInitialPosition.Absolute;
+		Window.ToQueueFree = false;
+		Window.BlockParent = false;
+		Window.CloseCalled += () =>
+		{
+			WindowContainer.CallDeferred("remove_child", Child);
+			CallDeferred("add_child", Child);
+			CallDeferred("move_child", Child, 0);
 
-		WindowContainer = new PanelContainer();
+			if (RestoreSize) Child.Size = Size;
+			Child.LayoutMode = LayoutMode;
+			Child.SetAnchorsPreset(Preset);
+			Child.Position = Vector2.Zero;
+			EmitSignalPoppedIn();
+		};
+
+		Panel backdrop = new();
+		backdrop.SetAnchorsPreset(LayoutPreset.FullRect);
+		
+		WindowContainer = new Control();
 		WindowContainer.SetAnchorsPreset(LayoutPreset.FullRect);
+		WindowContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+		WindowContainer.SizeFlagsVertical = SizeFlags.ExpandFill;
 			
-		Window.AddChild(WindowContainer);
+		backdrop.AddChild(WindowContainer);
+		Window.AddChild(backdrop);
 		AddChild(Window);
 
 		Preset = (LayoutPreset)Child.AnchorsPreset;
@@ -49,24 +64,10 @@ public partial class PopoutWindow : Control
 		Window.Show();
 		EmitSignalPoppedOut();
 	}
-
-	public void Close()
-	{
-		Window.Hide();
-		WindowContainer.RemoveChild(Child);
-		AddChild(Child);
-		MoveChild(Child, 0);
-
-		if (RestoreSize) Child.Size = Size;
-		Child.LayoutMode = LayoutMode;
-		Child.SetAnchorsPreset(Preset);
-		Child.Position = Vector2.Zero;
-		EmitSignalPoppedIn();
-	}
 	
 	public void ToggleWindow()
 	{
-		if (Window.Visible) Close();
+		if (Window.Visible) Window.Close();
 		else Popout();
 	}
 }

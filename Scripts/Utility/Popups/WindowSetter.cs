@@ -5,12 +5,13 @@ namespace HydraTextClient.Scripts.Utility.Popups;
 
 public partial class WindowSetter : Window
 {
-    [Export] private bool DisableMin = true;
-    [Export] private bool DisableMax = false;
-    [Export] private bool BlockParent = true;
-    [Export] private bool OnTop = false;
-    [Export] private bool ToQueueFree = true;
-    [Export] private bool ClickAnywhereToClose = false;
+    [Export] public bool DisableMin = true;
+    [Export] public bool DisableMax = false;
+    [Export] public bool BlockParent = true;
+    [Export] public bool OnTop = false;
+    [Export] public bool ToQueueFree = true;
+    [Export] public bool ClickAnywhereToClose = false;
+    [Export] public WindowInitialPosition WindowPosition = WindowInitialPosition.CenterMainWindowScreen;
     private bool Added;
 
     [Signal] public delegate void CloseCalledEventHandler();
@@ -29,7 +30,7 @@ public partial class WindowSetter : Window
         MaximizeDisabled = DisableMax;
         ForceNative = true;
         Transparent = true;
-        InitialPosition = WindowInitialPosition.CenterMainWindowScreen;
+        InitialPosition = WindowPosition;
         Theme = MainController.GlobalTheme;
         if (Added) return;
         CloseRequested += Close;

@@ -71,6 +71,8 @@ public partial class SlotUtility : HSplitContainer
         LocationList.OnItemPressed += s => CallDeferred(
             "CreateDialog", "Hint Location", $"Hint for whats at\n{s}?", $"!hint_location {s}"
         );
+
+        GameItemImageLoader.OnReload += ItemList.RefreshList;
     }
 
     public void CreateDialog(string title, string text, string command)
@@ -81,5 +83,9 @@ public partial class SlotUtility : HSplitContainer
         popup.Show();
     }
 
-    protected override void Dispose(bool disposing) => Inventory.QueueFree();
+    protected override void Dispose(bool disposing)
+    {
+        GameItemImageLoader.OnReload -= ItemList.RefreshList;
+        Inventory.QueueFree();
+    }
 }

@@ -73,6 +73,7 @@ public partial class SearchingList : Control
         
         SetItemsSearch(results);
     }
-
+    
     public void SetupBox(Action<CheckBox> action) => action(Box);
+    public void RefreshList() => UpdateSearch(SearchBar.Text);
 }

@@ -24,7 +24,7 @@ public static class ExternalAppController
             MainController.ShowError($"Trying to run already running command: [{command}]");
             return -1;
         }
-        
+
         int appId;
         do appId = Random.Shared.Next();
         while (TaskProcesses.ContainsKey(appId) || appId is -1 or 404);
@@ -82,7 +82,7 @@ public static class ExternalAppController
             ProcessCommands.Remove(appId, out var command);
             CurrentlyRunningCommands.Remove(command, out _);
         }
-        
+
         try
         {
             if (!Processes.ContainsKey(appId)) return;
@@ -101,10 +101,15 @@ public static class ExternalAppController
         stream.Close();
         return sha;
     }
-    
+
     public static void CloseAll()
     {
-        foreach (var id in TaskProcesses.Keys) EndProcess(id);
+        if (TaskProcesses.Count == 0) return;
+        foreach (var id in TaskProcesses.Keys)
+        {
+            try { EndProcess(id); }
+            catch (Exception e) { GD.PrintErr(e); }
+        }
     }
 }
 

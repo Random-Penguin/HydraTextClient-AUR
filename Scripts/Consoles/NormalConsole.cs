@@ -21,11 +21,7 @@ public partial class NormalConsole : RichTextLabel
     {
         if (!Has)
         {
-            MainController.OnExit += () =>
-            {
-                SlotLogs.Flush();
-                SlotLogs.Close();
-            };
+            MainController.OnExit += () => SlotLogs.Close();
             Has = true;
         }
 

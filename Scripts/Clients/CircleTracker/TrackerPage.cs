@@ -99,8 +99,15 @@ public partial class TrackerPage : Control
         var priority = localHints.Where(hint => hint.Status is HintStatus.Priority).Select(hint => hint.LocationId)
                                  .ToArray();
         var firstEnd = SaveType<bool>.Load(ShowFutureCircles, false);
-        foreach (var (circle, locations) in Circles.OrderBy(kv => kv.Key))
+        
+        foreach (var circle in Circles.Keys.Order())
         {
+            if (!Circles.TryGetValue(circle, out var locations))
+            {
+                GD.PrintErr($"Circle [{circle}] doesn't exist in the circle list??? (maybe race condition)");
+                continue;
+            }
+            
             var uniqueLocations = locations.Except(recordedLocations).ToArray();
             recordedLocations.AddRange(uniqueLocations);
             uniqueLocations = uniqueLocations.Where(id => Client.MissingRawLocations.Contains((long)id)).ToArray();

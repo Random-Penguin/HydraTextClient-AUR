@@ -166,7 +166,8 @@ public partial class SettingsContainer : HSplitContainer
             {
                 var name = Path.GetFileName(file);
                 if (name is "") name = "Not Selected";
-                label.Text = label.Text[..label.Text.IndexOf('[')] + $"[{name}]";
+                label.Clear();
+                label.AddText($"Selected {contentType}: [{name}]");
             }
         );
         return this;

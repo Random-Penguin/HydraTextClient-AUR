@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
@@ -24,6 +25,10 @@ public partial class PlayerInventory : TextTable
     [Export] private PackedScene ItemCountPopup;
     [Export] private PackedScene ItemHistoryPopup;
     [Export] private Label CheatCounter;
+    [Export] private CheckBox ShowProgression;
+    [Export] private CheckBox ShowUseful;
+    [Export] private CheckBox ShowNormal;
+    [Export] private CheckBox ShowTraps;
     public override string[] Columns => ["Count", "Item", "Senders"];
     public override long DataSize => Keys.Length;
     private Dictionary<string, ItemInfo[]> Inventory = [];
@@ -37,6 +42,11 @@ public partial class PlayerInventory : TextTable
 
     public void SetupInventory(ApClient client)
     {
+        ShowProgression.Pressed += () => QueueUiRefresh(true);
+        ShowUseful.Pressed += () => QueueUiRefresh(true);
+        ShowNormal.Pressed += () => QueueUiRefresh(true);
+        ShowTraps.Pressed += () => QueueUiRefresh(true);
+
         Client = client;
         client.ItemHandler.OnNewItemsReceived += (_, starting) =>
         {
@@ -62,7 +72,18 @@ public partial class PlayerInventory : TextTable
 
         var items = Client.ItemHandler.Items;
         Inventory = items.GroupBy(item => item.UID).ToDictionary(g => g.Key, g => g.ToArray());
-        var ordered = Inventory.Select(kv => kv.Value).OrderBy(item => item[0].SortNumber());
+        var ordered = Inventory.Select(kv => kv.Value)
+                               .Where(item =>
+                                    {
+                                        if (item[0].Flags.HasFlag(ItemFlags.Advancement))
+                                            return ShowProgression.ButtonPressed;
+                                        if (item[0].Flags.HasFlag(ItemFlags.NeverExclude))
+                                            return ShowUseful.ButtonPressed;
+                                        return item[0].Flags.HasFlag(ItemFlags.Trap) ? ShowTraps.ButtonPressed
+                                            : ShowNormal.ButtonPressed;
+                                    }
+                                )
+                               .OrderBy(item => item[0].SortNumber());
 
         if (SortOrder.Count > 0)
         {
@@ -70,7 +91,7 @@ public partial class PlayerInventory : TextTable
             if (SortOrder.Count > 1) ordered = SortingOrder(ordered, SortOrder[1]);
         }
         else ordered = ordered.ThenBy(item => item[0].ItemName);
-        
+
         Keys = ordered.Select(item => item[0].UID).ToArray();
         RawItemNames = Inventory.Values.Select(arr => arr[0].ItemName).Distinct().ToArray();
 

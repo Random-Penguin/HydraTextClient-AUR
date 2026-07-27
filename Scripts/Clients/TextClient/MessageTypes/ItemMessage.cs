@@ -108,8 +108,8 @@ public partial class ItemMessage : MessageScene
     ).CompileSimpleText(
         new Dictionary<string, string>
         {
-            ["finder"] = PlayerEffect.PlayerName(FinderSlot, out _), ["item"] = ItemName,
-            ["receiver"] = PlayerEffect.PlayerName(ReceiverSlot, out _), ["loc"] = LocationName,
+            ["finder"] = PlayerEffect.PlayerName(FinderSlot, true, out _), ["item"] = ItemName,
+            ["receiver"] = PlayerEffect.PlayerName(ReceiverSlot, true, out _), ["loc"] = LocationName,
         }
     );
 

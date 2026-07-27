@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
+using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
+using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 
 namespace HydraTextClient.Scripts.PlayerList;
@@ -17,6 +19,8 @@ public partial class PlayerItem : PanelContainer
     [Export] private TextureRect ConnectedIndicator;
     [Export] private TextureRect DisconnectedIndicator;
     [Export] private TextureRect GoalIndicator;
+    [Export] private LineEdit Alias;
+    [Export] private LineEdit CopyAlias;
 
     private Dictionary<string, Action<RichTextLabel, string[]>> Effects;
 
@@ -35,6 +39,27 @@ public partial class PlayerItem : PanelContainer
     public void SetPlayer(int player)
     {
         PlayerText = $" {{{{player;{player}}}}}";
+
+        Alias.TextChanged += s =>
+        {
+            var mw = ConnectionController.GetCurrentMultiworld;
+            if (mw is null) return;
+            if (s.Trim() is "") mw.PlayerAliases.TryRemove(player, out _);
+            else mw.PlayerAliases[player] = s;
+            PlayerEffect.UpdatePlayerEffect();
+        };
+
+        CopyAlias.TextChanged += s =>
+        {
+            var mw = ConnectionController.GetCurrentMultiworld;
+            if (mw is null) return;
+            mw.PlayerCopyAliases[player] = s;
+        };
+        
+        var mw = ConnectionController.GetCurrentMultiworld;
+        if (mw is not null && mw.PlayerAliases.TryGetValue(player, out var alias)) Alias.Text = alias;
+        if (mw is not null && mw.PlayerCopyAliases.TryGetValue(player, out var copyAlias)) CopyAlias.Text = copyAlias;
+        
         UpdatePlayerText();
         SetCheckCount();
     }

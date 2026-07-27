@@ -46,7 +46,7 @@ public partial class ItemCheatMessage : MessageScene
     public override string CopyText() => SaveType<string>.Load(SaveId, Default).CompileSimpleText(
         new Dictionary<string, string>
         {
-            ["player"] = PlayerEffect.PlayerName(PlayerSlot, out _), ["server"] = "Server", ["loc"] = LocationName,
+            ["player"] = PlayerEffect.PlayerName(PlayerSlot, true, out _), ["server"] = "Server", ["loc"] = LocationName,
             ["item"] = ItemName,
         }
     );

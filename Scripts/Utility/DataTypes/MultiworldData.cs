@@ -18,6 +18,8 @@ public class MultiworldData
     public ConcurrentDictionary<string, Hint[]> Hints = [];
     public ConcurrentDictionary<int, bool> HiddenHints = [];
     public ConcurrentDictionary<string, int> ItemHistory = [];
+    public ConcurrentDictionary<int, string> PlayerAliases = [];
+    public ConcurrentDictionary<int, string> PlayerCopyAliases = [];
 
     public void ClearCache()
     {
@@ -25,10 +27,11 @@ public class MultiworldData
         SlotPasswords.Clear();
         CheckCountsChecked.Clear();
         CheckCounts.Clear();
-        SlotNames.Clear();
         Hints.Clear();
         HiddenHints.Clear();
         ItemHistory.Clear();
+        PlayerAliases.Clear();
+        PlayerCopyAliases.Clear();
     }
 
     public string GetSlotName(string slot) => SlotNames.GetValueOrDefault(slot, slot);

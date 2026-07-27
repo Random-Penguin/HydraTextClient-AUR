@@ -87,7 +87,7 @@ public partial class DeathLinkMessage : MessageScene
             new()
             {
                 ["groups"] = Groups, ["player"] = PlayerSlot is -1 ? "Unknown Player"
-                    : PlayerEffect.PlayerName(PlayerSlot, out _),
+                    : PlayerEffect.PlayerName(PlayerSlot, true, out _),
             };
 
         if (LastCause is null)

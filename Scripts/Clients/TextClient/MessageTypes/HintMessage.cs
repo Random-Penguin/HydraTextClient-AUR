@@ -60,17 +60,24 @@ public partial class HintMessage : MessageScene
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));
     }
 
-    public override string CopyText() => SaveType<string>.Load(
-        Flags.HasFlag(ItemFlags.Advancement) ? HintTable.GlobalCopyFormatProgressive : HintTable.GlobalCopyFormat,
-        "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
-    ).CompileSimpleText(
-        new Dictionary<string, string>
-        {
-            ["finder"] = PlayerEffect.PlayerName(FinderSlot, out _),
-            ["receiver"] = PlayerEffect.PlayerName(ReceiverSlot, out _), ["loc"] = LocationName,
-            ["entrance"] = HasBeenFound ? "(Found)" : "(Not Found)", ["item"] = ItemName,
-        }
-    );
+    public override string CopyText()
+    {
+        var mw = ConnectionController.GetCurrentMultiworld;
+        if (mw is null) return "Unknown Multiworld";
+        return SaveType<string>.Load(
+            Flags.HasFlag(ItemFlags.Advancement) ? HintTable.GlobalCopyFormatProgressive : HintTable.GlobalCopyFormat,
+            "{{receiver}}'s __`{{item}}`__ is in {{finder}}'s world at **`{{loc}}`**\n-# `{{entrance}}`"
+        ).CompileSimpleText(
+            new Dictionary<string, string>
+            {
+                ["finder"] = PlayerEffect.PlayerName(FinderSlot, true, out _),
+                ["receiver"] = PlayerEffect.PlayerName(ReceiverSlot, true, out _), ["loc"] = LocationName,
+                ["entrance"] = HasBeenFound ? "(Found)" : "(Not Found)", ["item"] = ItemName,
+                ["copy_finder"] = mw.PlayerCopyAliases.GetValueOrDefault(FinderSlot, ""),
+                ["copy_receiver"] = mw.PlayerCopyAliases.GetValueOrDefault(ReceiverSlot, ""),
+            }
+        );
+    }
 
     public override void RemoveEvents()
     {

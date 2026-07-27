@@ -62,10 +62,10 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 10
 
-[node name="PlayerItem" type="PanelContainer" unique_id=1141079990 node_paths=PackedStringArray("Player", "CheckCounter", "CheckIndicator", "CheckProgress", "ConnectedIndicator", "DisconnectedIndicator", "GoalIndicator")]
+[node name="PlayerItem" type="PanelContainer" unique_id=1141079990 node_paths=PackedStringArray("Player", "CheckCounter", "CheckIndicator", "CheckProgress", "ConnectedIndicator", "DisconnectedIndicator", "GoalIndicator", "Alias", "CopyAlias")]
 clip_contents = true
-offset_right = 368.0
-offset_bottom = 27.0
+offset_right = 488.0
+offset_bottom = 35.0
 size_flags_horizontal = 3
 script = ExtResource("1_u4hbj")
 CheckGradient = SubResource("Gradient_huhc0")
@@ -77,6 +77,8 @@ CheckProgress = NodePath("VBoxContainer/ProgressBar")
 ConnectedIndicator = NodePath("Panel/StatusConnected")
 DisconnectedIndicator = NodePath("Panel/StatusNotConnected")
 GoalIndicator = NodePath("Panel/StatusGoal")
+Alias = NodePath("VBoxContainer/HBoxContainer/LineEdit")
+CopyAlias = NodePath("VBoxContainer/HBoxContainer/LineEdit2")
 
 [node name="Panel" type="Panel" parent="." unique_id=51070588]
 clip_children = 1
@@ -130,15 +132,29 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer" unique_id=351135448]
 layout_mode = 2
+size_flags_horizontal = 3
 bbcode_enabled = true
 text = " Player A"
 fit_content = true
 autowrap_mode = 0
 script = ExtResource("3_mu871")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1308333435]
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1857274909]
 layout_mode = 2
-size_flags_horizontal = 3
+mouse_filter = 1
+placeholder_text = "Alias"
+expand_to_text_length = true
+
+[node name="LineEdit2" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=817591999]
+layout_mode = 2
+mouse_filter = 1
+placeholder_text = "Copy Alias"
+expand_to_text_length = true
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=1628569845]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 7
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1287203400]
 layout_mode = 2
@@ -156,3 +172,7 @@ theme = ExtResource("1_7wary")
 theme_override_styles/background = SubResource("StyleBoxFlat_uq7wj")
 theme_override_styles/fill = SubResource("StyleBoxFlat_w1qgd")
 show_percentage = false
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=32289114]
+layout_mode = 2
+mouse_filter = 2

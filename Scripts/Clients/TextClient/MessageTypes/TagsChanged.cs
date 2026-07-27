@@ -38,7 +38,7 @@ public partial class TagsChanged : MessageScene
     }
 
     public override string CopyText() => SaveType<string>.Load(SaveId, Default).CompileSimpleText(
-        new Dictionary<string, string> { ["player"] = PlayerEffect.PlayerName(PlayerSlot, out _), ["tags"] = Tags, }
+        new Dictionary<string, string> { ["player"] = PlayerEffect.PlayerName(PlayerSlot, true, out _), ["tags"] = Tags, }
     );
 
     public override void RemoveEvents() => SaveType<string>.RemoveIndividualEvent(SaveId, CallReload);

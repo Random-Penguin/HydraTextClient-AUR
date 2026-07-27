@@ -14,7 +14,7 @@ namespace HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 public class PlayerEffect : MessageParserEffect
 {
     public static event Action? OnUpdate;
-    
+
     public const string SaveIdNoAlias = "Clients/TextClient/TextEffects/PlayerNoAlias";
     public const string DefaultNoAlias = "{{name}}";
     public const string HintNoAlias = "{{name}} - name of the player";
@@ -22,6 +22,9 @@ public class PlayerEffect : MessageParserEffect
     public const string SaveIdWithAlias = "Clients/TextClient/TextEffects/PlayerWithAlias";
     public const string DefaultWithAlias = "{{alias}} ({{name}})";
     public const string HintAlias = "{{alias}} - the player's alias\n{{name}} - player slot name";
+
+    public const string HydraAliasOverrideInCopy = "Clients/TextClient/AliasOverrideInCopy";
+    public const string CopyAliasOverrideInCopy = "Clients/TextClient/CopyAliasOverrideInCopy";
 
     public override string Key => "player";
 
@@ -57,8 +60,8 @@ public class PlayerEffect : MessageParserEffect
             return;
         }
 
-        var player = PlayerName(playerSlot, out var name);
-        
+        var player = PlayerName(playerSlot, false, out var name);
+
         var color = ConnectionController.IsConnected(name)
             ? PlayerConnected.Color()
             : SlotView.ContainsSlot(name)
@@ -74,24 +77,44 @@ public class PlayerEffect : MessageParserEffect
 
     public override void AddValueUpdater()
     {
-        ConnectionController.OnClientConnection += (_, _, _) => OnUpdate?.Invoke();
-        ConnectionController.OnClientLeaderChanged += (_, _) => OnUpdate?.Invoke();
-        ConnectionController.OnClientRemoved += (_, _, _) => OnUpdate?.Invoke();
-        SaveType<string>.AddIndividualEvents( _ => OnUpdate?.Invoke(), SaveIdNoAlias, SaveIdWithAlias);
+        ConnectionController.OnClientConnection += (_, _, _) => UpdatePlayerEffect();
+        ConnectionController.OnClientLeaderChanged += (_, _) => UpdatePlayerEffect();
+        ConnectionController.OnClientRemoved += (_, _, _) => UpdatePlayerEffect();
+        SaveType<string>.AddIndividualEvents(_ => UpdatePlayerEffect(), SaveIdNoAlias, SaveIdWithAlias);
         SaveType<HexColor>.OnSaveEvent += (id, _) =>
         {
             if (!ColorIdConstants.IdToConstant.TryGetValue(id, out var constant)) return;
-            if (constant.IsPlayerColor()) OnUpdate?.Invoke();
+            if (constant.IsPlayerColor()) UpdatePlayerEffect();
         };
     }
 
-    public static string PlayerName(int slot, out string rawName)
+    public static void UpdatePlayerEffect() => OnUpdate?.Invoke();
+
+    public static string PlayerName(int slot, bool isCopy, out string rawName)
     {
+        var mw = ConnectionController.GetCurrentMultiworld;
+        if (mw is null)
+        {
+            rawName = "Unknown";
+            return "Unknown";
+        }
+
         var hasAlias = ConnectionController.GetPlayerInfo(slot, out rawName, out var alias, out _);
+
+        if ((!isCopy || SaveType<bool>.Load(HydraAliasOverrideInCopy, true))
+            && mw.PlayerAliases.TryGetValue(slot, out var tempAlias) && tempAlias.Trim() is not "")
+        {
+            alias = tempAlias;
+            hasAlias = true;
+        }
+        if (isCopy && SaveType<bool>.Load(CopyAliasOverrideInCopy, true)
+                   && mw.PlayerCopyAliases.TryGetValue(slot, out tempAlias)
+                   && tempAlias.Trim() is not "") return tempAlias;
+
         return SaveType<string>
-           .Load(
-                hasAlias ? SaveIdWithAlias : SaveIdNoAlias,
-                hasAlias ? DefaultWithAlias : DefaultNoAlias
-            ).CompileSimpleText(new Dictionary<string, string> {["alias"] = alias, ["name"] = rawName});
+              .Load(
+                   hasAlias ? SaveIdWithAlias : SaveIdNoAlias,
+                   hasAlias ? DefaultWithAlias : DefaultNoAlias
+               ).CompileSimpleText(new Dictionary<string, string> { ["alias"] = alias, ["name"] = rawName });
     }
 }

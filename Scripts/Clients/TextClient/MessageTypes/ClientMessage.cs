@@ -53,7 +53,7 @@ public partial class ClientMessage : AnimatedMessageScene
         PlayerName.ApplyCompiledPrintableObjs(Player.CompileRichText(GetCompileEffects(), false));
     }
 
-    public override string CopyText() => $"\"{MessageText}\"\n-# -{PlayerEffect.PlayerName(PlayerSlot, out _)}";
+    public override string CopyText() => $"\"{MessageText}\"\n-# -{PlayerEffect.PlayerName(PlayerSlot, true, out _)}";
     public override void RemoveEvents()
     {
         SaveType<bool>.RemoveIndividualEvent(TextClient.ShowGamePortraits, CallReload);

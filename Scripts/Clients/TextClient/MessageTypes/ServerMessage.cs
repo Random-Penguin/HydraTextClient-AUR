@@ -36,7 +36,7 @@ public partial class ServerMessage : AnimatedMessageScene
                     {
                         case JsonMessagePartType.PlayerId:
                             sb.Append("{{player;").Append(int.Parse(part.Text)).Append("}}");
-                            copySb.Append(PlayerEffect.PlayerName(int.Parse(part.Text), out _));
+                            copySb.Append(PlayerEffect.PlayerName(int.Parse(part.Text), true, out _));
                             break;
                         case JsonMessagePartType.ItemId:
                             var itemId = long.Parse(part.Text);

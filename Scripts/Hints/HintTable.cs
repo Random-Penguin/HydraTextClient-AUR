@@ -5,6 +5,7 @@ using System.Text;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
+using HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
@@ -25,7 +26,16 @@ public partial class HintTable : TextTable
     public override string[] EffectGroups => ["default", "hinttable"];
     public const string GlobalCopyFormatProgressive = "Theme/HintTable/CopyFormat/Progressive";
     public const string GlobalCopyFormat = "Theme/HintTable/CopyFormat";
-    public const string Hint = "{{receiver}} - player that receives the item\n{{item}} - item that was hinted for\n{{loc}} - where the item is\n{{finder}} - player who has the item\n{{entrance}} - entrance for Entrance Rando";
+
+    public const string Hint = """
+                               {{receiver}} - player that receives the item
+                               {{item}} - item that was hinted for
+                               {{loc}} - where the item is
+                               {{finder}} - player who has the item
+                               {{found}} - if the item was found or not
+                               {{copy_receiver}} - the copy alias of the receiver
+                               {{copy_finder}} - the copy alias of the finder
+                               """;
 
     public override string[] Columns
         => ["", "", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"];
@@ -61,13 +71,23 @@ public partial class HintTable : TextTable
         SettingsCreator.Tab(
             "Hints", tab =>
             {
-                tab.AddLineEdit(
-                    "Copy Hint Text Format (Progression Items)", GlobalCopyFormatProgressive,
-                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}", Hint
-                ).AddLineEdit(
-                    "Copy Hint Text Format", GlobalCopyFormat,
-                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}", Hint
-                );
+                tab
+                   .AddCheckBox(
+                        "Hydra Alias overrides Multiworld aliases when copying text",
+                        PlayerEffect.HydraAliasOverrideInCopy, true
+                    )
+                   .AddCheckBox(
+                        "Copy Alias overrides ALL naming when copying text", PlayerEffect.CopyAliasOverrideInCopy, true
+                    )
+                   .AddLineEdit(
+                        "Copy Hint Text Format (Progression Items)", GlobalCopyFormatProgressive,
+                        "{{receiver}}'s __`{{item}}`__ is in {{finder}}'s world at **`{{loc}}`**\n-# `{{entrance}}`",
+                        Hint
+                    ).AddLineEdit(
+                        "Copy Hint Text Format", GlobalCopyFormat,
+                        "{{receiver}}'s __`{{item}}`__ is in {{finder}}'s world at **`{{loc}}`**\n-# `{{entrance}}`",
+                        Hint
+                    );
             }
         );
 
@@ -279,16 +299,21 @@ public partial class HintTable : TextTable
                 var hint = SortedHints[int.Parse(text[0])];
                 var rawCopy = SaveType<string>.Load(
                     hint.ItemFlags.HasFlag(Advancement) ? GlobalCopyFormatProgressive : GlobalCopyFormat,
-                    "{{receiver}}'s __{{item}}__ is in `{{finder}}`'s world at **{{loc}}**\\n-# {{entrance}}"
+                    "{{receiver}}'s __`{{item}}`__ is in {{finder}}'s world at **`{{loc}}`**\n-# `{{entrance}}`"
                 );
+
+                var mw = ConnectionController.GetCurrentMultiworld;
+                if (mw is null) return;
 
                 DisplayServer.ClipboardSet(
                     rawCopy.CompileSimpleText(
                         new Dictionary<string, string>
                         {
-                            ["finder"] = PlayerEffect.PlayerName(hint.FindingPlayer, out _),
-                            ["receiver"] = PlayerEffect.PlayerName(hint.ReceivingPlayer, out _),
+                            ["finder"] = PlayerEffect.PlayerName(hint.FindingPlayer, true, out _),
+                            ["receiver"] = PlayerEffect.PlayerName(hint.ReceivingPlayer, true, out _),
                             ["loc"] = hint.LocationName, ["entrance"] = hint.EntranceName, ["item"] = hint.ItemName,
+                            ["copy_finder"] = mw.PlayerCopyAliases.GetValueOrDefault(hint.FindingPlayer, ""),
+                            ["copy_receiver"] = mw.PlayerCopyAliases.GetValueOrDefault(hint.ReceivingPlayer, ""),
                         }
                     ).Replace("\\n", "\n")
                 );

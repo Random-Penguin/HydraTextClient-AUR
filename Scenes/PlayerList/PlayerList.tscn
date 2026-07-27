@@ -43,4 +43,10 @@ size_flags_horizontal = 3
 [node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1338098062]
 layout_mode = 2
 
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=552017307]
+layout_mode = 2
+text = "Aliases set here will be client sided only
+Copy Aliases replace the player's name when being copied
+Discord @s can be represented as <@user id>"
+
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="SayStatus"]

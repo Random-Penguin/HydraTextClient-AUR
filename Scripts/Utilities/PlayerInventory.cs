@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Hints;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utilities.Popups;
@@ -31,6 +33,7 @@ public partial class PlayerInventory : TextTable
     public bool OpenNewWindow;
     public bool HasOpenedNewWindow = false;
     private Action<string, FilterType> OnFilterDataUpdated;
+    private List<SortObject> SortOrder = [new("Item"), new("Count") { IsDescending = true }];
 
     public void SetupInventory(ApClient client)
     {
@@ -59,10 +62,16 @@ public partial class PlayerInventory : TextTable
 
         var items = Client.ItemHandler.Items;
         Inventory = items.GroupBy(item => item.UID).ToDictionary(g => g.Key, g => g.ToArray());
-        Keys = Inventory.OrderBy(kv => kv.Value[0].SortNumber())
-                        .ThenByDescending(kv => kv.Value.Length)
-                        .ThenBy(kv => kv.Key)
-                        .Select(kv => kv.Key).ToArray();
+        var ordered = Inventory.Select(kv => kv.Value).OrderBy(item => item[0].SortNumber());
+
+        if (SortOrder.Count > 0)
+        {
+            ordered = SortingOrder(ordered, SortOrder[0], true);
+            if (SortOrder.Count > 1) ordered = SortingOrder(ordered, SortOrder[1]);
+        }
+        else ordered = ordered.ThenBy(item => item[0].ItemName);
+        
+        Keys = ordered.Select(item => item[0].UID).ToArray();
         RawItemNames = Inventory.Values.Select(arr => arr[0].ItemName).Distinct().ToArray();
 
         var mw = ConnectionController.GetCurrentMultiworld;
@@ -85,6 +94,25 @@ public partial class PlayerInventory : TextTable
 
         mw.ItemHistory[Client.PlayerName] = Client.ItemHandler.ItemIndex;
         OpenNewWindow = false;
+        return;
+
+        IOrderedEnumerable<ItemInfo[]> SortingOrder(IOrderedEnumerable<ItemInfo[]> current, SortObject option,
+            bool isFirst = false)
+        {
+            return option.Name switch
+            {
+                "Item" => Order(current, item => item[0].SortNumber(), option.IsDescending, isFirst),
+                "Count" => Order(current, item => item.Length, option.IsDescending, isFirst),
+            };
+        }
+
+        IOrderedEnumerable<ItemInfo[]> Order(IOrderedEnumerable<ItemInfo[]> arr, Func<ItemInfo[], int> compare,
+            bool descending,
+            bool first)
+        {
+            if (first) return !descending ? arr.OrderBy(compare) : arr.OrderByDescending(compare);
+            return !descending ? arr.ThenBy(compare) : arr.ThenByDescending(compare);
+        }
     }
 
     public override string GetData(int row, int col)
@@ -96,10 +124,46 @@ public partial class PlayerInventory : TextTable
         };
     }
 
+    public override string GetColumnText(int columnNum)
+    {
+        var columnText = Columns[columnNum];
+        if (columnNum >= 2) return columnText;
+
+        StringBuilder sb = new();
+        sb.Append("[url=\"sortorder_").Append(columnText).Append("\"]").Append(columnText);
+
+        if (SortOrder.All(so => so.Name != columnText))
+        {
+            sb.Append(" -").Append("[/url]");
+            return sb.ToString();
+        }
+
+        var so = SortOrder.First(so => so.Name == columnText);
+        var place = SortOrder.IndexOf(so) + 1;
+
+        sb.Append(' ').Append(place).Append(so.IsDescending ? '▼' : '▲').Append("[/url]");
+        return sb.ToString();
+    }
+
     public override void OnMetaClicked(string key, string[] text)
     {
         switch (key)
         {
+            case "sortorder":
+                if (SortOrder.Any(so => so.Name == text[0]))
+                {
+                    var index = SortOrder.FindIndex(so => so.Name == text[0]);
+                    var indexed = SortOrder[index];
+                    if (indexed.IsDescending) SortOrder.RemoveAt(index);
+                    else
+                    {
+                        indexed.IsDescending = true;
+                        SortOrder[index] = indexed;
+                    }
+                }
+                else SortOrder.Add(new SortObject(text[0]));
+                QueueUiRefresh(true);
+                break;
             case TextTableClickEffect.ClickedEventMsg:
                 var popup = SendersPopup.Instantiate<InventorySenders>();
                 popup.SetItems(Inventory[Keys[int.Parse(text[0])]]);

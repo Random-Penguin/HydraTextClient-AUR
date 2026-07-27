@@ -9,7 +9,6 @@ namespace HydraTextClient.Scripts.PlayerList;
 
 public partial class PlayerList : MarginContainer
 {
-    [Export] private Label Status;
     [Export] private PackedScene PlayerItem;
     [Export] private VBoxContainer ItemContainer;
 
@@ -140,5 +139,37 @@ public partial class PlayerList : MarginContainer
     {
         if (!ConnectionController.HasLeaderClient) return;
         ConnectionController.LeaderClient!.Say("!status");
+    }
+
+    public void ImportCopyList()
+    {
+        var mw = ConnectionController.GetCurrentMultiworld;
+        if (mw is null) return;
+        if (!ConnectionController.HasLeaderClient) return;
+        var text = DisplayServer.ClipboardGet();
+        if (text.Trim() is "") return;
+        try
+        {
+            var split = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var playerCopy in split)
+            {
+                var copySplit = playerCopy.Split('\t', StringSplitOptions.RemoveEmptyEntries);
+                if (copySplit.Length < 2) continue;
+                if (!int.TryParse(copySplit[0], out var slotNumber)) continue;
+                mw.PlayerCopyAliases[slotNumber] = string.Join('\t', copySplit.Skip(1));
+            }
+        }
+        catch (Exception e) { MainController.ShowError("Failed to import copy list from clipboard", e); }
+
+        if (Items is null) return;
+        foreach (var item in Items) item.UpdateCopyText();
+    }
+
+    public void ExportCopyList()
+    {
+        var mw = ConnectionController.GetCurrentMultiworld;
+        if (mw is null) return;
+        if (!ConnectionController.HasLeaderClient) return;
+        DisplayServer.ClipboardSet(string.Join('\n', mw.PlayerCopyAliases.Select(kv => $"{kv.Key}\t{kv.Value}")));
     }
 }

@@ -100,7 +100,7 @@ public partial class AutoUpdater : WindowSetter
             GD.Print("No new updates");
             return false;
         }
-        
+
         MaxVersion = VersionInfos.Values.Aggregate((i1, i2) => i1 > i2 ? i1 : i2);
         if (CurrentVersion == MaxVersion) GD.Print("No new updates");
         return CurrentVersion != MaxVersion;

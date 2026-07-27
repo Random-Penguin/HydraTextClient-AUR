@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://c45atmr4ebp3" path="res://Scenes/PlayerList/PlayerItem.tscn" id="3_qpyxp"]
 [ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="4_qpyxp"]
 
-[node name="Players" type="MarginContainer" unique_id=936307540 node_paths=PackedStringArray("Status", "ItemContainer")]
+[node name="Players" type="MarginContainer" unique_id=936307540 node_paths=PackedStringArray("ItemContainer")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,7 +15,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("1_sncgs")
 script = ExtResource("1_w0ce6")
-Status = NodePath("ScrollContainer/VBoxContainer/HBoxContainer/Label")
 PlayerItem = ExtResource("3_qpyxp")
 ItemContainer = NodePath("ScrollContainer/VBoxContainer")
 metadata/_tab_index = 3
@@ -40,8 +39,18 @@ modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1338098062]
+[node name="Button2" type="Button" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1429214627]
 layout_mode = 2
+text = "Import Copy List"
+
+[node name="VSeparator2" type="VSeparator" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=715177762]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Button3" type="Button" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=31253760]
+layout_mode = 2
+text = "Export Copy List"
 
 [node name="Label" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=552017307]
 layout_mode = 2
@@ -50,3 +59,5 @@ Copy Aliases replace the player's name when being copied
 Discord @s can be represented as <@user id>"
 
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/HBoxContainer/Button" to="." method="SayStatus"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/HBoxContainer/Button2" to="." method="ImportCopyList"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/HBoxContainer/Button3" to="." method="ExportCopyList"]

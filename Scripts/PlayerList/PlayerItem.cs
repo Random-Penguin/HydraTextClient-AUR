@@ -29,6 +29,7 @@ public partial class PlayerItem : PanelContainer
     private Tween ProgressTween;
     private Tween CheckGainTween;
     private int LastCount = -1;
+    private int PlayerSlot;
 
     public override void _Ready()
     {
@@ -38,6 +39,7 @@ public partial class PlayerItem : PanelContainer
 
     public void SetPlayer(int player)
     {
+        PlayerSlot = player;
         PlayerText = $" {{{{player;{player}}}}}";
 
         Alias.TextChanged += s =>
@@ -55,13 +57,18 @@ public partial class PlayerItem : PanelContainer
             if (mw is null) return;
             mw.PlayerCopyAliases[player] = s;
         };
-        
-        var mw = ConnectionController.GetCurrentMultiworld;
-        if (mw is not null && mw.PlayerAliases.TryGetValue(player, out var alias)) Alias.Text = alias;
-        if (mw is not null && mw.PlayerCopyAliases.TryGetValue(player, out var copyAlias)) CopyAlias.Text = copyAlias;
-        
+
+        UpdateCopyText();
         UpdatePlayerText();
         SetCheckCount();
+    }
+
+    public void UpdateCopyText()
+    {
+        var mw = ConnectionController.GetCurrentMultiworld;
+        if (mw is not null && mw.PlayerAliases.TryGetValue(PlayerSlot, out var alias)) Alias.Text = alias;
+        if (mw is not null && mw.PlayerCopyAliases.TryGetValue(PlayerSlot, out var copyAlias))
+            CopyAlias.Text = copyAlias;
     }
 
     public void UpdatePlayerText()

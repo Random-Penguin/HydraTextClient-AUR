@@ -101,8 +101,6 @@ public partial class MainController : Control
         ExternalAppController.CloseAll();
         SaveType<Vector2I>.Save($"{WindowSaveId}_pos", GetWindow().Position, true);
         Save();
-
-        foreach (var client in ConnectionController.GetClientNames()) ConnectionController.TryConnect(client);
         OnExit?.Invoke();
     }
 

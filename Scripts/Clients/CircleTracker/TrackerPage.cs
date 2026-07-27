@@ -26,9 +26,11 @@ public partial class TrackerPage : Control
     private ConcurrentQueue<bool> UpdateQueue = [];
     [Export] private PopoutWindow PopoutWindow;
     [Export] private EmptyRichLabelInteractor Label;
+    [Export] private ProgressionItemTable NextProgressionLabel;
+    public ConcurrentDictionary<long, int> NextProgression = [];
     public ConcurrentDictionary<int, ulong[]> Circles = [];
     public ConcurrentDictionary<int, string> CircleItems = [];
-    private ApClient Client;
+    public ApClient Client;
     private int ProcessId;
     private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects;
     private IPrintableObj[] CompiledMessage;
@@ -74,6 +76,8 @@ public partial class TrackerPage : Control
         ItemEffect.OnUpdate += CallReload;
         LocationEffect.OnUpdate += CallReload;
         OnStopCalled += QueueFree;
+        
+        NextProgressionLabel.SetPage(this);
     }
 
     public override void _Process(double delta)
@@ -82,8 +86,13 @@ public partial class TrackerPage : Control
         var recompile = UpdateQueue.Contains(true);
         UpdateQueue.Clear();
         Label.Clear();
+        NextProgressionLabel.Clear();
 
-        if (recompile) { CompiledMessage = RenderCirclePage().CompileRichText(GetCompileEffects(), true); }
+        if (recompile)
+        {
+            CompiledMessage = RenderCirclePage().CompileRichText(GetCompileEffects(), true);
+            NextProgressionLabel.QueueUiRefresh(true);
+        }
 
         Label.ApplyCompiledPrintableObjs(CompiledMessage);
     }
@@ -95,11 +104,13 @@ public partial class TrackerPage : Control
         List<ulong> recordedLocations = [];
         var localHints = Client.Hints.Where(hint => hint.FindingPlayer == Client.PlayerSlot).ToArray();
         var hints = localHints.ToDictionary(hint => hint.LocationId, hint => hint.GetItemEffectText());
-        var hintImportance = localHints.ToDictionary(hint => hint.LocationId, hint => hint.Status is HintStatus.Priority);
+        var hintImportance = localHints.ToDictionary(
+            hint => hint.LocationId, hint => hint.Status is HintStatus.Priority
+        );
         var priority = localHints.Where(hint => hint.Status is HintStatus.Priority).Select(hint => hint.LocationId)
                                  .ToArray();
         var firstEnd = SaveType<bool>.Load(ShowFutureCircles, false);
-        
+
         foreach (var circle in Circles.Keys.Order())
         {
             if (!Circles.TryGetValue(circle, out var locations))
@@ -107,7 +118,7 @@ public partial class TrackerPage : Control
                 GD.PrintErr($"Circle [{circle}] doesn't exist in the circle list??? (maybe race condition)");
                 continue;
             }
-            
+
             var uniqueLocations = locations.Except(recordedLocations).ToArray();
             recordedLocations.AddRange(uniqueLocations);
             uniqueLocations = uniqueLocations.Where(id => Client.MissingRawLocations.Contains((long)id)).ToArray();
@@ -135,9 +146,9 @@ public partial class TrackerPage : Control
             for (var i = 0; i < orderedLocations.Length; i++)
             {
                 var id = orderedLocations[i];
-                sb.Append(i % 2 == 0 ? "[cell bg=#00000044]" : "[cell]").Append(" {{loc;").Append(id).Append(';')
-                  .Append(Client.PlayerSlot).Append("}}[/cell]")
-                  .Append(i % 2 == 0 ? "[cell bg=#00000044] " : "[cell] ");
+                var colColor = i % 2 == 0 ? "[cell bg=#00000044]" : "[cell]";
+                sb.Append(colColor).Append(" {{loc;").Append(id).Append(';').Append(Client.PlayerSlot)
+                  .Append("}} [/cell]").Append(colColor);
                 if (hints.TryGetValue((long)id, out var item))
                 {
                     sb.Append(item);

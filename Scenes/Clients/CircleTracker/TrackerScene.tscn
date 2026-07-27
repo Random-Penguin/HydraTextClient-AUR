@@ -5,8 +5,9 @@
 [ext_resource type="Script" uid="uid://ducjwr1np6x7w" path="res://Scripts/Utility/UIHelpers/ButtonAnimation.cs" id="2_iqac5"]
 [ext_resource type="PackedScene" uid="uid://bqisbomfxfu6r" path="res://Scenes/Utility/Popout.tscn" id="3_iqac5"]
 [ext_resource type="Script" uid="uid://bvk0i3283dwhs" path="res://Scripts/Utility/UIHelpers/EmptyRichLabelInteractor.cs" id="5_3kkys"]
+[ext_resource type="Script" uid="uid://ci4bcdb7cbtm3" path="res://Scripts/Clients/CircleTracker/ProgressionItemTable.cs" id="5_5b2u4"]
 
-[node name="MarginContainer" type="MarginContainer" unique_id=1147147692 node_paths=PackedStringArray("PopoutWindow", "Label")]
+[node name="MarginContainer" type="MarginContainer" unique_id=1147147692 node_paths=PackedStringArray("PopoutWindow", "Label", "NextProgressionLabel")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,7 +16,8 @@ grow_vertical = 2
 theme = ExtResource("1_ot20o")
 script = ExtResource("2_hagme")
 PopoutWindow = NodePath("VBoxContainer/Popout")
-Label = NodePath("VBoxContainer/Popout/ScrollContainer/RichTextLabel")
+Label = NodePath("VBoxContainer/Popout/ScrollContainer/VBoxContainer/RichTextLabel")
+NextProgressionLabel = NodePath("VBoxContainer/Popout/ScrollContainer/VBoxContainer/FoldableContainer/RichTextLabel")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2017699683]
 layout_mode = 2
@@ -42,7 +44,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Popout/ScrollContainer" unique_id=1972510381]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Popout/ScrollContainer" unique_id=272890858]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FoldableContainer" type="FoldableContainer" parent="VBoxContainer/Popout/ScrollContainer/VBoxContainer" unique_id=1696324153]
+layout_mode = 2
+title = "Next Progression (Takes some time to load)"
+title_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Popout/ScrollContainer/VBoxContainer/FoldableContainer" unique_id=202186246]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+bbcode_enabled = true
+text = "[center]Loading . . .[/center]"
+fit_content = true
+selection_enabled = true
+script = ExtResource("5_5b2u4")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Popout/ScrollContainer/VBoxContainer" unique_id=1972510381]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2

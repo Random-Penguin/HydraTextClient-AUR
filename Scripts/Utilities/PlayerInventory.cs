@@ -59,7 +59,9 @@ public partial class PlayerInventory : TextTable
 
         var items = Client.ItemHandler.Items;
         Inventory = items.GroupBy(item => item.UID).ToDictionary(g => g.Key, g => g.ToArray());
-        Keys = Inventory.OrderBy(kv => kv.Value[0].SortNumber()).ThenByDescending(kv => kv.Value.Length)
+        Keys = Inventory.OrderBy(kv => kv.Value[0].SortNumber())
+                        .ThenByDescending(kv => kv.Value.Length)
+                        .ThenBy(kv => kv.Key)
                         .Select(kv => kv.Key).ToArray();
         RawItemNames = Inventory.Values.Select(arr => arr[0].ItemName).Distinct().ToArray();
 

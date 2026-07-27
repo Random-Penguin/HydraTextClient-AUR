@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Archipelago.MultiClient.Net.Enums;
 using CreepyUtil.Archipelago.ApClient;
 using HydraTextClient.Scripts.Controllers;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page, b
     : CoreAppEntry($"{apDir}/ArchipelagoLauncher{(useDebug ? "Debug" : "")}", "HydraUTBridge")
 {
     public readonly ConcurrentQueue<(int, long[])> ItemsQueued = [];
+    public bool CheckNextProg;
 
     public override void Interactor(string text, StreamWriter input, string console)
     {
@@ -27,7 +29,7 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page, b
                     WriteLine(console, $"Sending Slot Name: [{client.PlayerName}]");
                     input.WriteLine(client.PlayerName);
                     break;
-                case "game": input.WriteLine(client.PlayerGames[client.PlayerSlot]); break;
+                case "game": input.WriteLine(client.PlayerGame); break;
                 case "slot_data": input.WriteLine(JsonConvert.SerializeObject(client.SlotData)); break;
                 case "missing_locations":
                     input.WriteLine(string.Join(',', client.Locations.Select(kv => kv.Value))); break;
@@ -52,10 +54,39 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page, b
                         page.QueueUpdate();
                     }
 
-                    if (text.StartsWith("Circle ") || text is "start")
+                    if (text.StartsWith("counts "))
                     {
+                        var counts = text.Replace("counts ", "").Trim().Split(
+                            " ", StringSplitOptions.RemoveEmptyEntries
+                        );
+                        page.NextProgression.Clear();
+                        foreach (var entry in counts)
+                        {
+                            var split = entry.Split('=');
+                            page.NextProgression[long.Parse(split[0])] = int.Parse(split[1]);
+                        }
+                        WriteLine(console, $"Got counts: [{counts.Length}]");
+                        page.QueueUpdate();
+                    }
+
+                    if (text.StartsWith("Circle ") || text is "start" || text.StartsWith("counts "))
+                    {
+                        if (ItemsQueued.IsEmpty && CheckNextProg)
+                        {
+                            CheckNextProg = false;
+                            WriteLine(console, "Requesting next progression");
+                            input.WriteLine(
+                                $"next_items {string.Join(',',
+                                    client.ItemHandler.Items
+                                          .Where(item => item.Flags.HasFlag(ItemFlags.Advancement))
+                                          .Select(item => item.ItemId))}|{string.Join(',', client.Items.Select(kv => kv.Value))}"
+                            );
+                            return;
+                        }
+
                         while (ItemsQueued.IsEmpty) Task.Delay(20).Wait();
                         ItemsQueued.TryDequeue(out var next);
+                        CheckNextProg = true;
                         WriteLine(
                             console, $"Requesting Data for circle [{next.Item1}] with [{next.Item2.Length}] total items"
                         );

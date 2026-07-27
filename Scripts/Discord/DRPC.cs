@@ -31,7 +31,7 @@ public static class DRPC
         {
             if (!ConnectionController.HasLeaderClient) return "Not connected";
             var leader = ConnectionController.LeaderClient!;
-            var game = leader.PlayerGames[leader.PlayerSlot];
+            var game = leader.PlayerGame;
             return GameToTitle.GetValueOrDefault(game, game);
         };
 
@@ -46,7 +46,7 @@ public static class DRPC
         {
             if (!ConnectionController.HasLeaderClient) return "archipelago";
             var leader = ConnectionController.LeaderClient!;
-            var game = leader.PlayerGames[leader.PlayerSlot];
+            var game = leader.PlayerGame;
             return GameToImage.GetValueOrDefault(game, "archipelago");
         };
 

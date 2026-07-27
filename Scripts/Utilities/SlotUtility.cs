@@ -51,7 +51,7 @@ public partial class SlotUtility : HSplitContainer
                                                            Inventory.RawItemNames, item
                                                        ));
 
-        var game = client.PlayerGames[client.PlayerSlot];
+        var game = client.PlayerGame;
         ItemList.OnItemCreated += (list, index, item) =>
         {
             var img = CustomAssets.ItemImage(

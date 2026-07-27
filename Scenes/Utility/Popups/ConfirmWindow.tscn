@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://bgwc3as5kxnh6"]
+
+[ext_resource type="Script" uid="uid://8jl06y6upxbh" path="res://Scripts/Utility/Popups/ConfirmWindow.cs" id="1_n5w7l"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_pbtrr"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="2_pbtrr"]
+
+[node name="ConfirmWindow" type="Window" unique_id=625996744 node_paths=PackedStringArray("Label", "Yes", "No")]
+oversampling_override = 1.0
+size = Vector2i(400, 200)
+visible = false
+theme = ExtResource("1_pbtrr")
+script = ExtResource("1_n5w7l")
+Label = NodePath("Panel/ScrollContainer/VBoxContainer/Label")
+Yes = NodePath("Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button")
+No = NodePath("Panel/ScrollContainer/VBoxContainer/HBoxContainer/Button2")
+OnTop = true
+
+[node name="Panel" type="Panel" parent="." unique_id=66580898]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel" unique_id=605536445]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer" unique_id=783816087]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/ScrollContainer/VBoxContainer" unique_id=1801373797]
+layout_mode = 2
+size_flags_vertical = 6
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/ScrollContainer/VBoxContainer" unique_id=2129306889]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=313863170]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Yes"
+
+[node name="Button2" type="Button" parent="Panel/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1439927476]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No"
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("2_pbtrr")]
+Prefix = "window_nodes"
+Controls = {
+"confirm_window": NodePath("..")
+}

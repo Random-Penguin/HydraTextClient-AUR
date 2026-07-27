@@ -1,4 +1,5 @@
 using Godot;
+using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.Popups;
@@ -50,7 +51,7 @@ public partial class MultiworldCreator : WindowSetter
             mw.CheckCounts = EditData.CheckCounts;
             mw.CheckCountsChecked = EditData.CheckCountsChecked;
         }
-        
+
         return mw;
     }
 
@@ -58,7 +59,20 @@ public partial class MultiworldCreator : WindowSetter
 
     private void SetWorld(string world)
     {
-        if (LockMultiworld) return;
+        if (LockMultiworld)
+        {
+            MainController.ShowConfirm(
+                "Log out of all slots?",
+                "You are currently logged into Multiple slots\nDisconnect all of them and switch worlds?",
+                () =>
+                {
+                    foreach (var client in GetClientNames()) TryConnect(client);
+                    SetWorld(world);
+                }
+            );
+            return;
+        }
+
         CurrentMultiworld = world;
         CurrentMultiWorldLabel.Text = $"Current Multiworld: {world}";
         SaveType<string>.Save("CurrentMultiworld", CurrentMultiworld, false);
@@ -98,6 +112,7 @@ public partial class MultiworldCreator : WindowSetter
     }
 
     public void AddMultiworld(string _) => AddMultiworld();
+
     public void AddMultiworld()
     {
         var data = GenDataFromFields();

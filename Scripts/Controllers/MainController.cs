@@ -101,6 +101,8 @@ public partial class MainController : Control
         ExternalAppController.CloseAll();
         SaveType<Vector2I>.Save($"{WindowSaveId}_pos", GetWindow().Position, true);
         Save();
+
+        foreach (var client in ConnectionController.GetClientNames()) ConnectionController.TryConnect(client);
         OnExit?.Invoke();
     }
 
@@ -168,8 +170,9 @@ public partial class MainController : Control
         GD.PrintErr(error);
     }
 
-    public static void ShowConfirm(string title, string msg, Action yes) => Singleton.CreateConfirmWindow(title, msg, yes);
-    
+    public static void ShowConfirm(string title, string msg, Action yes)
+        => Singleton.CreateConfirmWindow(title, msg, yes);
+
     public void CreateConfirmWindow(string title, string msg, Action yes, Action? no = null)
     {
         var window = ConfirmDialogue.Instantiate<ConfirmWindow>();
@@ -177,7 +180,7 @@ public partial class MainController : Control
         window.OnTop = true;
         window.Setup(title, msg, yes, no);
     }
-    
+
     public static void ShowItemFilter() => Singleton.CallDeferred("CreateItemFilterDialogue", (string[])["", "", "0"]);
     public static void ShowItemFilter(string[] args) => Singleton.CallDeferred("CreateItemFilterDialogue", args);
 

@@ -24,6 +24,7 @@ public partial class CustomAssets : Control
     public override void _Ready()
     {
         Singleton = this;
+        if (Directories.IsPortable) return;
         Logger = new Logger();
         ItemSpritesManager = new ArchipelagoItemSprites(
             Logger, JsonConvert.DeserializeObject<ItemSpriteAliases>, new TimeSpan(30, 0, 0, 0)
@@ -45,6 +46,12 @@ public partial class CustomAssets : Control
             if (GameItemImageLoader.TryGet(location.GameName, location.ItemName, out var spriteOverride))
                 return spriteOverride;
 
+            if (Directories.IsPortable)
+            {
+                isFallback = true;
+                return GetFallback;
+            }
+            
             if (ItemSprites.TryGetValue(location.Uid, out var sprite)) return sprite;
             isFallback = true;
             Task.Run(() =>

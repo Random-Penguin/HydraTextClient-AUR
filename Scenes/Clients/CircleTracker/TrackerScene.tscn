@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bqisbomfxfu6r" path="res://Scenes/Utility/Popout.tscn" id="3_iqac5"]
 [ext_resource type="Script" uid="uid://bvk0i3283dwhs" path="res://Scripts/Utility/UIHelpers/EmptyRichLabelInteractor.cs" id="5_3kkys"]
 [ext_resource type="Script" uid="uid://ci4bcdb7cbtm3" path="res://Scripts/Clients/CircleTracker/ProgressionItemTable.cs" id="5_5b2u4"]
+[ext_resource type="PackedScene" uid="uid://d1unnc4t8u5xh" path="res://Scenes/Utilities/Popups/HintPopup.tscn" id="6_1e3v1"]
 
 [node name="MarginContainer" type="MarginContainer" unique_id=1147147692 node_paths=PackedStringArray("PopoutWindow", "Label", "NextProgressionLabel")]
 anchors_preset = 15
@@ -63,6 +64,7 @@ text = "[center]Loading . . .[/center]"
 fit_content = true
 selection_enabled = true
 script = ExtResource("5_5b2u4")
+HintPopup = ExtResource("6_1e3v1")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Popout/ScrollContainer/VBoxContainer" unique_id=1972510381]
 layout_mode = 2

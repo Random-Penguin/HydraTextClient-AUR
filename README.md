@@ -6,8 +6,8 @@
 - Add UT support (circle tracker):
   - make sure you have the ap launcher installed
   - grab [universal tracker](https://discord.com/channels/731205301247803413/1367270230635839539) and place it in your custom worlds folder
-  - grab the HydraUTBridge.apworld from [releases](https://github.com/SWCreeperKing/HydraTextClient_Rewrite/releases/latest) and place it also in your custom worlds folder
   - make sure that in hydra `Settings -> Main Settings` that your archipelago directory is set 
+  - Hydra *should* auto download/update the HydraUTBridge.apworld when needed
 
 ### Support me and hydra's development on [Patreon](https://www.patreon.com/SW_CreeperKing)
 
@@ -21,6 +21,7 @@
     - Caches hints
     - Caches item received history
     - Supports multiple DeathLink groups
+    - Switching multiworlds will log out of all connected slots
   - Can delete/edit/set/clear the cache of a multiworld
   - Save Slot names to be used across worlds
     - Saves slot name
@@ -51,9 +52,11 @@
     - Settings for showing specific kinds of items in the item log (removes anything not matching)
     - Send messages (messages are sent from the current 'Leader' client)
     - Emote menu to view and write emotes by clicking on them
+    - Can Click on any message to copy it, hint messages take the hint copy message format
     - Can change how some messages get displayed in the settings -> text client
   - Circle Tracker
     - Uses [Universal Tracker](https://discord.com/channels/731205301247803413/1367270230635839539) to display locations in order based on the order of items received for any connected slot
+    - Has Next Progression support (calculates after all the circles are done)
     - Disclaimer: this is NOT a sphere tracker
     - Displays any hinted items next to the location
     - Moves priority hinted locations to the top of a circle
@@ -66,11 +69,13 @@
   - Can sort hints based on multiple columns
   - Sort order is saved
   - Can view cached hints from other slots (can change: all/logged in slots/'leader' only slot)
-  - Change visibility settings for specific kinds of hints (found/priority/unspecified/no priority/avoid)
+  - Can Change visibility settings for specific kinds of hints (found/priority/unspecified/no priority/avoid)
+  - Can Hide/Show specific hints
   - Can copy a hint into your clipboard with a click of a button
   - Can change how a hint gets copied in the settings -> hints
 - Utilities
   - Displays inventory (view an item to see who sent you those items)
+    - Has sorting and some filtering capabilities
   - Can view the history of all items received (based on the order you received them)
   - View all items in your game, clicking on one gives you a hint prompt
   - View all missing locations in your game, click on one gives you a hint location prompt
@@ -79,6 +84,9 @@
   - Can display check counts when !status is used (there is a button that does !status for you)
   - Displays a fading + when a slot checks a location
   - Hovering hover a name will show their game
+  - Add a hydra specific Alias
+  - Add a copy specific Alias that only appears when copying a message
+  - Can change how the above aliases behave when copying 
 - Item Filter
   - Clicking on an item (almost anywhere) or the `Add Filter` button in the settings -> Item Filter opens up a popup to add an item filter
   - If an item was clicked, it will autofill the information
@@ -102,6 +110,10 @@
 
 ## Extra Info
 
+- Portable Functionality
+  - Rename `HydraTextClient` to `HydraTextClient_Portable` to enable
+  - forces all save data to be same folder as the executable
+  - disables custom assets loading
 - Custom Assets image overrides
   - this feature allows you to override/add item images for a game's items
   - the format follows the same as Custom Assets does so hydra can be used to test them before merging

@@ -25,11 +25,12 @@ public partial class MainController : Control
     [Export] private PackedScene ErrorWindow;
     [Export] private PackedScene ItemFilterWindow;
     [Export] private PackedScene ItemFilterDisplay;
+    [Export] private PackedScene AutoUpdater;
+    [Export] private PackedScene ConfirmDialogue;
     [Export] private LoggerLabel GDLogger;
     [Export] private TextureRect BackgroundImage;
     [Export] private SettingsPorter Porter;
     [Export] private TabContainer MainContainer;
-    [Export] private PackedScene AutoUpdater;
     [Export, ExportGroup("Debug")] private PackedScene VersioningHelper;
 
     private ErrorDialog ErrorDialog;
@@ -167,6 +168,16 @@ public partial class MainController : Control
         GD.PrintErr(error);
     }
 
+    public static void ShowConfirm(string title, string msg, Action yes) => Singleton.CreateConfirmWindow(title, msg, yes);
+    
+    public void CreateConfirmWindow(string title, string msg, Action yes, Action? no = null)
+    {
+        var window = ConfirmDialogue.Instantiate<ConfirmWindow>();
+        CallDeferred("add_child", window);
+        window.OnTop = true;
+        window.Setup(title, msg, yes, no);
+    }
+    
     public static void ShowItemFilter() => Singleton.CallDeferred("CreateItemFilterDialogue", (string[])["", "", "0"]);
     public static void ShowItemFilter(string[] args) => Singleton.CallDeferred("CreateItemFilterDialogue", args);
 

@@ -7,7 +7,9 @@ using Godot;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility.Loaders;
+using HydraTextClient.Scripts.Utility.Popups;
 using HydraTextClient.Scripts.Utility.UIHelpers;
+using HttpClient = System.Net.Http.HttpClient;
 
 namespace HydraTextClient.Scripts.Clients.CircleTracker;
 
@@ -61,15 +63,7 @@ public partial class CircleTracker : Control
             return false;
         }
 
-        if (!DoesApWorldExist(apDir, "HydraUTBridge", out var bridgeLoc)) return false;
-
-        if (ExternalAppController.GetFileSha(bridgeLoc) != HydraUTBridgeFileHash)
-        {
-            MainController.ShowError("HydraUTBridge.apworld version is not compatible with the current Hydra version");
-            return false;
-        }
-
-        if (!DoesApWorldExist(apDir, "tracker", out _)) return false;
+        if (!DoesApWorldExist(apDir, "tracker", true, out _)) return false;
 
         var page = TrackerScene.Instantiate<TrackerPage>();
         HydraBridgeEntry entry;
@@ -99,6 +93,23 @@ public partial class CircleTracker : Control
             return false;
         }
 
+        var downloadBridge = () => DownloadUTBridge($"{apDir}/custom_worlds/HydraUTBridge.apworld");
+        if (!DoesApWorldExist(apDir, "HydraUTBridge", false, out var bridgeLoc))
+        {
+            MainController.ShowConfirm(
+                "HydraUTBridge.apworld does not exist", "HydraUTBridge.apworld does not exist\nWould you like hydra to download it?", downloadBridge
+            );
+            return false;
+        }
+
+        if (ExternalAppController.GetFileSha(bridgeLoc) != HydraUTBridgeFileHash)
+        {
+            MainController.ShowConfirm(
+                "HydraUTBridge.apworld version isn't compatible", "HydraUTBridge.apworld version isn't compatible\nWould you like hydra to update it?", downloadBridge
+            );
+            return false;
+        }
+
         page.OnStopCalled += () =>
         {
             if (Pages.Remove(name, out var node)) PageContainer.CallDeferred("remove_child", node);
@@ -110,7 +121,7 @@ public partial class CircleTracker : Control
         return true;
     }
 
-    public bool DoesApWorldExist(string apDir, string world, out string path)
+    public bool DoesApWorldExist(string apDir, string world, bool show404Error, out string path)
     {
         var custom = $"{apDir}/custom_worlds/{world}.apworld";
         var lib = $"{apDir}/lib/worlds/{world}.apworld";
@@ -121,10 +132,32 @@ public partial class CircleTracker : Control
             path = worldInLibWorlds ? lib : custom;
             return true;
         }
-        MainController.ShowError(
-            worldInWorlds ? "Duplicate ApWorld in ./custom_worlds and ./lib/worlds" : $"ApWorld [{world}] not found"
-        );
+        if (show404Error && !worldInWorlds || worldInLibWorlds)
+        {
+            MainController.ShowError(
+                worldInWorlds ? "Duplicate ApWorld in ./custom_worlds and ./lib/worlds" : $"ApWorld [{world}] not found"
+            );
+        }
         path = "";
         return false;
+    }
+
+    public void DownloadUTBridge(string path)
+    {
+        var selfFile = System.Environment.ProcessPath;
+        if (Path.GetFileNameWithoutExtension(selfFile)!.ToLower() is "godot") return;
+
+        try
+        {
+            HttpClient client = new();
+            var response = client.GetByteArrayAsync(
+                                      $"{AutoUpdater.GithubReleasesPath}{MainController.GetVersion()}/HydraUTBridge.apworld"
+                                  )
+                                 .GetAwaiter().GetResult();
+
+            if (File.Exists(path)) File.Delete(path);
+            File.WriteAllBytes(path!, response);
+        }
+        catch (Exception e) { MainController.ShowError(e); }
     }
 }

@@ -121,12 +121,18 @@ public partial class MainController : Control
 
     public void LoadBackgroundImage(string path)
     {
-        if (path is "" || !File.Exists(path))
+        if (path.Trim() is "" || !File.Exists(path))
         {
             BackgroundImage.Visible = false;
             return;
         }
-        BackgroundImage.Texture = ImageTexture.CreateFromImage(Image.LoadFromFile(path));
+        var image = ImageTexture.CreateFromImage(Image.LoadFromFile(path));
+        if (image is null)
+        {
+            BackgroundImage.Visible = false;
+            return;
+        }
+        BackgroundImage.Texture = image;
         BackgroundImage.Visible = true;
     }
 

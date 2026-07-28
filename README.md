@@ -39,7 +39,7 @@
       - if {{mw}} is at the front then the process will only close when you disconnect all slots from the multiworld
       - if {{hydra}} is at the front then the process will only close when hydra closes
       - this runs using C#'s Process
-      - ex: {{ap}}/ArchipelagoLauncher.exe "universal tracker" {{add}} {{port}} {{slot}}
+      - ex: {{ap}}/ArchipelagoLauncher.exe "Universal Tracker" --  --name {{slot}} --connect {{add}}:{{port}}
   - Change the scale of the slot name text and portrait
   - Can have up to 7 slots connected at a time
     - The first Client that connects is designated as the 'Leader' client

@@ -47,6 +47,7 @@ public partial class SlotPortrait : TextureRect
     private Tween FontSizeTween;
     private Tween ScaleTween;
     private ConcurrentBag<int> ProcessIds = [];
+    private ConnectionStatus CurrentStatus = ConnectionStatus.NotConnected;
 
     public override void _Ready()
     {
@@ -114,11 +115,8 @@ public partial class SlotPortrait : TextureRect
                         if (id is -1 or 404) return;
                         switch (((ReadOnlyEntry)entry).Context)
                         {
-                            case "{{mw}}":
-                                ConnectionController.ProcessIds.Add(id);
-                                break;
-                            case "{{hydra}}":
-                                break;
+                            case "{{mw}}": ConnectionController.ProcessIds.Add(id); break;
+                            case "{{hydra}}": break;
                             default: ProcessIds.Add(id); break;
                         }
                     }
@@ -191,7 +189,9 @@ public partial class SlotPortrait : TextureRect
         switch (button.ButtonIndex)
         {
             case MouseButton.Left: EmitSignalOnPortraitLeftClicked(SlotName); break;
-            case MouseButton.Right: EmitSignalOnPortraitRightClicked(SlotName); break;
+            case MouseButton.Right
+                when CurrentStatus is ConnectionStatus.NotConnected or ConnectionStatus.Error:
+                EmitSignalOnPortraitRightClicked(SlotName); break;
         }
     }
 

@@ -82,7 +82,8 @@ public partial class SlotPortrait : TextureRect
 
             var data = SaveType<SlotGameData>.Load(SlotName, null, false);
             if (data is null) return;
-            var commands = data.ProcessCommands.Select(command => command.Trim()).Where(command => command is not "")
+            var commands = data.ProcessCommands
+                               .Select(command => command.Trim()).Where(command => command is not "")
                                .Select(command => command.Replace("{{port}}", mw.Port).Replace("{{add}}", mw.Address)
                                                          .Replace(
                                                               "{{ap}}",

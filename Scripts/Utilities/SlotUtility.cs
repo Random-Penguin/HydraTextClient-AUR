@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
@@ -14,6 +15,7 @@ public partial class SlotUtility : HSplitContainer
     [Export] private PlayerInventory Inventory;
     [Export] private SearchingList ItemList;
     [Export] private SearchingList LocationList;
+    private Action<double> ItemListIconSize;
     private bool ShowUnobtainedItems;
     private ApClient Client;
 
@@ -21,9 +23,8 @@ public partial class SlotUtility : HSplitContainer
     {
         Client = client;
         var fontSize = (int)SaveType<double>.Load(GlobalThemeSettings.GlobalFontSize, 20d);
-        SaveType<double>.AddIndividualEvent(
-            GlobalThemeSettings.GlobalFontSize, d => ItemList.List.FixedIconSize = new Vector2I((int)d, (int)d)
-        );
+        ItemListIconSize = d => ItemList.List.FixedIconSize = new Vector2I((int)d, (int)d);
+        SaveType<double>.AddIndividualEvent(GlobalThemeSettings.GlobalFontSize, ItemListIconSize);
 
         client.OnLocationsChecked += locPack =>
         {
@@ -85,6 +86,7 @@ public partial class SlotUtility : HSplitContainer
 
     protected override void Dispose(bool disposing)
     {
+        SaveType<double>.RemoveIndividualEvent(GlobalThemeSettings.GlobalFontSize, ItemListIconSize);
         GameItemImageLoader.OnReload -= ItemList.RefreshList;
         Inventory.QueueFree();
     }

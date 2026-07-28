@@ -60,7 +60,7 @@ public partial class TrapLinkMessage : MessageScene
     public override string CopyText() => SaveType<string>.Load(SaveIdMessage, Default).CompileSimpleText(
         new Dictionary<string, string>
         {
-            ["player"] = PlayerSlot is -1 ? $"[hint=?]{Player}[/hint]" : PlayerEffect.PlayerName(PlayerSlot, true, out _),
+            ["player"] = PlayerSlot is -1 ? Player : PlayerEffect.PlayerName(PlayerSlot, true, out _),
             ["trap"] = Trap,
         }
     );

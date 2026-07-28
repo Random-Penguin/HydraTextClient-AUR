@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
-using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
@@ -19,7 +18,7 @@ public static class GlobalThemeSettings
 
     private static readonly string[] ImageFormats =
     [
-        "*.png", "*.jpg", "*.bmp", "*.dds", "*.exr", "*.jpeg", "*.tga", "*.svg", "*.svgz", "*.webp",
+        "*.png", "*.jpg", "*.bmp", "*.exr", "*.jpeg", "*.tga", "*.svg", "*.svgz",
     ];
 
     private static readonly string[] FontFormats =

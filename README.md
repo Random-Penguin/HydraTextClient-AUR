@@ -100,7 +100,7 @@
   - Change Color Themes
   - Import/Export Color themes from/to clipboard
   - Set Background image and alpha (transparency/opacity)
-    - Accepted formats: \*.png, \*.jpg, \*.bmp, \*.dds, \*.exr, \*.jpeg, \*.tga, \*.svg, \*.svgz, \*.webp 
+    - Accepted formats: \*.png, \*.jpg, \*.bmp, \*.exr, \*.jpeg, \*.tga, \*.svg, \*.svgz
   - Change some Font Sizes
   - Discord Rich Presence
 - Autoupdater

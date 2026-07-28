@@ -1,10 +1,11 @@
 ﻿using Godot;
+using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 
 public abstract partial class AnimatedMessageScene : MessageScene
 {
-    [Export] private float TextAnimationLength = 1;
+    public const string TextAnimationLength = "TextClient/TextAnimationLength";
 
     public IPrintableObj[] CompiledMessage;
     public IPrintableObj[] CompiledNameMessage;
@@ -21,7 +22,7 @@ public abstract partial class AnimatedMessageScene : MessageScene
         if (!RunAnimation) return;
         Tween = CreateTween();
         Tween.SetTrans(Tween.TransitionType.Bounce).SetEase(Tween.EaseType.Out);
-        Tween.TweenProperty(Message, "offset_transform_position", Vector2.Zero, 1.5)
+        Tween.TweenProperty(Message, "offset_transform_position", Vector2.Zero, SaveType<double>.Load(TextAnimationLength, 1.5f))
              .From(new Vector2(Message.Size.X * 2, 0));
         Tween.Parallel().TweenProperty(Message, "modulate:a", 1, 0);
         RunAnimation = false;

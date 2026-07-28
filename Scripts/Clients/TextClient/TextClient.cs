@@ -131,6 +131,15 @@ public partial class TextClient : Control
             tab =>
             {
                 tab
+                   .AddSpinBox(
+                        "Chat Message Animation Duration (sec)", AnimatedMessageScene.TextAnimationLength, 1.5f, 0, box =>
+                        {
+                            box.Step = .01f;
+                            box.AllowGreater = true;
+                            box.MinValue = 0;
+                        }
+                    )
+                   .AddSeparator()
                    .AddCheckBox("Show Timestamps", ShowTimestamps, true)
                    .AddCheckBox("Show Game Portraits", ShowGamePortraits, true)
                    .AddCheckBox("Hide Item Fallback Image", ItemEffect.FallbackSaveId)

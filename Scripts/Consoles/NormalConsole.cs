@@ -29,7 +29,7 @@ public partial class NormalConsole : RichTextLabel
         SelectionEnabled = true;
         SaveType<double>.AddIndividualEvent(ChildLimiter.QueueSaveId, SetLimit);
     }
-
+    
     private void SetLimit(double d)
     {
         Messages.SetLimit((int)d);

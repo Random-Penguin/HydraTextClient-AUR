@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using HydraTextClient.Scripts.Consoles;
+using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Controllers;
 
@@ -14,9 +17,8 @@ public partial class ConsoleController : TabContainer
 	public override void _Ready()
 	{
 		Singleton = this;
-		ConnectionController.OnClientConnection += (name, _, _) =>
+		ConnectionController.OnClientConnection += (name, client, _) =>
 		{
-			GD.Print($"Adding Console: [{name}]");
 			if (Consoles.ContainsKey(name)) return;
 			var cons = NormalConsoleLabel.Instantiate<NormalConsole>();
 			cons.Name = $"Slot {name}";

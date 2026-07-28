@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
@@ -96,29 +97,36 @@ public partial class TextClient : Control
 
         ConnectionController.OnClientPrepareConnection += (_, client, _, _) =>
         {
-            client.ExcludeBouncedPacketsFromSelf = false;
-            client.OnChatPrintPacketReceived += packet => Enqueue(MessageType.ClientMessage, packet);
-            client.OnItemLogPacketReceived += packet => Enqueue(MessageType.ItemLog, packet);
-            client.OnItemCheatLogPacketReceived += packet => Enqueue(MessageType.ItemCheatLog, packet);
-            client.OnServerMessagePacketReceived += packet => Enqueue(MessageType.ServerMessage, packet);
-            client.OnHintPrintJsonPacketReceived += packet => Enqueue(MessageType.HintMessage, packet);
-            client.OnCommandResult += packet => Enqueue(MessageType.CommandResult, packet);
-            client.OnJoinLogPacketReceived += packet => Enqueue(MessageType.JoinMessage, packet);
-            client.OnLeaveLogPacketReceived += packet => Enqueue(MessageType.LeaveMessage, packet);
-            client.OnTagsChangedLogPacketReceived += packet => Enqueue(MessageType.TagsChangedMessage, packet);
-            client.OnGoalPrintJsonPacketReceived += packet => Enqueue(MessageType.GoalMessage, packet);
-            client.OnPrintJsonPacketReceived += packet => Enqueue(MessageType.ServerMessage, packet);
-            client.OnDeathLinkPacketReceived += (groups, player, message) =>
+            try
             {
-                if (ConnectionController.LeaderClient! != client) return;
-                MessageQueue.Enqueue(new DeathLinkPacket(groups, player, message));
-            };
-            client.OnUnregisteredTrapLinkReceived += (player, trap) =>
+                client.ExcludeBouncedPacketsFromSelf = false;
+                client.OnChatPrintPacketReceived += packet => Enqueue(MessageType.ClientMessage, packet);
+                client.OnItemLogPacketReceived += packet => Enqueue(MessageType.ItemLog, packet);
+                client.OnItemCheatLogPacketReceived += packet => Enqueue(MessageType.ItemCheatLog, packet);
+                client.OnServerMessagePacketReceived += packet => Enqueue(MessageType.ServerMessage, packet);
+                client.OnHintPrintJsonPacketReceived += packet => Enqueue(MessageType.HintMessage, packet);
+                client.OnCommandResult += packet => Enqueue(MessageType.CommandResult, packet);
+                client.OnJoinLogPacketReceived += packet => Enqueue(MessageType.JoinMessage, packet);
+                client.OnLeaveLogPacketReceived += packet => Enqueue(MessageType.LeaveMessage, packet);
+                client.OnTagsChangedLogPacketReceived += packet => Enqueue(MessageType.TagsChangedMessage, packet);
+                client.OnGoalPrintJsonPacketReceived += packet => Enqueue(MessageType.GoalMessage, packet);
+                client.OnPrintJsonPacketReceived += packet => Enqueue(MessageType.ServerMessage, packet);
+                client.OnDeathLinkPacketReceived += (groups, player, message) =>
+                {
+                    if (ConnectionController.LeaderClient! != client) return;
+                    MessageQueue.Enqueue(new DeathLinkPacket(groups, player, message));
+                };
+                client.OnUnregisteredTrapLinkReceived += (player, trap) =>
+                {
+                    if (ConnectionController.LeaderClient! != client) return;
+                    MessageQueue.Enqueue(new TrapLinkPacket(player, trap));
+                };
+                // client.OnUnhandledPacketReceived += packet => { };
+            }
+            catch (Exception e)
             {
-                if (ConnectionController.LeaderClient! != client) return;
-                MessageQueue.Enqueue(new TrapLinkPacket(player, trap));
-            };
-            // client.OnUnhandledPacketReceived += packet => { };
+                MainController.ShowError("Error with setting up client data", e);
+            }
         };
 
         SettingsCreator.Tab(
@@ -202,8 +210,8 @@ public partial class TextClient : Control
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.Advancement)
                 && !SaveType<bool>.Load(ShowProgressive, true)) return;
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.NeverExclude) && !SaveType<bool>.Load(ShowUseful, true)) return;
-            if (itemPacket.Item.Flags.HasFlag(ItemFlags.None) && !SaveType<bool>.Load(ShowNormal, true)) return;
             if (itemPacket.Item.Flags.HasFlag(ItemFlags.Trap) && !SaveType<bool>.Load(ShowTrap, true)) return;
+            if (itemPacket.Item.Flags is ItemFlags.None && !SaveType<bool>.Load(ShowNormal, true)) return;
             var leader = ConnectionController.LeaderClient!;
             var receiver = leader.PlayerNames[itemPacket.ReceivingPlayer];
             var finder = leader.PlayerNames[itemPacket.FindingPlayer];

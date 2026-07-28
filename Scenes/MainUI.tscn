@@ -50,7 +50,7 @@ size_flags_vertical = 3
 theme = ExtResource("1_yd0xa")
 theme_override_styles/panel = SubResource("StyleBoxFlat_yd0xa")
 script = ExtResource("1_8dqd8")
-VersionNumber = "v0.6.2"
+VersionNumber = "v0.6.3"
 ErrorWindow = ExtResource("8_uwgue")
 ItemFilterWindow = ExtResource("4_p6tld")
 ItemFilterDisplay = ExtResource("5_dc4qw")
@@ -127,7 +127,8 @@ Containers = {
 9: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
 10: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
 11: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
-12: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
+12: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+13: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
 }
 metadata/_tab_index = 0
 

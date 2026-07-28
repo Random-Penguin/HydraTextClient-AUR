@@ -312,4 +312,5 @@ public partial class ConnectionController : Control
     }
 
     public static bool IsLeaderClient(string client) => Singleton.Clients[0] == client;
+    public static void ForceDataClear() => DataClearCall?.Invoke();
 }

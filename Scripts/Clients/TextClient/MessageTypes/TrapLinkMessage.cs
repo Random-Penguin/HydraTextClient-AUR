@@ -39,7 +39,7 @@ public partial class TrapLinkMessage : MessageScene
 
         CachedReplacement = new Dictionary<string, string>
         {
-            ["player"] = PlayerSlot is -1 ? $"[hint=?]{Player}[/hint]" : $"{{{{player;{PlayerSlot}}}}}",
+            ["player"] = PlayerSlot is -1 ?Player : $"{{{{player;{PlayerSlot}}}}}",
             ["trap"] = Trap,
         };
 

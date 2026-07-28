@@ -199,11 +199,11 @@ public partial class SlotPortrait : TextureRect
 
     private void TweenStatus(int intStatus)
     {
-        var status = (ConnectionStatus)intStatus;
+        CurrentStatus = (ConnectionStatus)intStatus;
         ColorTween?.Kill();
         ColorTween = CreateTween();
         ColorTween.SetTrans(Tween.TransitionType.Circ).SetEase(Tween.EaseType.Out);
-        switch (status)
+        switch (CurrentStatus)
         {
             case ConnectionStatus.Connecting:
                 ColorTween.TweenProperty(Tinter, "color", ConnectingTint, 1);
@@ -214,7 +214,7 @@ public partial class SlotPortrait : TextureRect
             case ConnectionStatus.NotConnected or ConnectionStatus.Connected or ConnectionStatus.Error:
                 ColorTween.TweenProperty(
                     Tinter, "color",
-                    status switch
+                    CurrentStatus switch
                     {
                         ConnectionStatus.NotConnected => IdleTint, ConnectionStatus.Connected => ConnectedTint,
                         ConnectionStatus.Error => ErrorTint,

@@ -39,7 +39,8 @@ Containers = {
 9: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
 10: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
 11: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
-12: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
+12: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit"),
+13: NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")
 }
 MessageScenes = Dictionary[int, PackedScene]({
 1: ExtResource("2_8nh8t"),
@@ -53,7 +54,8 @@ MessageScenes = Dictionary[int, PackedScene]({
 9: ExtResource("10_bcay1"),
 10: ExtResource("12_jucmm"),
 11: ExtResource("13_r31ss"),
-12: ExtResource("14_q866f")
+12: ExtResource("14_q866f"),
+13: ExtResource("5_tmo5f")
 })
 ScrollFixes = [NodePath("TabContainer/All/AllScroll"), NodePath("TabContainer/Chat Only/ChatOnlyScroll"), NodePath("TabContainer/Item Only/ItemOnlyScroll"), NodePath("TabContainer/Hint Only/HintOnlyScroll"), NodePath("TabContainer/Server Only/ServerOnlyScroll")]
 UniqueLimiters = [NodePath("TabContainer/All/AllScroll/MarginContainer/AllLimiter"), NodePath("TabContainer/Chat Only/ChatOnlyScroll/MarginContainer2/ChatLimiter"), NodePath("TabContainer/Item Only/ItemOnlyScroll/MarginContainer3/ItemLimiter"), NodePath("TabContainer/Hint Only/HintOnlyScroll/MarginContainer4/HintLimiter"), NodePath("TabContainer/Server Only/ServerOnlyScroll/MarginContainer5/ServerLimit")]

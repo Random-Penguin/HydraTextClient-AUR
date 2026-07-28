@@ -42,6 +42,20 @@ public partial class TextClient : Control
     private bool WasLastMessageHintLocation = false;
     private string HeldText;
 
+    private Dictionary<MessageType, string> MessageTypeSendSaveIds = new()
+    {
+        [MessageType.ClientMessage] = "TextClient/Sep/ClientMessage", [MessageType.ItemLog] = "TextClient/Sep/ItemLog",
+        [MessageType.ItemCheatLog] = "TextClient/Sep/ItemCheatLog",
+        [MessageType.ServerMessage] = "TextClient/Sep/ServerMessage",
+        [MessageType.HintMessage] = "TextClient/Sep/HintMessage",
+        [MessageType.CommandResult] = "TextClient/Sep/CommandResult",
+        [MessageType.JoinMessage] = "TextClient/Sep/JoinMessage",
+        [MessageType.LeaveMessage] = "TextClient/Sep/LeaveMessage",
+        [MessageType.TagsChangedMessage] = "TextClient/Sep/TagsChangedMessage",
+        [MessageType.GoalMessage] = "TextClient/Sep/GoalMessage", [MessageType.DeathLink] = "TextClient/Sep/DeathLink",
+        [MessageType.TrapLink] = "TextClient/Sep/TrapLink", [MessageType.PrintJson] = "TextClient/Sep/PrintJson",
+    };
+
     private static ConcurrentQueue<IMessagePacket> MessageQueue = [];
     private LimitedCollection<string> SentMessageHistory = new(50);
 
@@ -110,7 +124,7 @@ public partial class TextClient : Control
                 client.OnLeaveLogPacketReceived += packet => Enqueue(MessageType.LeaveMessage, packet);
                 client.OnTagsChangedLogPacketReceived += packet => Enqueue(MessageType.TagsChangedMessage, packet);
                 client.OnGoalPrintJsonPacketReceived += packet => Enqueue(MessageType.GoalMessage, packet);
-                client.OnPrintJsonPacketReceived += packet => Enqueue(MessageType.ServerMessage, packet);
+                client.OnPrintJsonPacketReceived += packet => Enqueue(MessageType.PrintJson, packet);
                 client.OnDeathLinkPacketReceived += (groups, player, message) =>
                 {
                     if (ConnectionController.LeaderClient! != client) return;
@@ -132,7 +146,8 @@ public partial class TextClient : Control
             {
                 tab
                    .AddSpinBox(
-                        "Chat Message Animation Duration (sec)", AnimatedMessageScene.TextAnimationLength, 1.5f, 0, box =>
+                        "Chat Message Animation Duration (sec)", AnimatedMessageScene.TextAnimationLength, 1.5f, 0, box
+                            =>
                         {
                             box.Step = .01f;
                             box.AllowGreater = true;
@@ -191,9 +206,51 @@ public partial class TextClient : Control
                         PlayerEffect.HintAlias
                     )
                    .AddSeparator()
-                   .AddLineEdit("Item Text", ItemEffect.SaveId, ItemEffect.Default, ItemEffect.Hint);
+                   .AddLineEdit("Item Text", ItemEffect.SaveId, ItemEffect.Default, ItemEffect.Hint)
+                   .AddCheckBox(
+                        "Send Chat Messages In All Tab", MessageTypeSendSaveIds[MessageType.ClientMessage], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Item Log Messages In All Tab", MessageTypeSendSaveIds[MessageType.ItemLog], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Item Cheat Log Messages In All Tab", MessageTypeSendSaveIds[MessageType.ItemCheatLog],
+                        true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Server Messages In All Tab", MessageTypeSendSaveIds[MessageType.ServerMessage], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Hint Messages In All Tab", MessageTypeSendSaveIds[MessageType.HintMessage], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Command Results In All Tab", MessageTypeSendSaveIds[MessageType.CommandResult], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Join Messages In All Tab", MessageTypeSendSaveIds[MessageType.JoinMessage], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Leave Messages In All Tab", MessageTypeSendSaveIds[MessageType.LeaveMessage], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Tags Changed Messages In All Tab", MessageTypeSendSaveIds[MessageType.TagsChangedMessage],
+                        true, 1
+                    )
+                   .AddCheckBox(
+                        "Send Goal Messages In All Tab", MessageTypeSendSaveIds[MessageType.GoalMessage], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send DeathLink Messages In All Tab", MessageTypeSendSaveIds[MessageType.DeathLink], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send TrapLink Messages In All Tab", MessageTypeSendSaveIds[MessageType.TrapLink], true, 1
+                    )
+                   .AddCheckBox(
+                        "Send PrintJson Messages In All Tab", MessageTypeSendSaveIds[MessageType.PrintJson], true, 1
+                    );
             }
         );
+
 
         ConnectionController.DataClearCall += () => CallDeferred("RemoveMessages");
     }
@@ -242,15 +299,17 @@ public partial class TextClient : Control
 
         if (!MessageScenes.TryGetValue(messagePacket.GetMsgType(), out var scene)) return;
 
-        var msgScene1 = scene.Instantiate<MessageScene>();
-        var msgScene2 = scene.Instantiate<MessageScene>();
-        msgScene1.SetPacket(messagePacket);
-        msgScene2.SetPacket(messagePacket);
-        msgScene1.TimeStamp.Text = messagePacket.GetTimestamp();
-        msgScene2.TimeStamp.Text = messagePacket.GetTimestamp();
+        if (SaveType<bool>.Load(MessageTypeSendSaveIds[messagePacket.GetMsgType()], true))
+            SendMessage(scene, messagePacket, MessageType.All);
+        SendMessage(scene, messagePacket, messagePacket.GetMsgType());
+    }
 
-        if (Containers.TryGetValue(MessageType.All, out var allContainer)) allContainer.AddToLimiter(msgScene1);
-        if (Containers.TryGetValue(messagePacket.GetMsgType(), out var container)) container.AddToLimiter(msgScene2);
+    private void SendMessage(PackedScene scene, IMessagePacket messagePacket, MessageType containerType)
+    {
+        var msgScene = scene.Instantiate<MessageScene>();
+        msgScene.SetPacket(messagePacket);
+        msgScene.TimeStamp.Text = messagePacket.GetTimestamp();
+        if (Containers.TryGetValue(containerType, out var allContainer)) allContainer.AddToLimiter(msgScene);
     }
 
     public void Enqueue(MessageType type, ArchipelagoPacketBase packet)
@@ -290,7 +349,7 @@ public enum MessageType
     ItemCheatLog, ServerMessage, HintMessage,
     CommandResult, JoinMessage, LeaveMessage,
     TagsChangedMessage, GoalMessage, DeathLink,
-    TrapLink,
+    TrapLink, PrintJson,
 }
 
 public readonly struct DeathLinkPacket(string[] group, string player, string? cause) : IMessagePacket

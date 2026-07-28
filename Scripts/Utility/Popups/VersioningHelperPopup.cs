@@ -55,7 +55,7 @@ public partial class VersioningHelperPopup : WindowSetter
             files.ToDictionary(ExternalAppController.GetFileSha, file => FileTypes[Path.GetFileName(file)])
         );
 
-        VersionInfos.RemoveAll(ver => ver.ExtVersion == newInfo.ExtVersion);
+        VersionInfos.RemoveAll(ver => ver == newInfo);
         VersionInfos.Add(newInfo);
         File.WriteAllText(JsonPath, JsonConvert.SerializeObject(VersionInfos));
         DisplayServer.ClipboardSet(string.Join('\n', newInfo.Content));

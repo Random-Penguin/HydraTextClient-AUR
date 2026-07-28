@@ -17,7 +17,7 @@ public partial class ConsoleController : TabContainer
 	public override void _Ready()
 	{
 		Singleton = this;
-		ConnectionController.OnClientConnection += (name, client, _) =>
+		ConnectionController.OnClientConnection += (name, _, _) =>
 		{
 			if (Consoles.ContainsKey(name)) return;
 			var cons = NormalConsoleLabel.Instantiate<NormalConsole>();

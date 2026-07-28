@@ -109,11 +109,10 @@ metadata/_tab_index = 1
 visible = false
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 1
+current_tab = 0
 metadata/_tab_index = 1
 
 [node name="Text Client" parent="Main Container/Clients" unique_id=763075218 node_paths=PackedStringArray("Containers") instance=ExtResource("2_3ngb3")]
-visible = false
 layout_mode = 2
 Containers = {
 0: NodePath("TabContainer/All/AllScroll/MarginContainer/AllLimiter"),
@@ -133,6 +132,7 @@ Containers = {
 metadata/_tab_index = 0
 
 [node name="Circle Tracker" parent="Main Container/Clients" unique_id=1192745647 instance=ExtResource("13_ncyvy")]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 

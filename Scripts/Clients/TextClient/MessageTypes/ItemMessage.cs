@@ -83,7 +83,7 @@ public partial class ItemMessage : MessageScene
     {
         var isAdvancement = Flags.HasFlag(ItemFlags.Advancement);
         var isNeverExclude = Flags.HasFlag(ItemFlags.NeverExclude) && !Flags.HasFlag(ItemFlags.Advancement);
-        var isTrap = Flags.HasFlag(ItemFlags.Trap);
+        var isTrap = Flags.HasFlag(ItemFlags.Trap) && !Flags.HasFlag(ItemFlags.Advancement);
         var isNormal = Flags is ItemFlags.None;
 
         var showAdvancement = SaveType<bool>.Load(ShowProgressive, true) && isAdvancement;

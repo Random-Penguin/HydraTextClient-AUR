@@ -205,11 +205,19 @@ public partial class TextClient : Control
         {
             if (SaveType<FilterType>.TryGet(itemPacket.UID, out var filter) && !filter.ShowInItemLog) return;
             var flags = itemPacket.Item.Flags;
-            if (flags.HasFlag(ItemFlags.Advancement) && !SaveType<bool>.Load(ShowProgressive, true)) return;
-            if (flags.HasFlag(ItemFlags.NeverExclude) && !flags.HasFlag(ItemFlags.Advancement)
-                                                      && !SaveType<bool>.Load(ShowUseful, true)) return;
-            if (flags.HasFlag(ItemFlags.Trap) && !SaveType<bool>.Load(ShowTrap, true)) return;
-            if (flags is ItemFlags.None && !SaveType<bool>.Load(ShowNormal, true)) return;
+            if (flags.HasFlag(ItemFlags.Advancement))
+            {
+                if (!SaveType<bool>.Load(ShowProgressive, true)) return;
+            }
+            else if (flags.HasFlag(ItemFlags.NeverExclude))
+            {
+                if (!SaveType<bool>.Load(ShowUseful, true)) return;
+            }
+            else if (flags.HasFlag(ItemFlags.Trap))
+            {
+                if (!SaveType<bool>.Load(ShowTrap, true)) return;
+            }
+            else if (flags is ItemFlags.None && !SaveType<bool>.Load(ShowNormal, true)) return;
             var leader = ConnectionController.LeaderClient!;
             var receiver = leader.PlayerNames[itemPacket.ReceivingPlayer];
             var finder = leader.PlayerNames[itemPacket.FindingPlayer];

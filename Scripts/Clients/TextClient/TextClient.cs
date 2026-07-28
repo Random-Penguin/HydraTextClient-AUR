@@ -123,10 +123,7 @@ public partial class TextClient : Control
                 };
                 // client.OnUnhandledPacketReceived += packet => { };
             }
-            catch (Exception e)
-            {
-                MainController.ShowError("Error with setting up client data", e);
-            }
+            catch (Exception e) { MainController.ShowError("Error with setting up client data", e); }
         };
 
         SettingsCreator.Tab(
@@ -207,11 +204,12 @@ public partial class TextClient : Control
             && messagePacket.GetPacket() is ItemPrintJsonPacket itemPacket)
         {
             if (SaveType<FilterType>.TryGet(itemPacket.UID, out var filter) && !filter.ShowInItemLog) return;
-            if (itemPacket.Item.Flags.HasFlag(ItemFlags.Advancement)
-                && !SaveType<bool>.Load(ShowProgressive, true)) return;
-            if (itemPacket.Item.Flags.HasFlag(ItemFlags.NeverExclude) && !SaveType<bool>.Load(ShowUseful, true)) return;
-            if (itemPacket.Item.Flags.HasFlag(ItemFlags.Trap) && !SaveType<bool>.Load(ShowTrap, true)) return;
-            if (itemPacket.Item.Flags is ItemFlags.None && !SaveType<bool>.Load(ShowNormal, true)) return;
+            var flags = itemPacket.Item.Flags;
+            if (flags.HasFlag(ItemFlags.Advancement) && !SaveType<bool>.Load(ShowProgressive, true)) return;
+            if (flags.HasFlag(ItemFlags.NeverExclude) && !flags.HasFlag(ItemFlags.Advancement)
+                                                      && !SaveType<bool>.Load(ShowUseful, true)) return;
+            if (flags.HasFlag(ItemFlags.Trap) && !SaveType<bool>.Load(ShowTrap, true)) return;
+            if (flags is ItemFlags.None && !SaveType<bool>.Load(ShowNormal, true)) return;
             var leader = ConnectionController.LeaderClient!;
             var receiver = leader.PlayerNames[itemPacket.ReceivingPlayer];
             var finder = leader.PlayerNames[itemPacket.FindingPlayer];

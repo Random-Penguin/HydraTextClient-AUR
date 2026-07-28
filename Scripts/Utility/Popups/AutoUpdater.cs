@@ -56,8 +56,8 @@ public partial class AutoUpdater : WindowSetter
 
     public bool CanRunUpdater()
     {
-        // var selfFile = System.Environment.ProcessPath;
-        // if (Path.GetFileNameWithoutExtension(selfFile)!.ToLower() is "godot") return false;
+        var selfFile = System.Environment.ProcessPath;
+        if (Path.GetFileNameWithoutExtension(selfFile)!.ToLower() is "godot") return false;
 
         Client = new HttpClient();
         using var response = Client.GetAsync(GithubVersionPath).GetAwaiter().GetResult();

@@ -6,6 +6,7 @@ using System.Text;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 
 namespace HydraTextClient.Scripts.Utility.UIHelpers;
@@ -109,6 +110,7 @@ public abstract partial class TextTable : RichLabelInteractions
     public abstract void RefreshUi(bool recompile);
     public void QueueUiRefresh(bool recompile) => QueueRefreshUi.Add(recompile);
     public void CallReload() => QueueUiRefresh(false);
+    public void CallReload(HexColor _) => CallReload();
     public void CallReload(bool _) => CallReload();
     public void CallReload(string _) => CallReload();
     public void CallReload(double _) => CallReload();

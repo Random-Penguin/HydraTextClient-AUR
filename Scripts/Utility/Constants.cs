@@ -21,7 +21,7 @@ public static class ColorIdConstants
         [Unknown] = Colors.White, [Avoid] = Colors.OrangeRed, [Priority] = Colors.BlueViolet,
         [Unspecified] = Colors.NavajoWhite, [NoPriority] = Colors.CornflowerBlue, [EntranceColor] = Colors.Cyan,
         [UiBackground] = new Color("#2a2a2a"), [PopupBackground] = new Color("#2a2a2a"),
-        [TooltipColor] = Colors.Transparent,
+        [TooltipColor] = Colors.Transparent, [InLogic] = Colors.ForestGreen, [NotInLogic] = Colors.DarkRed,
     };
 
     public static Dictionary<ColorConstant, string> ConstantToId = new()
@@ -42,7 +42,8 @@ public static class ColorIdConstants
         [NotFoundColor] = "Theme/Ap/Colors/HintNotFoundColor", [FoundColor] = "Theme/Ap/Colors/HintFoundColor",
         [Unknown] = "UnknownColorConstant", [Avoid] = "Theme/Ap/Colors/HintAvoid",
         [Priority] = "Theme/Ap/Colors/HintPriority", [Unspecified] = "Theme/Ap/Colors/HintUnspecified",
-        [NoPriority] = "Theme/Ap/Colors/HintNoPriority", [EntranceColor] = "Theme/Ap/Colors/EntranceColor"
+        [NoPriority] = "Theme/Ap/Colors/HintNoPriority", [EntranceColor] = "Theme/Ap/Colors/EntranceColor",
+        [NotInLogic] = "Theme/Ap/Colors/OutofLogicColor", [InLogic] = "Theme/Ap/Colors/InLogicColor"
     };
 
     public static Dictionary<string, ColorConstant> IdToConstant = ConstantToId.ToDictionary(
@@ -61,7 +62,8 @@ public static class ColorIdConstants
         [UsefulItemBackgroundColor] = "Background Item (Useful)", [TrapItemBackgroundColor] = "Background Item (Trap)",
         [NormalItemBackgroundColor] = "Background Item (Normal)", [NotFoundColor] = "Hint 'Not Found'",
         [FoundColor] = "Hint 'Found'", [Unknown] = "???", [Avoid] = "Hint 'Avoid'", [Priority] = "Hint 'Priority'",
-        [Unspecified] = "Hint 'Unspecified'", [NoPriority] = "Hint 'No Priority'", [EntranceColor] = "Entrance",
+        [Unspecified] = "Hint 'Unspecified'", [NoPriority] = "Hint 'No Priority'", [InLogic] = "Hint In Logic",
+        [NotInLogic] = "Hint Not in Logic", [EntranceColor] = "Entrance",
     };
 
     public static void CreateSettings()
@@ -88,6 +90,7 @@ public static class ColorIdConstants
         UsefulItemBackgroundColor, TrapItemBackgroundColor, NormalItemBackgroundColor,
         LocationColor, EntranceColor, NotFoundColor,
         FoundColor, Priority, Unspecified,
-        NoPriority, Avoid,
+        NoPriority, Avoid, InLogic,
+        NotInLogic,
     }
 }

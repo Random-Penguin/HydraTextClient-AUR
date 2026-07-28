@@ -16,16 +16,19 @@ namespace HydraTextClient.Scripts.Clients.CircleTracker;
 public partial class CircleTracker : Control
 {
     private const string HydraUTBridgeFileHash = "A0C83298DBC2D2D6B84BA7032C15A7FE0F7CC2E95872C7CF210E39B881AE3670";
+    public static CircleTracker Singleton;
+    public static event Action? OnTrackerUpdate;
     [Export] private PackedScene TrackerScene;
     [Export] private VBoxContainer ButtonContainer;
     [Export] private TabContainer PageContainer;
 
-    public Dictionary<string, ButtonAnimation> Buttons = [];
-    public Dictionary<string, TrackerPage> Pages = [];
-    public ConcurrentDictionary<string, ApClient> Clients = []; // easy access
+    private Dictionary<string, ButtonAnimation> Buttons = [];
+    public ConcurrentDictionary<string, TrackerPage> Pages = [];
+    private ConcurrentDictionary<string, ApClient> Clients = []; // easy access
 
     public override void _Ready()
     {
+        Singleton = this;
         ConnectionController.OnClientConnection += (name, client, _) => AddButton(name, client);
         ConnectionController.OnClientRemoved += (name, _, _) => RemoveButton(name);
     }
@@ -115,7 +118,7 @@ public partial class CircleTracker : Control
             if (Pages.Remove(name, out var node)) PageContainer.CallDeferred("remove_child", node);
             if (Buttons.TryGetValue(name, out var button)) button.Disabled = false;
         };
-        Pages.Add(name, page);
+        Pages.TryAdd(name, page);
         PageContainer.CallDeferred("add_child", page);
         page.Setup(name, Clients[name], entry);
         return true;
@@ -160,4 +163,6 @@ public partial class CircleTracker : Control
         }
         catch (Exception e) { MainController.ShowError(e); }
     }
+
+    public void SendTrackerNotify() => OnTrackerUpdate?.Invoke();
 }

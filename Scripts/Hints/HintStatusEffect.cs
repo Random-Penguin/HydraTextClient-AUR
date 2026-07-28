@@ -55,6 +55,7 @@ public class HintVisibilityEffect : MessageParserEffect
 {
     public override string Group => "hinttable";
     public override string Key => "vis";
+
     public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
     {
         if (args.Length < 2) return;
@@ -63,6 +64,29 @@ public class HintVisibilityEffect : MessageParserEffect
         label.PushMeta((int[])[int.Parse(args[1]), 0]);
         label.PushColor(state ? Colors.Red : Colors.LimeGreen);
         label.AddText(state ? "Hide" : "Show");
+        label.PopContext();
+    }
+}
+
+// {{log;type}}
+// 3 n/a
+// 2 unknown
+// 1 no
+// 0 yes
+public class LogicEffect : MessageParserEffect
+{
+    public override string Group => "hinttable";
+    public override string Key => "log";
+
+    public override void Effect(RichTextLabel label, string[] args, Action reloadFunction = null)
+    {
+        if (args.Length < 1) return;
+        var type = int.Parse(args[0]);
+        label.PushContext();
+        label.PushColor(
+            type switch { 0 => InLogic.Color(), 1 => NotInLogic.Color(), 2 => Colors.GhostWhite, _ => Colors.DarkGray, }
+        );
+        label.AddText(type switch { 0 => "In Logic", 1 => "Not in Logic", 2 => "Unknown", _ => "N/A", });
         label.PopContext();
     }
 }

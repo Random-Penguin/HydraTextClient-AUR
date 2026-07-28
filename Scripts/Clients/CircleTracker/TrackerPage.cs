@@ -10,6 +10,7 @@ using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
+using HydraTextClient.Scripts.Connection.Slots;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utilities.ItemFilter;
@@ -42,6 +43,7 @@ public partial class TrackerPage : Control
     private Action<string, bool> OnBoolSaveDataUpdated;
     private Action<string, FilterType> OnFilterDataUpdated;
     private HydraBridgeEntry Entry;
+    public ulong[] LocationsInLogic = [];  
 
     [Signal] public delegate void OnStopCalledEventHandler();
 
@@ -92,6 +94,7 @@ public partial class TrackerPage : Control
         {
             CompiledMessage = RenderCirclePage().CompileRichText(GetCompileEffects(), true);
             NextProgressionLabel.QueueUiRefresh(true);
+            CircleTracker.Singleton.SendTrackerNotify();
         }
 
         Label.ApplyCompiledPrintableObjs(CompiledMessage);
@@ -110,6 +113,7 @@ public partial class TrackerPage : Control
         var priority = localHints.Where(hint => hint.Status is HintStatus.Priority).Select(hint => hint.LocationId)
                                  .ToArray();
         var firstEnd = SaveType<bool>.Load(ShowFutureCircles, false);
+        LocationsInLogic = Circles.Values.SelectMany(arr => arr).ToArray();
 
         foreach (var circle in Circles.Keys.Order())
         {

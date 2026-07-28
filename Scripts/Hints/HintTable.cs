@@ -5,6 +5,7 @@ using System.Text;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
+using HydraTextClient.Scripts.Clients.CircleTracker;
 using HydraTextClient.Scripts.Clients.TextClient.MessageTypes;
 using HydraTextClient.Scripts.Clients.TextClient.ParserEffects;
 using HydraTextClient.Scripts.Connection.Slots;
@@ -12,6 +13,7 @@ using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utilities.ItemFilter;
 using HydraTextClient.Scripts.Utility;
+using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using HydraTextClient.Scripts.Utility.UtilityEffects;
@@ -38,7 +40,7 @@ public partial class HintTable : TextTable
                                """;
 
     public override string[] Columns
-        => ["", "", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"];
+        => ["", "", "Receiving Player", "Item", "Finding Player", "Priority", "In Logic", "Location", "Entrance"];
 
     public override long DataSize => SortedHints.Length;
 
@@ -61,9 +63,12 @@ public partial class HintTable : TextTable
         LocationEffect.OnUpdate += CallReload;
         PlayerEffect.OnUpdate += CallReload;
         HintStatusEffect.OnUpdate += CallReload;
+        CircleTracker.OnTrackerUpdate += () => QueueUiRefresh(true);
         SaveType<string>.AddIndividualEvents(
             CallReload, PlayerEffect.SaveIdNoAlias, PlayerEffect.SaveIdWithAlias, ItemEffect.SaveId
         );
+        SaveType<HexColor>.AddIndividualEvent(ColorIdConstants.ColorConstant.InLogic.SaveId(), CallReload);
+        SaveType<HexColor>.AddIndividualEvent(ColorIdConstants.ColorConstant.NotInLogic.SaveId(), CallReload);
         SaveType<bool>.AddIndividualEvent(ItemEffect.FallbackSaveId, CallReload);
         SaveType<FilterType>.OnSaveEvent += (_, _) => QueueUiRefresh(true);
         SaveType<FilterType>.OnDeleteEvent += (_, _) => QueueUiRefresh(true);
@@ -210,6 +215,7 @@ public partial class HintTable : TextTable
                     isFirst
                 ),
                 "Priority" => Order(current, hint => HintStatusNumber[hint.Status], option.IsDescending, isFirst),
+                "In Logic" => Order(current, InLogic, option.IsDescending, isFirst),
             };
         }
     }
@@ -219,7 +225,7 @@ public partial class HintTable : TextTable
     public override string GetColumnText(int columnNum)
     {
         var columnText = Columns[columnNum];
-        if (columnNum is < 2 or > 5) return columnText;
+        if (columnNum is < 2 or > 6) return columnText;
 
         StringBuilder sb = new();
         sb.Append("[url=\"sortorder_").Append(columnText).Append("\"]").Append(columnText);
@@ -250,8 +256,8 @@ public partial class HintTable : TextTable
             2 or 4 => $"{{{{player;{(col is 2 ? hint.ReceivingPlayer : hint.FindingPlayer)}}}}}",
             3 => hint.GetItemEffectText(), 5 =>
                 $"{{{{hintstatus;{hint.Status switch { Found => '4', NoPriority => '1', Avoid => '2', Priority => '3', _ => '0' }};{row};{ConnectionController.IsConnected(hint.ReceivingPlayer)}}}}}",
-            6 => $"{{{{loc;{hint.LocationId};{hint.FindingPlayer}}}}}", 7 => $"{{{{entrance;{hint.Entrance}}}}}",
-            _ => "Error",
+            6 => $"{{{{log;{InLogic(hint)}}}}}", 7 => $"{{{{loc;{hint.LocationId};{hint.FindingPlayer}}}}}",
+            8 => $"{{{{entrance;{hint.Entrance}}}}}", _ => "Error",
         };
     }
 
@@ -267,6 +273,14 @@ public partial class HintTable : TextTable
         var player = ConnectionController.LeaderClient!.PlayerNames[slot];
         if (ConnectionController.IsConnected(player)) return 3;
         return SlotView.ContainsSlot(player) ? 2 : 1;
+    }
+
+    public int InLogic(Hint hint)
+    {
+        PlayerEffect.PlayerName(hint.FindingPlayer, false, out var name);
+        if (!SlotView.ContainsSlot(name)) return 3;
+        if (!CircleTracker.Singleton.Pages.TryGetValue(name, out var page)) return 2;
+        return page.LocationsInLogic.Contains((ulong)hint.LocationId) ? 0 : 1;
     }
 
     public override void OnMetaClicked(string key, string[] text)

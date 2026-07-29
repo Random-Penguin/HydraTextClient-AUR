@@ -42,6 +42,7 @@
       - ex: {{ap}}/ArchipelagoLauncherDebug.exe "Universal Tracker" --  --name {{slot}} --connect {{add}}:{{port}}
         - (UT is special as it accepts a slot name, by default AP doesn't)
       - ex: {{ap}}/ArchipelagoLauncherDebug.exe "other client" -- --connect {{add}}:{{port}} --password {{pass}}
+      - ex: {ap}}/ArchipelagoLauncher "Universal Tracker" archipelago://{{slot}}:{{pass}}@{{add}}:{{port}}
       - for more info, in the terminal launch `ArchipelagoLauncherDebug.exe` with `-h` or `--h`
   - Change the scale of the slot name text and portrait
   - Can have up to 7 slots connected at a time
@@ -140,6 +141,9 @@
 - Emotes/Emojis
   - Images saved to the emote directory (in settings -> theme)
   - Uses the name of the image as the emote name
+  - IMPORTANT: it is recommended to simplify your emote names (so everyone's can match to a degree)
+    - foxsmile -> smile
+    - foxpog -> pog
   - An emote is written as `{{e;[emote name]}}`
   - Emotes you do not have an image for are shown as `[emote name]`
 - Message effects 

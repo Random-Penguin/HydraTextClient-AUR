@@ -26,7 +26,7 @@ public static class GameItemImageLoader
         if (!Directory.Exists(GameItemImageOverrides)) Directory.CreateDirectory(GameItemImageOverrides);
         foreach (var folder in Directory.GetDirectories(GameItemImageOverrides))
         {
-            var gameName = Path.GetFileNameWithoutExtension(folder)!.ToLower();
+            var gameName = Path.GetFileName(folder)!.ToLower();
             GD.Print($"Loading [{gameName}] assets");
             GameImages[gameName] = new ItemImageLoader(folder, gameName);
             var aliases = $"{folder}/aliases.json";

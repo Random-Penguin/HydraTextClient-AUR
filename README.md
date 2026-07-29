@@ -42,7 +42,7 @@
       - ex: {{ap}}/ArchipelagoLauncherDebug.exe "Universal Tracker" --  --name {{slot}} --connect {{add}}:{{port}}
         - (UT is special as it accepts a slot name, by default AP doesn't)
       - ex: {{ap}}/ArchipelagoLauncherDebug.exe "other client" -- --connect {{add}}:{{port}} --password {{pass}}
-      - ex: {ap}}/ArchipelagoLauncher "Universal Tracker" archipelago://{{slot}}:{{pass}}@{{add}}:{{port}}
+      - ex: {{ap}}/ArchipelagoLauncher "Universal Tracker" archipelago://{{slot}}:{{pass}}@{{add}}:{{port}}
       - for more info, in the terminal launch `ArchipelagoLauncherDebug.exe` with `-h` or `--h`
   - Change the scale of the slot name text and portrait
   - Can have up to 7 slots connected at a time

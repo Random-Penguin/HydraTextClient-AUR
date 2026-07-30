@@ -73,7 +73,8 @@ public partial class ConnectionController : Control
 
         try
         {
-            ApClient client = new() { ServerTimeout = new TimeSpan(0, 1, 0), ExcludeBouncedPacketsFromSelf = false };
+            var disconnectTimer = new TimeSpan(0, 0, (int)SaveType<double>.Load(GlobalThemeSettings.ServerTimeoutTime, 60));
+            ApClient client = new() { ServerTimeout = disconnectTimer, ExcludeBouncedPacketsFromSelf = false };
             var isLeader = !HasLeaderClient;
             List<ArchipelagoTag> tags = [ArchipelagoTag.TextOnly, ArchipelagoTag.DeathLink, ArchipelagoTag.TrapLink];
             client.DeathLinkGroups = mw.DeathLinkGroups.ToHashSet();

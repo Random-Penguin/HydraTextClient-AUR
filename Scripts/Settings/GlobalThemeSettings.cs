@@ -35,6 +35,7 @@ public static class GlobalThemeSettings
     public const string BoldFont = "Main/BoldFont";
     public const string ItalicFont = "Main/ItalicFont";
     public const string BoldItalicFont = "Main/BoldItalicFont";
+    public const string ServerTimeoutTime = "Main/TimeoutTime";
     public static event Action? OnImageLoadersReload;
     public static Font DefaultFont;
     public static Font DefaultBoldFont;
@@ -66,6 +67,8 @@ public static class GlobalThemeSettings
             "Main Settings", tab =>
             {
                 tab.AddBrowseFile("Set Archipelago Folder", ApDir, FileDialog.FileModeEnum.OpenDir, [])
+                   .AddSeparator()
+                   .AddSpinBox("Connection Timeout Timer (sec)", ServerTimeoutTime, 60)
                    .AddSeparator()
                    .AddCheckBox("Clear UI on Full Disconnection", ClearDataOnFullDisconnect, true)
                    .AddSpinBox("Message History Limit", ChildLimiter.QueueSaveId, 200d)

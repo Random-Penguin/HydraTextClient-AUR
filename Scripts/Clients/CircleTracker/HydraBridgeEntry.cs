@@ -76,10 +76,7 @@ public class HydraBridgeEntry(string apDir, ApClient client, TrackerPage page, b
                             CheckNextProg = false;
                             WriteLine(console, "Requesting next progression");
                             input.WriteLine(
-                                $"next_items {string.Join(',',
-                                    client.ItemHandler.Items
-                                          .Where(item => item.Flags.HasFlag(ItemFlags.Advancement))
-                                          .Select(item => item.ItemId))}|{string.Join(',', client.Items.Select(kv => kv.Value))}"
+                                $"next_items {string.Join(',', client.ItemHandler.Items.Select(item => item.ItemId))}|{string.Join(',', client.Items.Select(kv => kv.Value))}"
                             );
                             return;
                         }

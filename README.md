@@ -58,6 +58,22 @@
     - Emote menu to view and write emotes by clicking on them
     - Can Click on any message to copy it, hint messages take the hint copy message format
     - Can change how some messages get displayed in the settings -> text client
+- Hint Table
+  - Can sort hints based on multiple columns
+  - Sort order is saved
+  - Can view cached hints from other slots (can change: all/logged in slots/'leader' only slot)
+  - Can Change visibility settings for specific kinds of hints (found/priority/unspecified/no priority/avoid)
+  - Can Hide/Show specific hints
+  - Can copy a hint into your clipboard with a click of a button
+  - Can change how a hint gets copied in the settings -> hints
+- Utilities
+  - Item Filter
+    - Clicking on an item (almost anywhere) or the `Add Filter` button in the settings -> Item Filter opens up a popup to add an item filter
+    - If an item was clicked, it will autofill the information
+    - Can show/hide items filtered from the Item Log in the text client
+    - Can show/hide items filtered from the Hint Table
+    - Can mark an item as special
+      - Special Items are treated higher than progression items and can have their own colors
   - Circle Tracker
     - Uses [Universal Tracker](https://discord.com/channels/731205301247803413/1367270230635839539) to display locations in order based on the order of items received for any connected slot
     - Has Next Progression support (calculates after all the circles are done)
@@ -69,17 +85,8 @@
     - Ability to show/hode circles beyond the first one that has locations
     - Can have multiple circle trackers opened with multiple slots
     - Any slot's tracker can be popped out into a popup window (top right)
-- Hint Table
-  - Can sort hints based on multiple columns
-  - Sort order is saved
-  - Can view cached hints from other slots (can change: all/logged in slots/'leader' only slot)
-  - Can Change visibility settings for specific kinds of hints (found/priority/unspecified/no priority/avoid)
-  - Can Hide/Show specific hints
-  - Can copy a hint into your clipboard with a click of a button
-  - Can change how a hint gets copied in the settings -> hints
-- Utilities
   - Displays inventory (view an item to see who sent you those items)
-    - Has sorting and some filtering capabilities
+  - Has sorting and some filtering capabilities
   - Can view the history of all items received (based on the order you received them)
   - View all items in your game, clicking on one gives you a hint prompt
   - View all missing locations in your game, click on one gives you a hint location prompt
@@ -90,14 +97,7 @@
   - Hovering hover a name will show their game
   - Add a hydra specific Alias
   - Add a copy specific Alias that only appears when copying a message
-  - Can change how the above aliases behave when copying 
-- Item Filter
-  - Clicking on an item (almost anywhere) or the `Add Filter` button in the settings -> Item Filter opens up a popup to add an item filter
-  - If an item was clicked, it will autofill the information
-  - Can show/hide items filtered from the Item Log in the text client
-  - Can show/hide items filtered from the Hint Table
-  - Can mark an item as special
-    - Special Items are treated higher than progression items and can have their own colors
+  - Can change how the above aliases behave when copying
 - Misc Settings/Features
   - Ability to change the default font
     - Accepted formats: \*.ttf, \*.ttc, \*.otf, \*.otc, \*.woff, \*.woff2, \*.pfb, \*.pfm 

@@ -82,26 +82,40 @@ public partial class SlotPortrait : TextureRect
 
             var data = SaveType<SlotGameData>.Load(SlotName, null, false);
             if (data is null) return;
-            var commands = data.ProcessCommands
-                               .Select(command => command.Trim()).Where(command => command is not "")
-                               .Select(command => command.Replace("{{port}}", mw.Port).Replace("{{add}}", mw.Address)
-                                                         .Replace(
-                                                              "{{ap}}",
-                                                              SaveType<string>.Load(
-                                                                  GlobalThemeSettings.ApDir, "", false
-                                                              )
-                                                          ).Replace("{{slot}}", slot)
-                                                         .Replace("{{pass}}", mw.GetPassword(slot)).Split(' ')
-                                ).Where(args => args.Any(arg => arg is not ("{{mw}}" or "{{hydra}}")))
-                               .Select(args =>
-                                    {
-                                        var context = args[0];
-                                        args = args.Where(arg => arg is not ("{{mw}}" or "{{hydra}}")).ToArray();
-                                        return new ReadOnlyEntry(
-                                            args[0], string.Join(' ', args.Length > 1 ? args[1..] : []), context
-                                        );
-                                    }
-                                ).ToArray();
+            var commands =
+                data.ProcessCommands
+                    .Select(command => command.Trim()).Where(command => command is not "")
+                    .Select(command => command.Replace("{{port}}", mw.Port).Replace("{{add}}", mw.Address)
+                                              .Replace(
+                                                   "{{ap}}",
+                                                   SaveType<string>.Load(GlobalThemeSettings.ApDir, "", false)
+                                               ).Replace("{{slot}}", slot)
+                                              .Replace("{{pass}}", mw.GetPassword(slot)).Split(' ')
+                     ).Where(args => args.Any(arg => arg is not ("{{mw}}" or "{{hydra}}")))
+                    .Select(args =>
+                         {
+                             var context = args[0];
+                             args = args.Where(arg => arg is not ("{{mw}}" or "{{hydra}}")).ToArray();
+                             if (args.Length == 0) return null;
+
+                             if (args[0].StartsWith('"'))
+                             {
+                                 while (!args[0].EndsWith('"') && args.Length > 1)
+                                 {
+                                     args[0] = $"{args[0]} {args[1]}";
+
+                                     if (args.Length > 2) args = [args[0], ..args[2..]];
+                                     else args = [args[0]];
+                                 }
+
+                                 if (!args[0].EndsWith('"')) return null;
+                             }
+
+                             return new ReadOnlyEntry(
+                                 args[0], string.Join(' ', args.Length > 1 ? args[1..] : []), context
+                             );
+                         }
+                     ).Where(entry => entry is not null).ToArray();
 
             if (commands.Length == 0) return;
 

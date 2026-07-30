@@ -112,7 +112,7 @@ public partial class SlotPortrait : TextureRect
                              }
 
                              return new ReadOnlyEntry(
-                                 args[0], string.Join(' ', args.Length > 1 ? args[1..] : []), context
+                                 args[0].Remove('"'), string.Join(' ', args.Length > 1 ? args[1..] : []), context
                              );
                          }
                      ).Where(entry => entry is not null).ToArray();

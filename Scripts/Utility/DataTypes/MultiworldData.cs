@@ -35,5 +35,10 @@ public class MultiworldData
     }
 
     public string GetSlotName(string slot) => SlotNames.GetValueOrDefault(slot, slot);
-    public string GetPassword(string slot) => SlotPasswords.GetValueOrDefault(slot, Password);
+
+    public string GetPassword(string slot)
+    {
+        var pass = SlotPasswords.GetValueOrDefault(slot, Password);
+        return pass.Trim() is "" ? "None" : pass;
+    }
 }

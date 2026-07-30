@@ -50,7 +50,7 @@ size_flags_vertical = 3
 theme = ExtResource("1_yd0xa")
 theme_override_styles/panel = SubResource("StyleBoxFlat_yd0xa")
 script = ExtResource("1_8dqd8")
-VersionNumber = "v0.6.3"
+VersionNumber = "v0.6.4"
 ErrorWindow = ExtResource("8_uwgue")
 ItemFilterWindow = ExtResource("4_p6tld")
 ItemFilterDisplay = ExtResource("5_dc4qw")
@@ -90,9 +90,10 @@ expand_mode = 1
 [node name="Main Container" type="TabContainer" parent="." unique_id=534411987]
 layout_mode = 2
 theme = ExtResource("1_yd0xa")
-current_tab = 0
+current_tab = 3
 
 [node name="Connection" type="TabContainer" parent="Main Container" unique_id=2072097402]
+visible = false
 layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 0
@@ -132,24 +133,23 @@ Containers = {
 }
 metadata/_tab_index = 0
 
-[node name="Circle Tracker" parent="Main Container/Clients" unique_id=1192745647 instance=ExtResource("13_ncyvy")]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 1
-
 [node name="Hints" parent="Main Container" unique_id=664656044 instance=ExtResource("11_wplvb")]
 visible = false
 layout_mode = 2
 
 [node name="Utilities" parent="Main Container" unique_id=1245487862 instance=ExtResource("14_i5ty2")]
-visible = false
 layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 3
 
-[node name="Item Filter" parent="Main Container/Utilities" unique_id=1407271342 instance=ExtResource("5_dc4qw")]
+[node name="Circle Tracker" parent="Main Container/Utilities" unique_id=1192745647 instance=ExtResource("13_ncyvy")]
 layout_mode = 2
 metadata/_tab_index = 0
+
+[node name="Item Filter" parent="Main Container/Utilities" unique_id=1407271342 instance=ExtResource("5_dc4qw")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
 
 [node name="Players" parent="Main Container" unique_id=936307540 instance=ExtResource("12_w1qgd")]
 visible = false

@@ -12,6 +12,7 @@ using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility;
 using HydraTextClient.Scripts.Utility.DataTypes;
 using HydraTextClient.Scripts.Utility.Loaders;
+using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Controllers;
 
@@ -105,6 +106,7 @@ public partial class ConnectionController : Control
 
             client.OnConnectionErrorReceived += (exception, message) =>
             {
+                if (exception is JsonSerializationException) return;
                 MainController.ShowError(message, exception);
                 SlotView.SetPortraitStatus(originalName, ConnectionStatus.Error);
             };

@@ -64,7 +64,9 @@ public partial class PlayerList : MarginContainer
         };
     }
 
-    public void Refresh()
+    public void Refresh() => CallDeferred("CallRefresh"); 
+    
+    private void CallRefresh()
     {
         var mw = ConnectionController.GetCurrentMultiworld;
         if (!ConnectionController.HasLeaderClient || mw is null)
@@ -90,7 +92,7 @@ public partial class PlayerList : MarginContainer
                 CheckFunctions[i] = (slot, amount, count) =>
                 {
                     if (slot != name) return;
-                    Items[i1].CallDeferred("SetCheckCount", amount, count);
+                    Items[i1].SetCheckCount(amount, count);
                 };
                 ConnectionController.OnCheckCountUpdated += CheckFunctions[i];
                 item.SetPlayer(i + 1);
@@ -99,7 +101,7 @@ public partial class PlayerList : MarginContainer
 
             if (statuses[i] == ClientGoal)
             {
-                Items[i].CallDeferred("HasGoaled");
+                Items[i].HasGoaled();
                 continue;
             }
 

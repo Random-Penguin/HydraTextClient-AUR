@@ -38,6 +38,7 @@ public partial class SlotPortrait : TextureRect
 
     public string SlotName;
     public string GameName;
+    public ConcurrentQueue<(int, int)> UpdateCheckCounts = [];
     private Vector2 PortraitSize = new(150, 225);
     private Action<string, int, int> CheckAction;
     private Action ClearCheckCountOnDisconnect;
@@ -61,13 +62,11 @@ public partial class SlotPortrait : TextureRect
             {
                 if (mw.CheckCounts.TryGetValue(thisPlayer, out max)
                     && mw.CheckCountsChecked.TryGetValue(thisPlayer, out amount))
-                {
-                    CallDeferred("UpdateCheckCount", amount, max);
-                }
+                    UpdateCheckCounts.Enqueue((amount, max));
 
                 return;
             }
-            CallDeferred("UpdateCheckCount", amount, max);
+            UpdateCheckCounts.Enqueue((amount, max));
         };
 
         ClearCheckCountOnDisconnect = () => CheckCountPanel.Visible = false;
@@ -110,7 +109,7 @@ public partial class SlotPortrait : TextureRect
 
                                  if (!args[0].EndsWith('"')) return null;
                              }
-                             
+
                              return new ReadOnlyEntry(
                                  args[0].Replace("\"", ""), string.Join(' ', args.Length > 1 ? args[1..] : []), context
                              );
@@ -166,6 +165,10 @@ public partial class SlotPortrait : TextureRect
 
     public void Reload()
     {
+        if (!UpdateCheckCounts.IsEmpty)
+            while (UpdateCheckCounts.TryDequeue(out var t))
+                UpdateCheckCount(t.Item1, t.Item2);
+
         if (!SaveType<SlotGameData>.TryGet(SlotName, out var data))
         {
             QueueFree();

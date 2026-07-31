@@ -2,6 +2,8 @@
 using CreepyUtil.DiscordRpc;
 using Godot;
 using HydraTextClient.Scripts.Controllers;
+using HydraTextClient.Scripts.Settings;
+using HydraTextClient.Scripts.Utility.Loaders;
 using static HydraTextClient.Scripts.Discord.DRPC_GTI;
 using static HydraTextClient.Scripts.Discord.DRPC_GTT;
 
@@ -11,9 +13,11 @@ public static class DRPC
 {
     private const string AppId = "1339447230909644851"; 
     public static string? LastLocationChecked = null;
+    public static bool RunDiscordRPC = SaveType<bool>.Load(GlobalThemeSettings.DiscordEnabled, true);
 
     public static void Init()
     {
+        if (!RunDiscordRPC) return;
         ConnectionController.OnClientLeaderChanged += (_, _) => DiscordIntegration.UpdateActivity();
         ConnectionController.OnClientConnection += (_, client, _) =>
         {
@@ -65,5 +69,9 @@ public static class DRPC
         CheckDiscord();
     }
 
-    public static void CheckDiscord() => DiscordIntegration.UpdateActivity();
+    public static void CheckDiscord()
+    {
+        if (!RunDiscordRPC) return;
+        DiscordIntegration.UpdateActivity();
+    }
 }

@@ -36,6 +36,7 @@ public static class GlobalThemeSettings
     public const string ItalicFont = "Main/ItalicFont";
     public const string BoldItalicFont = "Main/BoldItalicFont";
     public const string ServerTimeoutTime = "Main/TimeoutTime";
+    public const string DiscordEnabled = "Main/DiscordRPC";
     public static event Action? OnImageLoadersReload;
     public static Font DefaultFont;
     public static Font DefaultBoldFont;
@@ -75,6 +76,7 @@ public static class GlobalThemeSettings
                    .AddSeparator()
                    .AddCheckBox("Always on top", AlwaysOnTop, false, 0, b => b.Toggled += SetAlwaysOnTop)
                    .AddCheckBox("Show new Items on Connect", DisplayNewItemsPopup, true)
+                   .AddCheckBox("Discord Rich Presence (requires restart)", DiscordEnabled, true)
                    .AddButton("Force (Safety) Save", Save, 1)
                    .AddButton("Open Save Directory", () => OS.ShellOpen(Directories.MainDirectory), 1)
                    .AddSeparator(1)

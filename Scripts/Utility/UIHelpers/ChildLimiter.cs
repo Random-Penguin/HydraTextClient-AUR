@@ -44,7 +44,7 @@ public partial class ChildLimiter : VBoxContainer
 
     public void EmptyLimiter()
     {
-        Limiter.ForEach(c => CallDeferred("RemoveTheChild", c));
+        Limiter.ForEach(RemoveChildQueue.Enqueue);
         Limiter.Clear();
     }
 

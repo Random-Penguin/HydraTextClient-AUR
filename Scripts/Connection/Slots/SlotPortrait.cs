@@ -110,9 +110,9 @@ public partial class SlotPortrait : TextureRect
 
                                  if (!args[0].EndsWith('"')) return null;
                              }
-
+                             
                              return new ReadOnlyEntry(
-                                 args[0].Remove('"'), string.Join(' ', args.Length > 1 ? args[1..] : []), context
+                                 args[0].Replace("\"", ""), string.Join(' ', args.Length > 1 ? args[1..] : []), context
                              );
                          }
                      ).Where(entry => entry is not null).ToArray();

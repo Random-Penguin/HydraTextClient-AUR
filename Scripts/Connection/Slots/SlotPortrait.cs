@@ -163,12 +163,17 @@ public partial class SlotPortrait : TextureRect
         Reload();
     }
 
+    public override void _Process(double delta)
+    {
+        while (!UpdateCheckCounts.IsEmpty)
+        {
+            UpdateCheckCounts.TryDequeue(out var t);
+            UpdateCheckCount(t.Item1, t.Item2);
+        }
+    }
+
     public void Reload()
     {
-        if (!UpdateCheckCounts.IsEmpty)
-            while (UpdateCheckCounts.TryDequeue(out var t))
-                UpdateCheckCount(t.Item1, t.Item2);
-
         if (!SaveType<SlotGameData>.TryGet(SlotName, out var data))
         {
             QueueFree();
@@ -241,7 +246,7 @@ public partial class SlotPortrait : TextureRect
         }
     }
 
-    public void UpdateCheckCount(int count, int max)
+    private void UpdateCheckCount(int count, int max)
     {
         CheckCountPanel.Visible = false;
         if (!ConnectionController.HasLeaderClient) return;

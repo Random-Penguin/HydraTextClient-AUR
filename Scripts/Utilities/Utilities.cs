@@ -7,6 +7,7 @@ namespace HydraTextClient.Scripts.Utilities;
 public partial class Utilities : TabContainer
 {
     [Export] private PackedScene SlotUtilScene;
+    [Export] private Control InventoryContainer;
     private Dictionary<string, SlotUtility> UtilityPages = [];
 
     public override void _Ready()
@@ -21,14 +22,14 @@ public partial class Utilities : TabContainer
         var page = UtilityPages[name] = SlotUtilScene.Instantiate<SlotUtility>();
         page.SetupPlayer(client);
         page.Name = name;
-        AddChild(page);
+        InventoryContainer.AddChild(page);
     }
 
     public void ClosePage(string name)
     {
         var page = UtilityPages[name];
         UtilityPages.Remove(name);
-        RemoveChild(page);
+        InventoryContainer.RemoveChild(page);
         page.QueueFree();
     }
 }

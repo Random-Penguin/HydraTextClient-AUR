@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Godot;
 using HydraTextClient.Scripts.Clients.TextClient;
@@ -22,8 +23,8 @@ public partial class PlayerItem : PanelContainer
     [Export] private LineEdit Alias;
     [Export] private LineEdit CopyAlias;
 
+    public ConcurrentQueue<(int, int)> ReloadCheckCounts = [];
     private Dictionary<string, Action<RichTextLabel, string[]>> Effects;
-
     private string PlayerText;
     private bool Goaled;
     private Tween ProgressTween;
@@ -35,6 +36,15 @@ public partial class PlayerItem : PanelContainer
     {
         CheckProgress.Modulate = CheckGradient.Sample(0);
         Effects = MessageParser.CreateEffects(() => CallDeferred("UpdatePlayerText"));
+    }
+
+    public override void _Process(double delta)
+    {
+        while (!ReloadCheckCounts.IsEmpty)
+        {
+            ReloadCheckCounts.TryDequeue(out var t);
+            SetCheckCount(t.Item1, t.Item2);
+        }
     }
 
     public void SetPlayer(int player)
@@ -77,7 +87,7 @@ public partial class PlayerItem : PanelContainer
         Player.ApplyCompiledPrintableObjs(PlayerText.CompileRichText(Effects, false));
     }
 
-    public void SetCheckCount(int count = 0, int max = 0)
+    private void SetCheckCount(int count = 0, int max = 0)
     {
         if (max <= 0 && !Goaled)
         {

@@ -92,7 +92,7 @@ public partial class PlayerList : MarginContainer
                 CheckFunctions[i] = (slot, amount, count) =>
                 {
                     if (slot != name) return;
-                    Items[i1].SetCheckCount(amount, count);
+                    Items[i1].ReloadCheckCounts.Enqueue((amount, count));
                 };
                 ConnectionController.OnCheckCountUpdated += CheckFunctions[i];
                 item.SetPlayer(i + 1);
@@ -114,7 +114,7 @@ public partial class PlayerList : MarginContainer
 
             if (!mw.CheckCountsChecked.ContainsKey(name)
                 || !mw.CheckCounts.TryGetValue(name, out var maxCount)) continue;
-            Items[i].SetCheckCount(mw.CheckCountsChecked[name], maxCount);
+            Items[i].ReloadCheckCounts.Enqueue((mw.CheckCountsChecked[name], maxCount));
         }
     }
 

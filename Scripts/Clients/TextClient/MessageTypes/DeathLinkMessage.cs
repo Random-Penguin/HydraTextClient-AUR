@@ -72,7 +72,7 @@ public partial class DeathLinkMessage : MessageScene
         }
 
         UpdateFontSize(Message);
-
+        UpdateFontSize(TimeStamp);
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(
             SaveType<string>.Load(SaveIdMessage, DefaultMessage).CompileSimpleText(CachedReplacement)

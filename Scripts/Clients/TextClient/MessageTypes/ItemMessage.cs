@@ -74,6 +74,7 @@ public partial class ItemMessage : MessageScene
         ).CompileSimpleText(CachedReplacement);
 
         UpdateFontSize(Message);
+        UpdateFontSize(TimeStamp);
 
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));

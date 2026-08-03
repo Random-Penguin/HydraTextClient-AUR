@@ -45,6 +45,7 @@ public partial class ClientMessage : AnimatedMessageScene
 
         UpdateFontSize(Message);
         UpdateFontSize(PlayerName);
+        UpdateFontSize(TimeStamp);
 
         Message.Clear();
         PlayerName.Clear();

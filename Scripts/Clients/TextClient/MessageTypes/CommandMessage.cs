@@ -15,6 +15,7 @@ public partial class CommandMessage : MessageScene
 
     public override void Reload()
     {
+        UpdateFontSize(TimeStamp);
         UpdateFontSize(Message);
         Message.Text = Text;
     }

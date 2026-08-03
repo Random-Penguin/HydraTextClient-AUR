@@ -38,6 +38,7 @@ public partial class ItemCheatMessage : MessageScene
         var final = SaveType<string>.Load(SaveId, Default).CompileSimpleText(CachedReplacement);
 
         UpdateFontSize(Message);
+        UpdateFontSize(TimeStamp);
 
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));

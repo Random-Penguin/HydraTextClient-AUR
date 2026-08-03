@@ -33,6 +33,7 @@ public partial class JoinMessage : MessageScene
         var final = SaveType<string>.Load(SaveId, Default).CompileSimpleText(CachedReplacement);
 
         UpdateFontSize(Message);
+        UpdateFontSize(TimeStamp);
 
         Message.Clear();
         Message.ApplyCompiledPrintableObjs(final.CompileRichText(GetCompileEffects(), false));

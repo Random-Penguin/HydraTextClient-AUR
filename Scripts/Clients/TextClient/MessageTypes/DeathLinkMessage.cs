@@ -53,9 +53,8 @@ public partial class DeathLinkMessage : MessageScene
 
         if (LastCause is not null)
         {
-            LastCause = LastCause.Replace("{player}", dl.Player);
             LastCause = LastCause.Contains(dl.Player) ? LastCause.Replace(dl.Player, "{{player}}")
-                : $"{{player}} {LastCause}";
+                : $"{{{{player}}}} {LastCause}";
 
             CachedReplacement["cause"] = LastCause.CompileSimpleText(CachedReplacement);
         }

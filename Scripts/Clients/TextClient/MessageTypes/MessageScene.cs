@@ -58,6 +58,7 @@ public abstract partial class MessageScene : PanelContainer
     }
 
     public void UpdateFontSize(RichTextLabel label) => label.SetFontSizeOverride(SaveType<double>.Load(TextClient.FontSizeId, 20d));
+    public void UpdateFontSize(Label label) => label.SetFontSizeOverride(SaveType<double>.Load(TextClient.FontSizeId, 20d));
 
     public override void _GuiInput(InputEvent @event)
     {

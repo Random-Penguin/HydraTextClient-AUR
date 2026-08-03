@@ -9,6 +9,7 @@ using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 using static HydraTextClient.Scripts.Controllers.MainController;
 using static HydraTextClient.Scripts.Utility.ColorIdConstants;
+using Environment = System.Environment;
 
 namespace HydraTextClient.Scripts.Settings;
 
@@ -64,6 +65,10 @@ public static class GlobalThemeSettings
         SaveType<double>.AddIndividualEvent(GlobalFontSize, LoadGlobalFont);
         CreateSettings();
 
+        var emptyFontDir = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
+        if (emptyFontDir.EndsWith("WINDOWS\\Fonts"))
+            emptyFontDir = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/Microsoft/Windows/Fonts/";
+
         SettingsCreator.Tab(
             "Main Settings", tab =>
             {
@@ -84,7 +89,6 @@ public static class GlobalThemeSettings
                    .AddCheckBox("Update to Beta Branches", UpdateToBeta, false, 1)
                    .AddText("Will still update to beta\nif you are on a beta branch", 1)
                    .AddButton("Check For Updates", CheckForUpdates, 1)
-                    
                    .AddButton("Open Emotes Directory", () => OS.ShellOpen(Directories.Emotes), 2)
                    .AddButton("Open Portrait Directory", () => OS.ShellOpen(Directories.GamePortraits), 2)
                    .AddButton(
@@ -140,20 +144,23 @@ public static class GlobalThemeSettings
                   .AddSpinBox("Global Font Size", GlobalFontSize, 20d, 1, c => c.MinValue = 1)
                   .AddSpinBox("Text Client Font Size", TextClient.FontSizeId, 20d, 1)
                   .AddBrowseFile(
-                       "Set Normal Font Override", NormalFont, FileDialog.FileModeEnum.OpenFile, FontFormats, col: 2
+                       "Set Normal Font Override", NormalFont, FileDialog.FileModeEnum.OpenFile, FontFormats, col: 2,
+                       defaultOpen: emptyFontDir
                    )
                   .AddSeparator(2)
                   .AddBrowseFile(
-                       "Set Bold Font Override", BoldFont, FileDialog.FileModeEnum.OpenFile, FontFormats, col: 2
+                       "Set Bold Font Override", BoldFont, FileDialog.FileModeEnum.OpenFile, FontFormats, col: 2,
+                       defaultOpen: emptyFontDir
                    )
                   .AddSeparator(2)
                   .AddBrowseFile(
-                       "Set Italics Font Override", ItalicFont, FileDialog.FileModeEnum.OpenFile, FontFormats, col: 2
+                       "Set Italics Font Override", ItalicFont, FileDialog.FileModeEnum.OpenFile, FontFormats, col: 2,
+                       defaultOpen: emptyFontDir
                    )
                   .AddSeparator(2)
                   .AddBrowseFile(
                        "Set Bold Italics Font Override", BoldItalicFont, FileDialog.FileModeEnum.OpenFile, FontFormats,
-                       col: 2
+                       col: 2, defaultOpen: emptyFontDir
                    )
         );
 

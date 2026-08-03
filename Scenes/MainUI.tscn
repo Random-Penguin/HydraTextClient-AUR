@@ -25,6 +25,7 @@
 [ext_resource type="Script" uid="uid://cnoe8nx10kvwi" path="res://Scripts/Controllers/ConsoleController.cs" id="17_es56x"]
 [ext_resource type="PackedScene" uid="uid://nheywstd8qsg" path="res://Scenes/Consoles/Console.tscn" id="18_t8puo"]
 [ext_resource type="Script" uid="uid://cbjgujffa32pl" path="res://Scripts/Consoles/Godot/LoggerLabel.cs" id="18_y7llr"]
+[ext_resource type="PackedScene" uid="uid://dbta85uptdvut" path="res://Scenes/Mapper/MapTracker.tscn" id="19_ow5w7"]
 [ext_resource type="PackedScene" uid="uid://b57ci707f3gsq" path="res://Scenes/Utility/Popups/PortSettings.tscn" id="22_0oxgv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yd0xa"]
@@ -137,19 +138,30 @@ metadata/_tab_index = 0
 visible = false
 layout_mode = 2
 
-[node name="Utilities" parent="Main Container" unique_id=1245487862 instance=ExtResource("14_i5ty2")]
+[node name="Utilities" parent="Main Container" unique_id=1245487862 node_paths=PackedStringArray("InventoryContainer") instance=ExtResource("14_i5ty2")]
 layout_mode = 2
-current_tab = 0
+current_tab = 1
+InventoryContainer = NodePath("Inventories")
 metadata/_tab_index = 3
 
 [node name="Circle Tracker" parent="Main Container/Utilities" unique_id=1192745647 instance=ExtResource("13_ncyvy")]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
+
+[node name="Map Tracker" parent="Main Container/Utilities" unique_id=1830903005 instance=ExtResource("19_ow5w7")]
+layout_mode = 2
+metadata/_tab_index = 1
 
 [node name="Item Filter" parent="Main Container/Utilities" unique_id=1407271342 instance=ExtResource("5_dc4qw")]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 1
+metadata/_tab_index = 2
+
+[node name="Inventories" type="TabContainer" parent="Main Container/Utilities" unique_id=2041321464]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
 
 [node name="Players" parent="Main Container" unique_id=936307540 instance=ExtResource("12_w1qgd")]
 visible = false

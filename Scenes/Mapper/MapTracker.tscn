@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://dbta85uptdvut"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_dgvn7"]
+[ext_resource type="Script" uid="uid://c2vh78otyyus1" path="res://Scripts/Mapper/MapTracker.cs" id="2_so8ey"]
+[ext_resource type="PackedScene" uid="uid://0xx1eerb6jki" path="res://Scenes/Mapper/GameMap.tscn" id="3_yrvkc"]
+
+[node name="Map Tracker" type="HSplitContainer" unique_id=1830903005 node_paths=PackedStringArray("MapContainer", "ButtonContainer")]
+offset_right = 1152.0
+offset_bottom = 648.0
+theme = ExtResource("1_dgvn7")
+split_offsets = PackedInt32Array(270)
+split_offset = 270
+script = ExtResource("2_so8ey")
+MapContainer = NodePath("TabContainer")
+ButtonContainer = NodePath("MarginContainer/VBoxContainer/ScrollContainer/Container")
+MapScene = ExtResource("3_yrvkc")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=470804883]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=446069638]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1810564245]
+layout_mode = 2
+text = "Import Pack"
+
+[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1960466507]
+layout_mode = 2
+text = "Pack Editor"
+
+[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer" unique_id=125284823]
+layout_mode = 2
+text = "Reload Packs"
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=993470166]
+custom_minimum_size = Vector2(0.03, 0.035)
+layout_mode = 2
+text = "Only shows slots that are loaded in in the Circle Tracker"
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1208423874]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=915445904]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=1043327244]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1926773751]
+layout_mode = 2
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Button3" to="." method="Reload"]

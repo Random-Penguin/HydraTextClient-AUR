@@ -38,7 +38,7 @@ text = "Show Empty Circles"
 
 [node name="CheckBox2" type="CheckBox" parent="MarginContainer/VBoxContainer" unique_id=384526913]
 layout_mode = 2
-text = "Spoil Future Circles"
+text = "Show Future Circles"
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1096340705]
 layout_mode = 2

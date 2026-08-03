@@ -112,12 +112,12 @@ public partial class SettingsContainer : HSplitContainer
     }
 
     public SettingsContainer AddBrowseFile(string text, string saveId, FileDialog.FileModeEnum mode, string[] fileExt,
-        string fileTarget = "", int col = 0, Action<ButtonAnimation, FileDialog, ButtonAnimation>? extraConfig = null)
+        string fileTarget = "", int col = 0, string defaultOpen = "", Action<ButtonAnimation, FileDialog, ButtonAnimation>? extraConfig = null)
     {
         var contentType = mode switch
         {
             FileDialog.FileModeEnum.OpenFile => "File", FileDialog.FileModeEnum.OpenFiles => "Files",
-            FileDialog.FileModeEnum.OpenDir => "Folder", _ => "Items"
+            FileDialog.FileModeEnum.OpenDir => "Folder", _ => "Items",
         };
 
         ButtonAnimation button = new();
@@ -137,7 +137,12 @@ public partial class SettingsContainer : HSplitContainer
         fileDialog.Filters = fileExt;
         fileDialog.FileMode = mode;
 
-        button.Pressed += () => fileDialog.CurrentPath = SaveType<string>.Load(saveId, "");
+        button.Pressed += () =>
+        {
+            var open = SaveType<string>.Load(saveId, "");
+            if (defaultOpen is not "" && open is "") fileDialog.CurrentPath = defaultOpen;
+            else fileDialog.CurrentPath = open;
+        };
 
         switch (mode)
         {

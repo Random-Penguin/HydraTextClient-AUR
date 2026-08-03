@@ -85,6 +85,11 @@
     - Ability to show/hode circles beyond the first one that has locations
     - Can have multiple circle trackers opened with multiple slots
     - Any slot's tracker can be popped out into a popup window (top right)
+  - Map Tracker
+    - Ability to render checks on a map
+    - Ability to map entrances
+    - Has auto tabbing support
+    - For more, advanced info visit the [Map Tracker/Maker](#map-trackermaker) Section
   - Displays inventory (view an item to see who sent you those items)
   - Has sorting and some filtering capabilities
   - Can view the history of all items received (based on the order you received them)
@@ -158,3 +163,10 @@
   - `{{loc;[location id];[player slot]}}` displays a location, location id is specific to the apworld
   - `{{entrance;[entrance text]}}` displays the text as an entrance
   - `{{found}}`/`{{notfound}}` displays hint found/not found text
+
+## Map Tracker/Maker
+
+- For devs implementing auto tabbing
+- For those who don't want to use the UI
+  - The folder of the pack should be named the game's name as it appears in ap
+  - 

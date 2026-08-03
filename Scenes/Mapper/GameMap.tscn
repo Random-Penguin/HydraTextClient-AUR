@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://0xx1eerb6jki"]
+
+[ext_resource type="Script" uid="uid://70co544byxq8" path="res://Scripts/Mapper/MapLoader.cs" id="1_ajsmo"]
+[ext_resource type="PackedScene" uid="uid://cffrkj53il485" path="res://Scenes/Mapper/MapLocation.tscn" id="2_ajsmo"]
+[ext_resource type="PackedScene" uid="uid://164rwbaa41fg" path="res://Scenes/Mapper/MapContainer.tscn" id="3_ajsmo"]
+
+[node name="Game" type="MarginContainer" unique_id=235484884]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+script = ExtResource("1_ajsmo")
+MapLocation = ExtResource("2_ajsmo")
+MapContainer = ExtResource("3_ajsmo")
+metadata/_tab_index = 0

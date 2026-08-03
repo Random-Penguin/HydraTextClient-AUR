@@ -22,9 +22,12 @@ public partial class CircleTracker : Control
     [Export] private VBoxContainer ButtonContainer;
     [Export] private TabContainer PageContainer;
 
+    public static event Action<string, ApClient>? CircleTrackerOpened; 
+    public static event Action<string, ApClient>? CircleTrackerClosed; 
+    
+    private ConcurrentDictionary<string, ApClient> Clients = []; // easy access
     private Dictionary<string, ButtonAnimation> Buttons = [];
     public ConcurrentDictionary<string, TrackerPage> Pages = [];
-    private ConcurrentDictionary<string, ApClient> Clients = []; // easy access
 
     public override void _Ready()
     {
@@ -113,14 +116,17 @@ public partial class CircleTracker : Control
             return false;
         }
 
+        var client = Clients[name];
         page.OnStopCalled += () =>
         {
             if (Pages.Remove(name, out var node)) PageContainer.CallDeferred("remove_child", node);
             if (Buttons.TryGetValue(name, out var button)) button.Disabled = false;
+            CircleTrackerClosed?.Invoke(name, client);
         };
         Pages.TryAdd(name, page);
         PageContainer.CallDeferred("add_child", page);
-        page.Setup(name, Clients[name], entry);
+        CircleTrackerOpened?.Invoke(name, client);
+        page.Setup(name, client, entry);
         return true;
     }
 

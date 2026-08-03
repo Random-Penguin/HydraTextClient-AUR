@@ -21,4 +21,5 @@ public static class Directories
     public static string Emotes = $"{MainDirectory}/Emotes";
     public static string GameItemImageOverrides = $"{MainDirectory}/Game Item Images";
     public static string LegacyData = $"{MainDirectory}/data.json";
+    public static string MapPacks = $"{MainDirectory}/Map Packs";
 }

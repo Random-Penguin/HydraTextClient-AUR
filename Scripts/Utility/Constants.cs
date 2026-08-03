@@ -22,6 +22,7 @@ public static class ColorIdConstants
         [Unspecified] = Colors.NavajoWhite, [NoPriority] = Colors.CornflowerBlue, [EntranceColor] = Colors.Cyan,
         [UiBackground] = new Color("#2a2a2a"), [PopupBackground] = new Color("#2a2a2a"),
         [TooltipColor] = Colors.Transparent, [InLogic] = Colors.ForestGreen, [NotInLogic] = Colors.DarkRed,
+        [InLogicHinted] = Colors.DodgerBlue, [NotInLogicHinted] = Colors.DarkViolet,
     };
 
     public static Dictionary<ColorConstant, string> ConstantToId = new()
@@ -43,7 +44,9 @@ public static class ColorIdConstants
         [Unknown] = "UnknownColorConstant", [Avoid] = "Theme/Ap/Colors/HintAvoid",
         [Priority] = "Theme/Ap/Colors/HintPriority", [Unspecified] = "Theme/Ap/Colors/HintUnspecified",
         [NoPriority] = "Theme/Ap/Colors/HintNoPriority", [EntranceColor] = "Theme/Ap/Colors/EntranceColor",
-        [NotInLogic] = "Theme/Ap/Colors/OutofLogicColor", [InLogic] = "Theme/Ap/Colors/InLogicColor"
+        [NotInLogic] = "Theme/Ap/Colors/OutofLogicColor", [InLogic] = "Theme/Ap/Colors/InLogicColor",
+        [InLogicHinted] = "Theme/Ap/Colors/InLogicHintedColor",
+        [NotInLogicHinted] = "Theme/Ap/Colors/NotInLogicHintedColor",
     };
 
     public static Dictionary<string, ColorConstant> IdToConstant = ConstantToId.ToDictionary(
@@ -63,7 +66,8 @@ public static class ColorIdConstants
         [NormalItemBackgroundColor] = "Background Item (Normal)", [NotFoundColor] = "Hint 'Not Found'",
         [FoundColor] = "Hint 'Found'", [Unknown] = "???", [Avoid] = "Hint 'Avoid'", [Priority] = "Hint 'Priority'",
         [Unspecified] = "Hint 'Unspecified'", [NoPriority] = "Hint 'No Priority'", [InLogic] = "Hint In Logic",
-        [NotInLogic] = "Hint Not in Logic", [EntranceColor] = "Entrance",
+        [NotInLogic] = "Hint Not in Logic", [EntranceColor] = "Entrance", [InLogicHinted] = "In Logic (Hinted)",
+        [NotInLogicHinted] = "Not in Logic (Hinted)",
     };
 
     public static void CreateSettings()
@@ -91,6 +95,6 @@ public static class ColorIdConstants
         LocationColor, EntranceColor, NotFoundColor,
         FoundColor, Priority, Unspecified,
         NoPriority, Avoid, InLogic,
-        NotInLogic,
+        NotInLogic, InLogicHinted, NotInLogicHinted, 
     }
 }

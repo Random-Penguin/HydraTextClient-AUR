@@ -64,7 +64,9 @@ public static class Extensions // sorted alphabetically for the memes
 
         public string UID => FilterType.MakeUID(hint.ItemName, hint.ItemGame, hint.ItemFlags);
         public string EntranceName => hint.Entrance == "" ? "Vanilla" : hint.Entrance;
-        public string GetItemEffectText() => $"{{{{item;``{hint.ItemGame}``;``{hint.ItemName}``;{(int)hint.ItemFlags}}}}}";
+
+        public string GetItemEffectText()
+            => $"{{{{item;``{hint.ItemGame}``;``{hint.ItemName}``;{(int)hint.ItemFlags}}}}}";
 
         public int GetHash() => HashCode.Combine(
             hint.FindingPlayer, hint.LocationId, hint.ReceivingPlayer, hint.Entrance, hint.ItemFlags
@@ -209,6 +211,15 @@ public static class Extensions // sorted alphabetically for the memes
 
         public string GetLocationEffectText() => $"{{{{loc;{packet.Item.Location};{packet.FindingPlayer}}}}}";
         public string GetLocationName() => LocationEffect.LocationName(packet.Item.Location, packet.FindingPlayer);
+    }
+
+    extension(Label label)
+    {
+        public void SetFontSizeOverride(double val)
+        {
+            if (label.HasThemeFontSizeOverride("font_size")) label.RemoveThemeFontSizeOverride("font_size");
+            label.AddThemeFontSizeOverride("font_size", (int)val);
+        }
     }
 
     extension(LineEdit edit)

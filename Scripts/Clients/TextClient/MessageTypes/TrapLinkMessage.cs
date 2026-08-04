@@ -30,7 +30,7 @@ public partial class TrapLinkMessage : MessageScene
         {
             var left = Player.LastIndexOf('(') + 1;
             var right = Player.LastIndexOf(')');
-            if (left < right) Player = Player[(left + 1)..right];
+            if (left < right) Player = Player[left..right];
             else PlayerSlot = -1;
         }
 

@@ -53,14 +53,15 @@ public partial class SlotUtility : HSplitContainer
                                                        ));
 
         var game = client.PlayerGame;
-        ItemList.OnItemCreated += (list, index, item) =>
+        ItemList.OnItemCreated += (_, index, item) =>
         {
             var img = CustomAssets.ItemImage(
-                game, item, game, asset => list.CallDeferred("set_item_icon", index, asset), out var isFallback
+                game, item, game, asset => ItemList.ImageQueue.Enqueue((index, asset)), out var isFallback
             );
             if (isFallback && SaveType<bool>.Load(ItemEffect.FallbackSaveId, false)) return;
-            list.CallDeferred("set_item_icon", index, img);
+            ItemList.ImageQueue.Enqueue((index, img));
         };
+
         ItemList.SetItems(client.Items.Select(kv => kv.Key).ToArray());
         ItemList.List.FixedIconSize = new Vector2I(fontSize, fontSize);
 

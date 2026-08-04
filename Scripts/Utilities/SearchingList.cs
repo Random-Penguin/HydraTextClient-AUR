@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -11,6 +12,7 @@ public partial class SearchingList : Control
     [Export] public ItemList List;
     [Export] public LineEdit SearchBar;
     [Export] private CheckBox Box;
+    public ConcurrentQueue<(int, Texture2D)> ImageQueue = [];
     private FuzzySearch Search = new();
     private List<string> Items = [];
     public Func<string[], string, bool> VisibilitySetter = (searchRes, item) => searchRes.Contains(item);
@@ -29,10 +31,20 @@ public partial class SearchingList : Control
         };
     }
 
+    public override void _Process(double delta)
+    {
+        while (!ImageQueue.IsEmpty)
+        {
+            ImageQueue.TryDequeue(out var t);
+            List.SetItemIcon(t.Item1, t.Item2);
+        }
+    }
+
     public void SetItems(params string[] items)
     {
         Items.Clear();
         List.Clear();
+        ImageQueue.Clear();
         Items = items.Distinct().Order().ToList();
         for (var i = 0; i < Items.Count; i++)
         {
@@ -42,10 +54,11 @@ public partial class SearchingList : Control
             EmitSignalOnItemCreated(List, i, item);
         }
     }
-    
+
     protected void SetItemsSearch(string[] searchRes)
     {
         List.Clear();
+        ImageQueue.Clear();
         for (int i = 0, j = 0; i < Items.Count; i++)
         {
             var item = Items[i];
@@ -70,10 +83,10 @@ public partial class SearchingList : Control
     {
         var results = text.Trim() is "" ? Items.ToArray()
             : Search.SearchAll(text, Items.ToArray()).Select(res => res.Target).ToArray();
-        
+
         SetItemsSearch(results);
     }
-    
+
     public void SetupBox(Action<CheckBox> action) => action(Box);
     public void RefreshList() => UpdateSearch(SearchBar.Text);
 }

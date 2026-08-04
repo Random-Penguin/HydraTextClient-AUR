@@ -51,6 +51,8 @@ public partial class DeathLinkMessage : MessageScene
             ["groups"] = Groups = $"{string.Join(", ", dl.Groups.Select(g => $"DeathLink{g}").ToArray())}",
         };
 
+        if (LastCause?.Replace(dl.Player, "").Trim() is "") LastCause = null;
+        
         if (LastCause is not null)
         {
             LastCause = LastCause.Contains(dl.Player) ? LastCause.Replace(dl.Player, "{{player}}")

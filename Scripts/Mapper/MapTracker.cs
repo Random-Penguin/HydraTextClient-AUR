@@ -4,7 +4,6 @@ using System.IO;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Clients.CircleTracker;
-using HydraTextClient.Scripts.Settings;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.UIHelpers;
 
@@ -17,8 +16,9 @@ public partial class MapTracker : HSplitContainer
     [Export] private PackedScene MapScene;
     private Dictionary<string, string> MapPaths = [];
     private Dictionary<string, string> ClientGames = [];
-    private ConcurrentDictionary<string, ApClient> Clients = []; // easy access
     private Dictionary<string, ButtonAnimation> Buttons = [];
+    private ConcurrentDictionary<string, MapLoader> Loaders = [];
+    private ConcurrentDictionary<string, ApClient> Clients = []; // easy access
 
     public override void _Ready()
     {
@@ -46,11 +46,7 @@ public partial class MapTracker : HSplitContainer
         Clients.Remove(name, out _);
         ClientGames.Remove(name);
         if (Buttons.Remove(name, out var button)) ButtonContainer.CallDeferred("remove_child", button);
-        // if (Pages.Remove(name, out var page))
-        // {
-        // 	page.Stop();
-        // 	PageContainer.CallDeferred("remove_child", page);
-        // }
+        CallDeferred("UnloadMap", name);
     }
 
     public bool LoadMap(string game, string tabName, string trackerName, ApClient client)
@@ -58,9 +54,19 @@ public partial class MapTracker : HSplitContainer
         var map = MapScene.Instantiate<MapLoader>();
         map.Client = client;
         map.Name = tabName;
-        map.CallDeferred("Setup", MapPaths[game], trackerName);
+        map.CallDeferred("Setup", MapPaths[game], trackerName, this);
         MapContainer.CallDeferred("add_child", map);
+        Loaders[trackerName] = map;
         return true;
+    }
+
+    public void UnloadMap(string trackerName)
+    {
+        if (!Loaders.ContainsKey(trackerName)) return;
+        Loaders.Remove(trackerName, out var loader);
+        MapContainer.RemoveChild(loader);
+        loader!.QueueFree();
+        if (Buttons.TryGetValue(trackerName, out var button)) button.Disabled = false;
     }
 
     public void Reload()

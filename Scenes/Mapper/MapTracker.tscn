@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_dgvn7"]
 [ext_resource type="Script" uid="uid://c2vh78otyyus1" path="res://Scripts/Mapper/MapTracker.cs" id="2_so8ey"]
 [ext_resource type="PackedScene" uid="uid://0xx1eerb6jki" path="res://Scenes/Mapper/GameMap.tscn" id="3_yrvkc"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="4_dgvn7"]
 
 [node name="Map Tracker" type="HSplitContainer" unique_id=1830903005 node_paths=PackedStringArray("MapContainer", "ButtonContainer")]
 offset_right = 1152.0
@@ -29,10 +30,6 @@ text = "Import Pack"
 layout_mode = 2
 text = "Pack Editor"
 
-[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer" unique_id=125284823]
-layout_mode = 2
-text = "Reload Packs"
-
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=993470166]
 custom_minimum_size = Vector2(0.03, 0.035)
 layout_mode = 2
@@ -53,4 +50,9 @@ size_flags_horizontal = 3
 [node name="TabContainer" type="TabContainer" parent="." unique_id=1926773751]
 layout_mode = 2
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/Button3" to="." method="Reload"]
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("4_dgvn7")]
+layout_mode = 2
+Prefix = "map_tracker"
+Controls = {
+"main split": NodePath("..")
+}

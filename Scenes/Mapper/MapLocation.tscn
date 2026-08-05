@@ -12,3 +12,9 @@ BaseCheckImage = ExtResource("2_2k46v")
 [node name="Highlighter" parent="." unique_id=902065195 node_paths=PackedStringArray("HigherPower") instance=ExtResource("3_2k46v")]
 layout_mode = 1
 HigherPower = NodePath("..")
+Selectable = true
+
+[connection signal="OnEntered" from="Highlighter" to="." method="EmitOnEntered"]
+[connection signal="OnExited" from="Highlighter" to="." method="EmitOnExited"]
+[connection signal="OnSelected" from="Highlighter" to="." method="EmitSelected"]
+[connection signal="OnUnSelected" from="Highlighter" to="." method="EmitUnSelected"]

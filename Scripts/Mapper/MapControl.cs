@@ -8,7 +8,7 @@ public partial class MapControl : Control
     [Export] public float ZoomSpeed = .1f;
     [Export] public ScrollContainer ScrollContainer;
     [Export] public TextureRect MapImage;
-    
+
     public float Zoom
     {
         get => _Zoom;
@@ -31,10 +31,9 @@ public partial class MapControl : Control
     public override void _Process(double delta)
     {
         if (!ToResetZoom) return;
-        
+
         var rawZoom = ScrollContainer.Size / MapImage.Texture.GetSize();
-        var farthest = Math.Min(rawZoom.X, rawZoom.Y);
-        Zoom = (float)Math.Round(farthest, 1);
+        Zoom = Math.Min(rawZoom.X, rawZoom.Y) - .01f;
         ToResetZoom = false;
     }
 

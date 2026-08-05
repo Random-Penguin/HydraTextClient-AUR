@@ -28,10 +28,15 @@ public partial class TrackerPage : Control
     [Export] private PopoutWindow PopoutWindow;
     [Export] private EmptyRichLabelInteractor Label;
     [Export] private ProgressionItemTable NextProgressionLabel;
+    
     public ConcurrentDictionary<long, int> NextProgression = [];
     public ConcurrentDictionary<int, ulong[]> Circles = [];
     public ConcurrentDictionary<int, string> CircleItems = [];
+    public ulong[] LocationsInLogic = [];
+    public string[] LocationNamesInLogic = [];
+    public event Action? OnLogicUpdated;
     public ApClient Client;
+    
     private int ProcessId;
     private Dictionary<string, Action<RichTextLabel, string[]>>? CompileEffects;
     private IPrintableObj[] CompiledMessage;
@@ -43,7 +48,6 @@ public partial class TrackerPage : Control
     private Action<string, bool> OnBoolSaveDataUpdated;
     private Action<string, FilterType> OnFilterDataUpdated;
     private HydraBridgeEntry Entry;
-    public ulong[] LocationsInLogic = [];  
 
     [Signal] public delegate void OnStopCalledEventHandler();
 
@@ -95,6 +99,7 @@ public partial class TrackerPage : Control
             CompiledMessage = RenderCirclePage().CompileRichText(GetCompileEffects(), true);
             NextProgressionLabel.QueueUiRefresh(true);
             CircleTracker.Singleton.SendTrackerNotify();
+            OnLogicUpdated?.Invoke();
         }
 
         Label.ApplyCompiledPrintableObjs(CompiledMessage);
@@ -114,6 +119,7 @@ public partial class TrackerPage : Control
                                  .ToArray();
         var firstEnd = SaveType<bool>.Load(ShowFutureCircles, false);
         LocationsInLogic = Circles.Values.SelectMany(arr => arr).ToArray();
+        LocationNamesInLogic = LocationsInLogic.Select(loc => Client.Locations[(long)loc]).ToArray(); 
 
         foreach (var circle in Circles.Keys.Order())
         {

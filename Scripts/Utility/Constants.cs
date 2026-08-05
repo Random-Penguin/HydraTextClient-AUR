@@ -65,8 +65,8 @@ public static class ColorIdConstants
         [UsefulItemBackgroundColor] = "Background Item (Useful)", [TrapItemBackgroundColor] = "Background Item (Trap)",
         [NormalItemBackgroundColor] = "Background Item (Normal)", [NotFoundColor] = "Hint 'Not Found'",
         [FoundColor] = "Hint 'Found'", [Unknown] = "???", [Avoid] = "Hint 'Avoid'", [Priority] = "Hint 'Priority'",
-        [Unspecified] = "Hint 'Unspecified'", [NoPriority] = "Hint 'No Priority'", [InLogic] = "Hint In Logic",
-        [NotInLogic] = "Hint Not in Logic", [EntranceColor] = "Entrance", [InLogicHinted] = "In Logic (Hinted)",
+        [Unspecified] = "Hint 'Unspecified'", [NoPriority] = "Hint 'No Priority'", [InLogic] = "In Logic Color",
+        [NotInLogic] = "Not in Logic Color", [EntranceColor] = "Entrance", [InLogicHinted] = "In Logic (Hinted)",
         [NotInLogicHinted] = "Not in Logic (Hinted)",
     };
 

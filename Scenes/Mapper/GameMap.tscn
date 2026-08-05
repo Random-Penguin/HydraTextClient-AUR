@@ -4,7 +4,19 @@
 [ext_resource type="PackedScene" uid="uid://cffrkj53il485" path="res://Scenes/Mapper/MapLocation.tscn" id="2_ajsmo"]
 [ext_resource type="PackedScene" uid="uid://164rwbaa41fg" path="res://Scenes/Mapper/MapContainer.tscn" id="3_ajsmo"]
 
-[node name="Game" type="MarginContainer" unique_id=235484884]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ajsmo"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.7764706)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Game" type="MarginContainer" unique_id=235484884 node_paths=PackedStringArray("Container", "List")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,10 +25,92 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 script = ExtResource("1_ajsmo")
+Container = NodePath("VBoxContainer/Control/MapContainer")
+List = NodePath("VBoxContainer/Control/ItemList")
 MapLocation = ExtResource("2_ajsmo")
 MapContainer = ExtResource("3_ajsmo")
 metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=520425136]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=120085920]
+layout_mode = 2
+
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=322102203]
+layout_mode = 2
+text = "Reset Zoom"
+
+[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=223116638]
+layout_mode = 2
+text = "Unselect Node"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=574984010]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=75209065]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=882059614]
+layout_mode = 2
+text = "Stop and Close"
+
+[node name="Control" type="Control" parent="VBoxContainer" unique_id=1571274619]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MapContainer" type="VBoxContainer" parent="VBoxContainer/Control" unique_id=89605152]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemList" type="ItemList" parent="VBoxContainer/Control" unique_id=1913025308]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -75.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ajsmo")
+auto_width = true
+item_count = 24
+item_0/text = "wegweg"
+item_1/text = "wegweg"
+item_2/text = "wegweg"
+item_3/text = "wegwe"
+item_4/text = "wegwg"
+item_5/text = "wegwe"
+item_6/text = "wegwe"
+item_6/disabled = true
+item_7/text = "weg"
+item_8/text = "g"
+item_9/text = "g"
+item_10/text = "g"
+item_11/text = "g"
+item_12/text = "g"
+item_13/text = "g"
+item_14/text = "g"
+item_15/text = "g"
+item_16/text = "g"
+item_17/text = "g"
+item_18/text = "g"
+item_19/text = "g"
+item_20/text = "g"
+item_21/text = "g"
+item_22/text = "g"
+item_23/text = "g"
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button2" to="." method="ResetZoom"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="StopAndClose"]

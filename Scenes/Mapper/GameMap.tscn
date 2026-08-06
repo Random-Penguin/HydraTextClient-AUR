@@ -89,7 +89,7 @@ layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_ajsmo")
 allow_search = false
-fixed_icon_size = Vector2i(20, 20)
+fixed_icon_size = Vector2i(16, 16)
 
 [connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/Button2" to="." method="ResetZoom"]
 [connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/Button3" to="." method="ResetSelectedNodes"]

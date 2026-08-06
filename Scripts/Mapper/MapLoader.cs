@@ -95,11 +95,12 @@ public partial class MapLoader : Control
                 var nodeSize = new Vector2(Math.Abs(loc.W), Math.Abs(loc.H));
                 node.SetImage(mapId, nodeId, path, loc.Icon, nodeSize, this);
 
-                if (loc.Icon is not "")
+                if (loc.Icon is not "" && ItemImageLoader.TryGet(loc.Icon, out var img))
                 {
-                    node.Texture = ItemImageLoader[loc.Icon];
+                    node.Texture = img;
                     node.HasCustomImage = true;
                 }
+                else if (loc.Icon is not "") GD.PrintErr($"Location Icon not found for: [{loc.Icon}]");
 
                 node.OnEntered += () =>
                 {

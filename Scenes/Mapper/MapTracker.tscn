@@ -49,6 +49,7 @@ size_flags_horizontal = 3
 
 [node name="TabContainer" type="TabContainer" parent="." unique_id=1926773751]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("4_dgvn7")]
 layout_mode = 2

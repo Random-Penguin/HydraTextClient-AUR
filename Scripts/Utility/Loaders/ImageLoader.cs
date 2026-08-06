@@ -6,7 +6,7 @@ using HydraTextClient.Scripts.Controllers;
 
 namespace HydraTextClient.Scripts.Utility.Loaders;
 
-public abstract class ImageLoader
+public abstract class ImageLoader : IDisposable
 {
     public abstract string ImageFolder { get; }
     public virtual bool LoadSubDirectories => true;
@@ -58,4 +58,16 @@ public abstract class ImageLoader
 
     public virtual bool PreprocessStep(string path) // return true to skipp file
         => Path.GetExtension(path) switch { ".jpg" or ".png" => false, _ => true, };
+
+    public ImageTexture this[string name] => GetImage(name);
+    
+    public void Dispose()
+    {
+        foreach (var (_, img) in Images)
+        {
+            img?.Free();
+            img?.Dispose();
+        }
+        Images.Clear();
+    }
 }

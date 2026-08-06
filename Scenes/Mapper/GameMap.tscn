@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://70co544byxq8" path="res://Scripts/Mapper/MapLoader.cs" id="1_ajsmo"]
 [ext_resource type="PackedScene" uid="uid://cffrkj53il485" path="res://Scenes/Mapper/MapLocation.tscn" id="2_ajsmo"]
 [ext_resource type="PackedScene" uid="uid://164rwbaa41fg" path="res://Scenes/Mapper/MapContainer.tscn" id="3_ajsmo"]
+[ext_resource type="PackedScene" uid="uid://bqisbomfxfu6r" path="res://Scenes/Utility/Popout.tscn" id="4_5tv33"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ajsmo"]
 content_margin_left = 4.0
@@ -28,89 +29,68 @@ theme_override_constants/margin_left = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 script = ExtResource("1_ajsmo")
-Container = NodePath("VBoxContainer/Control/MapContainer")
-List = NodePath("VBoxContainer/Control/ItemList")
+Container = NodePath("HSplitContainer/VBoxContainer/Popout/MapContainer")
+List = NodePath("HSplitContainer/ItemList")
 MapLocation = ExtResource("2_ajsmo")
 MapContainer = ExtResource("3_ajsmo")
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=520425136]
+[node name="HSplitContainer" type="HSplitContainer" parent="." unique_id=208381665]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=120085920]
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer" unique_id=520425136]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/VBoxContainer" unique_id=120085920]
 layout_mode = 2
 
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=322102203]
+[node name="Button2" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer" unique_id=322102203]
 layout_mode = 2
 text = "Reset Zoom"
 
-[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=223116638]
+[node name="Button3" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer" unique_id=223116638]
 layout_mode = 2
-text = "Unselect Node"
+text = "Reset Selected Node"
 
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=574984010]
+[node name="VSeparator" type="VSeparator" parent="HSplitContainer/VBoxContainer/HBoxContainer" unique_id=574984010]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer" unique_id=75209065]
+[node name="VSeparator2" type="VSeparator" parent="HSplitContainer/VBoxContainer/HBoxContainer" unique_id=75209065]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=882059614]
+[node name="Button" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer" unique_id=882059614]
 layout_mode = 2
 text = "Stop and Close"
 
-[node name="Control" type="Control" parent="VBoxContainer" unique_id=1571274619]
+[node name="Popout" parent="HSplitContainer/VBoxContainer" unique_id=763240208 node_paths=PackedStringArray("Child") instance=ExtResource("4_5tv33")]
 layout_mode = 2
-size_flags_vertical = 3
+Title = "MapTracker"
+Child = NodePath("MapContainer")
+RestoreSize = false
 
-[node name="MapContainer" type="VBoxContainer" parent="VBoxContainer/Control" unique_id=89605152]
+[node name="MapContainer" type="VBoxContainer" parent="HSplitContainer/VBoxContainer/Popout" unique_id=89605152]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 3
 
-[node name="ItemList" type="ItemList" parent="VBoxContainer/Control" unique_id=1913025308]
-layout_mode = 1
-anchors_preset = 11
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -75.0
-grow_horizontal = 0
-grow_vertical = 2
+[node name="ItemList" type="ItemList" parent="HSplitContainer" unique_id=1913025308]
+visible = false
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_ajsmo")
-auto_width = true
-item_count = 24
-item_0/text = "wegweg"
-item_1/text = "wegweg"
-item_2/text = "wegweg"
-item_3/text = "wegwe"
-item_4/text = "wegwg"
-item_5/text = "wegwe"
-item_6/text = "wegwe"
-item_6/disabled = true
-item_7/text = "weg"
-item_8/text = "g"
-item_9/text = "g"
-item_10/text = "g"
-item_11/text = "g"
-item_12/text = "g"
-item_13/text = "g"
-item_14/text = "g"
-item_15/text = "g"
-item_16/text = "g"
-item_17/text = "g"
-item_18/text = "g"
-item_19/text = "g"
-item_20/text = "g"
-item_21/text = "g"
-item_22/text = "g"
-item_23/text = "g"
+allow_search = false
+fixed_icon_size = Vector2i(20, 20)
 
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button2" to="." method="ResetZoom"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="StopAndClose"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/Button2" to="." method="ResetZoom"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/Button3" to="." method="ResetSelectedNodes"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer/HBoxContainer/Button" to="." method="StopAndClose"]

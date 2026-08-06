@@ -13,11 +13,12 @@ public partial class MapLocation : TextureRect
 
     [Export] public Texture2D BaseCheckImage;
     public Vector2? SetSize;
-    public List<LocationCheck> Locations;
+    public List<string> Locations;
     public bool QueueUpdate;
     public MapLoader Loader;
     public int MapId;
     public int NodeId;
+    public bool HasCustomImage;
 
     [Signal] public delegate void OnSelectedEventHandler();
 
@@ -26,6 +27,7 @@ public partial class MapLocation : TextureRect
     [Signal] public delegate void OnEnteredEventHandler();
 
     [Signal] public delegate void OnExitedEventHandler();
+    [Signal] public delegate void OnUnSelectHighlighterEventHandler();
 
     public void SetImage(int mapId, int nodeId, string path, string image, Vector2 size, MapLoader loader)
     {
@@ -67,15 +69,15 @@ public partial class MapLocation : TextureRect
         var color = 4;
         foreach (var loc in Locations.ToArray())
         {
-            if (!Loader.Client.MissingLocations.Contains(loc.Location))
+            if (!Loader.Client.MissingLocations.Contains(loc))
             {
                 Locations.Remove(loc);
                 continue;
             }
 
             var locColor = 3;
-            if (Loader.Page.LocationNamesInLogic.Contains(loc.Location)) locColor = 1;
-            if (applicableHints.Contains(loc.Location)) locColor -= 1;
+            if (Loader.Page.LocationNamesInLogic.Contains(loc)) locColor = 1;
+            if (applicableHints.Contains(loc)) locColor -= 1;
             color = Math.Min(color, locColor);
         }
 
@@ -89,6 +91,7 @@ public partial class MapLocation : TextureRect
         }
     }
 
+    public void EmitUnSelect() => EmitSignalOnUnSelectHighlighter();
     public void EmitSelected() => EmitSignalOnSelected();
     public void EmitUnSelected() => EmitSignalOnUnSelected();
     public void EmitOnEntered() => EmitSignalOnEntered();

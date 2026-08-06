@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using HydraTextClient.Scripts.Clients.CircleTracker;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Mapper;
@@ -15,6 +18,7 @@ public partial class MapLoader : Control
     [Export] public ItemList List;
     [Export] public PackedScene MapLocation;
     [Export] public PackedScene MapContainer;
+    public MapItemImageLoader ItemImageLoader;
     public List<Maps> MapsList = [];
     public TabStructure Structure;
     public Dictionary<string, TabContainer> MapTabs = [];
@@ -24,11 +28,15 @@ public partial class MapLoader : Control
     public TrackerPage Page;
     public MapTracker Parent;
     private string TrackerName;
+    private HashSet<int> SelectedLocation = [];
+    private HashSet<int> HoveredLocation = [];
+    private bool UpdateItemList;
+    private EmptyRichLabelInteractor LocationPopupList;
 
     public void Setup(string path, string trackerName, MapTracker parent)
     {
         Client.HintsTrackedEvent += UpdateNodes;
-        
+
         TrackerName = trackerName;
         Parent = parent;
         MapsList = JsonConvert.DeserializeObject<List<Maps>>(File.ReadAllText($"{path}/atlas.json"));
@@ -38,7 +46,8 @@ public partial class MapLoader : Control
             parent.UnloadMap(trackerName);
             return;
         }
-        
+        ItemImageLoader = new(path);
+
         Page.OnLogicUpdated += UpdateNodes;
 
         Queue<TabStructure> structures = [];
@@ -79,11 +88,39 @@ public partial class MapLoader : Control
             foreach (var loc in map.Nodes)
             {
                 nodeId++;
+                var id = nodeId;
                 var node = MapLocation.Instantiate<MapLocation>();
                 node.Locations = loc.Locations;
                 node.Name = loc.Name;
                 var nodeSize = new Vector2(Math.Abs(loc.W), Math.Abs(loc.H));
                 node.SetImage(mapId, nodeId, path, loc.Icon, nodeSize, this);
+
+                if (loc.Icon is not "")
+                {
+                    node.Texture = ItemImageLoader[loc.Icon];
+                    node.HasCustomImage = true;
+                }
+
+                node.OnEntered += () =>
+                {
+                    HoveredLocation.Add(id);
+                    UpdateItemList = true;
+                };
+                node.OnExited += () =>
+                {
+                    HoveredLocation.Remove(id);
+                    UpdateItemList = true;
+                };
+                node.OnSelected += () =>
+                {
+                    SelectedLocation.Add(id);
+                    UpdateItemList = true;
+                };
+                node.OnUnSelected += () =>
+                {
+                    SelectedLocation.Remove(id);
+                    UpdateItemList = true;
+                };
 
                 mapContainer.Container.MapImage.AddChild(node);
                 MapLocationMap[nodeId] = node;
@@ -99,7 +136,46 @@ public partial class MapLoader : Control
         }
     }
 
-    public void UpdateNodes(Hint[] hints) => UpdateNodes(); 
+    public override void _Process(double delta)
+    {
+        if (!UpdateItemList) return;
+        List.Visible = false;
+        UpdateItemList = false;
+
+        if (SelectedLocation.Count != 0)
+        {
+            SetItemList(SelectedLocation.First());
+            return;
+        }
+
+        if (HoveredLocation.Count == 0) return;
+        SetItemList(HoveredLocation.First());
+    }
+
+    public void SetItemList(int locationId)
+    {
+        List.Visible = true;
+        List.Clear();
+
+        var node = MapLocationMap[locationId];
+        foreach (var loc in node.Locations)
+        {
+            if (!Client.MissingLocations.Contains(loc)) return;
+            var i = List.AddItem(loc);
+            if (!node.HasCustomImage) continue;
+            List.SetItemIcon(i, node.Texture);
+        }
+    }
+
+    public void ResetSelectedNodes()
+    {
+        foreach (var id in SelectedLocation) MapLocationMap[id].EmitUnSelect();
+        SelectedLocation.Clear();
+        UpdateItemList = true;
+    }
+
+    public void UpdateNodes(Hint[] hints) => UpdateNodes();
+
     public void UpdateNodes()
     {
         foreach (var node in MapLocationMap.Values) node.QueueUpdate = true;
@@ -154,23 +230,13 @@ public struct Maps(string mapName, string imageName, string tab = "", params Lis
 }
 
 public struct MapNode(string name, float x, float y, float w = 16, float h = 16, string icon = "",
-    params List<LocationCheck> locationChecks)
+    params List<string> locationChecks)
 {
     public string Icon = icon;
     public string Name = name;
-    public List<LocationCheck> Locations = locationChecks;
+    public List<string> Locations = locationChecks;
     public float X = x;
     public float Y = y;
     public float W = w;
     public float H = h;
-}
-
-public struct LocationCheck(string loc, string icon = "") : IEquatable<LocationCheck>
-{
-    public string Icon = icon;
-    public string Location = loc;
-
-    public bool Equals(LocationCheck other) => Icon == other.Icon && Location == other.Location;
-    public override bool Equals(object obj) => obj is LocationCheck other && Equals(other);
-    public override int GetHashCode() => HashCode.Combine(Icon, Location);
 }

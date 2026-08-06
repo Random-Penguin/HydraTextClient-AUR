@@ -22,7 +22,7 @@ public static class ColorIdConstants
         [Unspecified] = Colors.NavajoWhite, [NoPriority] = Colors.CornflowerBlue, [EntranceColor] = Colors.Cyan,
         [UiBackground] = new Color("#2a2a2a"), [PopupBackground] = new Color("#2a2a2a"),
         [TooltipColor] = Colors.Transparent, [InLogic] = Colors.ForestGreen, [NotInLogic] = Colors.DarkRed,
-        [InLogicHinted] = Colors.DodgerBlue, [NotInLogicHinted] = Colors.DarkViolet,
+        [InLogicHinted] = Colors.DodgerBlue, [NotInLogicHinted] = Colors.DarkViolet, [LocationsChecked] = Colors.DimGray,
     };
 
     public static Dictionary<ColorConstant, string> ConstantToId = new()
@@ -46,7 +46,7 @@ public static class ColorIdConstants
         [NoPriority] = "Theme/Ap/Colors/HintNoPriority", [EntranceColor] = "Theme/Ap/Colors/EntranceColor",
         [NotInLogic] = "Theme/Ap/Colors/OutofLogicColor", [InLogic] = "Theme/Ap/Colors/InLogicColor",
         [InLogicHinted] = "Theme/Ap/Colors/InLogicHintedColor",
-        [NotInLogicHinted] = "Theme/Ap/Colors/NotInLogicHintedColor",
+        [NotInLogicHinted] = "Theme/Ap/Colors/NotInLogicHintedColor", [LocationsChecked] = "Theme/Ap/Colors/LocationsChecked",
     };
 
     public static Dictionary<string, ColorConstant> IdToConstant = ConstantToId.ToDictionary(
@@ -67,7 +67,7 @@ public static class ColorIdConstants
         [FoundColor] = "Hint 'Found'", [Unknown] = "???", [Avoid] = "Hint 'Avoid'", [Priority] = "Hint 'Priority'",
         [Unspecified] = "Hint 'Unspecified'", [NoPriority] = "Hint 'No Priority'", [InLogic] = "In Logic Color",
         [NotInLogic] = "Not in Logic Color", [EntranceColor] = "Entrance", [InLogicHinted] = "In Logic (Hinted)",
-        [NotInLogicHinted] = "Not in Logic (Hinted)",
+        [NotInLogicHinted] = "Not in Logic (Hinted)", [LocationsChecked] = "Location Checked (Map)",
     };
 
     public static void CreateSettings()
@@ -95,6 +95,6 @@ public static class ColorIdConstants
         LocationColor, EntranceColor, NotFoundColor,
         FoundColor, Priority, Unspecified,
         NoPriority, Avoid, InLogic,
-        NotInLogic, InLogicHinted, NotInLogicHinted, 
+        NotInLogic, InLogicHinted, NotInLogicHinted, LocationsChecked
     }
 }

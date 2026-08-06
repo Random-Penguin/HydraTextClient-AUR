@@ -27,6 +27,7 @@ public partial class MapLocation : TextureRect
     [Signal] public delegate void OnEnteredEventHandler();
 
     [Signal] public delegate void OnExitedEventHandler();
+
     [Signal] public delegate void OnUnSelectHighlighterEventHandler();
 
     public void SetImage(int mapId, int nodeId, string path, string image, Vector2 size, MapLoader loader)
@@ -55,7 +56,7 @@ public partial class MapLocation : TextureRect
         SetSize = null;
     }
 
-    // 0: in logic (hinted) <- 1: in logic <- 2: not logic (hinted) <- 3: not in logic <- 4: nothing, queue delete
+    // 0: in logic (hinted) <- 1: in logic <- 2: not logic (hinted) <- 3: not in logic <- 4: nothing, location checked
     private void LocationUpdate()
     {
         QueueUpdate = false;
@@ -69,26 +70,23 @@ public partial class MapLocation : TextureRect
         var color = 4;
         foreach (var loc in Locations.ToArray())
         {
-            if (!Loader.Client.MissingLocations.Contains(loc))
-            {
-                Locations.Remove(loc);
-                continue;
-            }
-
+            if (!Loader.Client.MissingLocations.Contains(loc)) continue;
             var locColor = 3;
             if (Loader.Page.LocationNamesInLogic.Contains(loc)) locColor = 1;
             if (applicableHints.Contains(loc)) locColor -= 1;
             color = Math.Min(color, locColor);
+            if (color is 0) break;
+            if (applicableHints.Length == 0 && color is 1) break;
         }
 
-        switch (color)
+        SelfModulate = color switch
         {
-            case 0: SelfModulate = ColorIdConstants.ColorConstant.InLogicHinted.Color(); break;
-            case 1: SelfModulate = ColorIdConstants.ColorConstant.InLogic.Color(); break;
-            case 2: SelfModulate = ColorIdConstants.ColorConstant.NotInLogicHinted.Color(); break;
-            case 3: SelfModulate = ColorIdConstants.ColorConstant.NotInLogic.Color(); break;
-            case 4: Loader.RemoveNode(MapId, NodeId); break;
-        }
+            0 => ColorIdConstants.ColorConstant.InLogicHinted.Color(),
+            1 => ColorIdConstants.ColorConstant.InLogic.Color(),
+            2 => ColorIdConstants.ColorConstant.NotInLogicHinted.Color(),
+            3 => ColorIdConstants.ColorConstant.NotInLogic.Color(),
+            4 => ColorIdConstants.ColorConstant.LocationsChecked.Color(), _ => SelfModulate,
+        };
     }
 
     public void EmitUnSelect() => EmitSignalOnUnSelectHighlighter();

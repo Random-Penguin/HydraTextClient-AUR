@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago.ApClient;
@@ -46,19 +47,16 @@ public partial class MapLoader : Control
         LocationGroups = JsonConvert.DeserializeObject<List<LocationGroup>>(
             File.ReadAllText($"{path}/locationgroups.json")
         );
+
         if (!CircleTracker.Singleton.Pages.TryGetValue(trackerName, out Page))
         {
             parent.UnloadMap(trackerName);
             return;
         }
-        ItemImageLoader = new(path);
 
+        ItemImageLoader = new MapItemImageLoader(path);
         Page.OnLogicUpdated += UpdateNodes;
-
-        foreach (var group in LocationGroups)
-        {
-            foreach (var loc in group.Locations) LocationGroupingMap[loc] = group;
-        }
+        foreach (var group in LocationGroups) LocationGroupingMap[group.GroupName] = group;
 
         Queue<TabStructure> structures = [];
         structures.Enqueue(Structure);
@@ -125,18 +123,22 @@ public partial class MapLoader : Control
         var node = MapLocation.Instantiate<MapLocation>();
         node.Locations = loc.Locations;
         node.Name = loc.Name;
+        node.LocationGroup = loc.LocationGroup;
         var nodeSize = new Vector2(Math.Abs(loc.W), Math.Abs(loc.H));
 
-
-        if (ItemImageLoader.TryGet(loc.Icon, out var img))
+        if (LocationGroupingMap.TryGetValue(loc.LocationGroup, out var group))
         {
-            node.SetImage(mapId, nodeId, path, loc.Icon, nodeSize, this);
-            node.HasCustomImage = true;
-        }
-        else
-        {
-            node.SetImage(mapId, nodeId, path, "", nodeSize, this);
-            GD.PrintErr($"Location Icon not found for: [{loc.Icon}]");
+            if (ItemImageLoader.TryGet(group.MappedIcon, out var img))
+            {
+                node.Texture = img;
+                node.SetImage(mapId, nodeId, path, group.MappedIcon, nodeSize, this);
+                node.HasCustomImage = true;
+            }
+            else
+            {
+                node.SetImage(mapId, nodeId, path, "", nodeSize, this);
+                GD.PrintErr($"Location Icon not found for: [{group.MappedIcon}]");
+            }
         }
 
         node.OnEntered += () =>
@@ -176,12 +178,18 @@ public partial class MapLoader : Control
         List.Clear();
 
         var node = MapLocationMap[locationId];
+        LocationGroup? group = node.LocationGroup is ""
+                               || !LocationGroupingMap.TryGetValue(node.LocationGroup, out var tGroup) ? null : tGroup;
         foreach (var loc in node.Locations)
         {
             var i = List.AddItem(loc);
-            if (!LocationGroupingMap.TryGetValue(loc, out var group)) continue;
-            var icon = Client.MissingLocations.Contains(loc) ? group.AvailableIcon : group.CollectedIcon;
-            if (icon is "" || !ItemImageLoader.TryGet(icon, out var img)) return;
+            if (group is null) continue;
+            var icon = Client.MissingLocations.Contains(loc) ? group!.Value.AvailableIcon : group!.Value.CollectedIcon;
+            if (icon is "" || !ItemImageLoader.TryGet(icon, out var img))
+            {
+                if (icon is not "") GD.PrintErr($"Missing icon for [{icon}]");
+                return;
+            }
             List.SetItemIcon(i, img);
         }
     }

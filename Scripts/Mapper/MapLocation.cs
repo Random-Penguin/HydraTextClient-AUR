@@ -19,6 +19,7 @@ public partial class MapLocation : TextureRect
     public int MapId;
     public int NodeId;
     public bool HasCustomImage;
+    public string LocationGroup;
 
     [Signal] public delegate void OnSelectedEventHandler();
 
@@ -37,15 +38,9 @@ public partial class MapLocation : TextureRect
         Loader = loader;
         SetSize = size;
         QueueUpdate = true;
-        if (image is "")
-        {
-            Texture = BaseCheckImage;
-            QueueRedraw();
-            return;
-        }
-
-        // var imagePath = $"{path}/{image}";
-        // if (TextureCache.ContainsKey())
+        if (image is not "") return;
+        Texture = BaseCheckImage;
+        QueueRedraw();
     }
 
     public override void _Process(double delta)

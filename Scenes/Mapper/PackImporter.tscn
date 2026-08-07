@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://c8kp7fmxpn1tr"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_ful1g"]
+[ext_resource type="Script" uid="uid://lfo6qrsuql3a" path="res://Scripts/Mapper/PoptrackerImporter.cs" id="2_ful1g"]
+[ext_resource type="PackedScene" uid="uid://ddi3pfkycocro" path="res://Scenes/UISaver.tscn" id="3_pwhwc"]
+
+[node name="Window" type="Window" unique_id=1649438620]
+oversampling_override = 1.0
+title = "Import Poptracker Pack"
+size = Vector2i(600, 210)
+theme = ExtResource("1_ful1g")
+script = ExtResource("2_ful1g")
+
+[node name="Panel" type="Panel" parent="." unique_id=1989329588]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1212581701]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer" unique_id=483669024]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer" unique_id=1346056092]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=406372560]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1837448063]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Pack Manifest.json"
+
+[node name="Button" type="Button" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=440841125]
+layout_mode = 2
+text = "Browse"
+
+[node name="UISaver" parent="." unique_id=1084530359 node_paths=PackedStringArray("Controls") instance=ExtResource("3_pwhwc")]
+Prefix = "window_nodes"
+Controls = {
+"poptracker_importer": NodePath("..")
+}

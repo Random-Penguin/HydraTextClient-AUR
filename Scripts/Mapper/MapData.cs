@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace HydraTextClient.Scripts.Mapper;
 
@@ -33,11 +35,13 @@ public struct MapNode(string name, float x, float y, float w = 16, float h = 16,
     public float H = h;
 }
 
-public struct LocationGroup(string name, string mapIcon, string openIcon = "", string closeIcon = "", params List<string> locations)
+public struct LocationGroup(string name, string mapIcon, string openIcon = "", string closeIcon = "",
+    params List<string> locations)
 {
     public string GroupName = name;
     public string MappedIcon = mapIcon;
     public string AvailableIcon = openIcon;
+
     public string CollectedIcon = closeIcon;
     // todo: add slot data conditions here
 }
@@ -125,9 +129,11 @@ public class PoptrackerMap
 
     [JsonProperty("location_shape")] public string _LocationShape;
 }
-
 public class PoptrackerLayout // needed to find the stupid tabs and subtabs ;-;
 {
+    [JsonProperty("tracker_default")] public PoptrackerLayout DefaultLayout;
+    [JsonProperty("tracker_horizontal")] public PoptrackerLayout HorizontalLayout;
+    [JsonProperty("tracker_vertical")] public PoptrackerLayout VerticalLayout;
     [JsonProperty("type")] public string Type = ""; // look for tabbed
     [JsonProperty("background")] public string BackgroundColor;
     [JsonProperty("h_alignment")] public string HorizontalAlignment;
@@ -144,11 +150,41 @@ public class PoptrackerLayout // needed to find the stupid tabs and subtabs ;-;
     [JsonProperty("dropshadow")] public bool DropShadow;
     [JsonProperty("text")] public string Text;
     [JsonProperty("header_content")] public dynamic HeaderContent;
-    [JsonProperty("content")] public PoptrackerLayout[] Content = [];
+
+    [JsonProperty("content"), JsonConverter(typeof(SingleOrArray<PoptrackerLayout>))]
+    public PoptrackerLayout[] Content = [];
+    
+    [JsonProperty("tabs"), JsonConverter(typeof(SingleOrArray<PoptrackerLayout>))]
+    public PoptrackerLayout[] Tabs = [];
+
     [JsonProperty("key")] public string KeyReference;
     [JsonProperty("compact")] public bool Compact;
-    [JsonProperty("maps")] public string[] Maps = [];
+
+    [JsonProperty("maps"), JsonConverter(typeof(SingleOrArray<string>))]
+    public string[] Maps = [];
+
     [JsonProperty("title")] public string Title = "";
+}
+
+public class SingleOrArray<T> : JsonConverter
+{
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        => throw new NotImplementedException();
+
+    public override bool CanWrite => false;
+
+    public override bool CanConvert(Type objectType)
+        => objectType == typeof(List<T>) || objectType == typeof(T[])
+                                         || objectType == typeof(T); // dunno what this last one does
+
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        var token = JToken.Load(reader);
+        return token.Type switch
+        {
+            JTokenType.Array => token.ToObject<T[]>(), JTokenType.Null => null, _ => [token.ToObject<T>()],
+        };
+    }
 }
 
 #endregion

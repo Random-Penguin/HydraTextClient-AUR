@@ -14,6 +14,7 @@ public partial class MapTracker : HSplitContainer
     [Export] private Control MapContainer;
     [Export] private Control ButtonContainer;
     [Export] private PackedScene MapScene;
+    [Export] private PackedScene PackImporterPopup;
     private Dictionary<string, string> MapPaths = [];
     private Dictionary<string, string> ClientGames = [];
     private Dictionary<string, ButtonAnimation> Buttons = [];
@@ -77,5 +78,13 @@ public partial class MapTracker : HSplitContainer
             var gameName = Path.GetFileName(game);
             MapPaths[gameName.ToLower().Replace(":", "")] = game;
         }
+    }
+
+    public void CallPopupImporter() => CallDeferred("PopupImporter");
+    private void PopupImporter()
+    {
+        var popup = PackImporterPopup.Instantiate<PoptrackerImporter>();
+        AddChild(popup);
+        popup.Show();
     }
 }

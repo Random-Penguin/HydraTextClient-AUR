@@ -6,6 +6,7 @@ using Godot;
 using HydraTextClient.Scripts.Controllers;
 using HydraTextClient.Scripts.Utility.Loaders;
 using HydraTextClient.Scripts.Utility.Popups;
+using HydraTextClient.Scripts.Utility.UIHelpers;
 using Newtonsoft.Json;
 
 namespace HydraTextClient.Scripts.Mapper;
@@ -14,12 +15,17 @@ public partial class PoptrackerImporter : WindowSetter
 {
     [Export] public OptionButton LayoutOptions;
     [Export] public VBoxContainer LocationImports;
+    [Export] public ButtonAnimation ConfirmButton;
+    [Export] public ButtonAnimation MapButton;
+    [Export] public FileDialog MapSelect;
 
     private string PackPath;
     private PoptrackerManifest Manifest;
     private PoptrackerMap[] MapsFile;
     private Dictionary<string, string> MapToFileConversion = [];
     private Dictionary<string, string> MapIdNameToMapName = [];
+    private Dictionary<string, int> DefaultMapLocationSize = [];
+    private Dictionary<string, int> DefaultMapLocationThickness = [];
     private Dictionary<int, TabStructure> LayoutCandidates = [];
     private Dictionary<int, Dictionary<string, Maps>> LayoutCandidateMaps = [];
     private Dictionary<int, string> LayoutNames = [];
@@ -28,13 +34,14 @@ public partial class PoptrackerImporter : WindowSetter
     private string[] LocationJsons = [];
 
     public void CallReadPack(string manifest) => CallDeferred("ReadPack", manifest);
+    public void CallReadMap(string map) => CallDeferred("ContinueToReadPack", map);
 
     private void ReadPack(string manifestFile)
     {
+        ConfirmButton.Disabled = true;
         PackPath = Path.GetDirectoryName(manifestFile);
         Manifest = JsonConvert.DeserializeObject<PoptrackerManifest>(File.ReadAllText(manifestFile));
-        LocationJsons = Directory.GetFiles($"{PackPath}/locations", "*.json", SearchOption.AllDirectories);
-
+        MapSelect.CurrentDir = PackPath;
         OptionItemMap.Clear();
         LayoutOptions.Clear();
         MapIdNameToMapName.Clear();
@@ -45,18 +52,39 @@ public partial class PoptrackerImporter : WindowSetter
         }
         LayoutSelections.Clear();
 
-        if (Directory.GetDirectories(Directories.MapPacks).Select(s => s.ToLower())
-                     .Contains(Manifest.GameName.Replace(":", "").ToLower()))
+        if (!Directory.GetDirectories(Directories.MapPacks).Select(s => s.ToLower())
+                      .Contains(Manifest.GameName.Replace(":", "").ToLower().Trim()))
         {
-            MainController.ShowError($"Pack for [{Manifest.GameName}] already exists");
-            CallDeferred("Close");
+            MapButton.Disabled = false;
             return;
         }
+        MainController.ShowError($"Pack for [{Manifest.GameName}] already exists");
+        CallDeferred("Close");
+    }
 
-        MapsFile = JsonConvert.DeserializeObject<PoptrackerMap[]>(File.ReadAllText($"{PackPath}/maps/maps.json"));
+    private void ContinueToReadPack(string selectedMap)
+    {
+        if (!Path.GetFullPath(selectedMap).StartsWith(Path.GetFullPath(PackPath))) return;
+        LocationJsons = Directory.GetFiles($"{PackPath}/locations", "*.json", SearchOption.AllDirectories);
+
+        MapsFile = JsonConvert.DeserializeObject<PoptrackerMap[]>(File.ReadAllText(selectedMap));
+        foreach (var map in MapsFile)
+        {
+            var imgPath = map.Image.Replace(@"\\", "/").Split('/');
+            if (!imgPath.Contains("maps") || imgPath.Length == 0)
+            {
+                GD.PrintErr($"map path [{map.Image}] is not a valid map path");
+                return;
+            }
+
+            if (imgPath[0] is not "maps") imgPath = imgPath[imgPath.IndexOf("maps")..];
+
+            MapToFileConversion[map.Name] = imgPath[^1];
+            DefaultMapLocationSize[map.Name] = map.LocationSize == 0 ? 20 : map.LocationSize;
+            DefaultMapLocationThickness[map.Name] = map.LocationBorderSize == 0 ? 1 : map.LocationBorderSize;
+        }
 
         var optionItem = 0;
-        foreach (var map in MapsFile) MapToFileConversion[map.Name] = Path.GetFileName(map.Image);
         foreach (var layoutPath in Directory.GetFiles($"{PackPath}/layouts"))
         {
             if (!layoutPath.ToLower().EndsWith(".json")) continue;
@@ -90,6 +118,13 @@ public partial class PoptrackerImporter : WindowSetter
             }
         }
 
+        if (LayoutCandidates.Count == 0)
+        {
+            GD.PrintErr("No valid map layouts found");
+            MapButton.Disabled = true;
+            return;
+        }
+
         foreach (var json in LocationJsons)
         {
             CheckBox box = new();
@@ -99,13 +134,13 @@ public partial class PoptrackerImporter : WindowSetter
             LocationImports.AddChild(box);
             LayoutSelections[json] = box;
         }
+
+        ConfirmButton.Disabled = false;
     }
 
     public void FinishConversionAndClose()
     {
-        GD.Print(JsonConvert.SerializeObject(MapIdNameToMapName));
-
-        var path = $"{Directories.MapPacks}/{Manifest.GameName}";
+        var path = $"{Directories.MapPacks}/{Manifest.GameName.Replace(":", "").Trim()}";
         var chosenLayout = OptionItemMap[LayoutOptions.Selected];
         Directory.CreateDirectory(path);
         Directory.CreateDirectory($"{path}/images");
@@ -115,8 +150,20 @@ public partial class PoptrackerImporter : WindowSetter
 
         foreach (var map in MapsFile)
         {
-            if (File.Exists($"{path}/{map.Image}")) continue;
-            File.Copy($"{PackPath}/{map.Image}", $"{path}/{map.Image}");
+            var imgPath = map.Image.Replace(@"\\", "/").Split('/');
+            if (!imgPath.Contains("maps") || imgPath.Length == 0)
+            {
+                GD.PrintErr($"map path [{map.Image}] is not a valid map path");
+                return;
+            }
+
+            if (imgPath[0] is not "maps") imgPath = imgPath[imgPath.IndexOf("maps")..];
+
+            var dir = string.Join('/', imgPath[..^1]);
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+            if (File.Exists($"{path}/{dir}/{imgPath[^1]}")) continue;
+            File.Copy($"{PackPath}/{map.Image}", $"{path}/{dir}/{imgPath[^1]}");
         }
 
         foreach (var (id, checkBox) in LayoutSelections)
@@ -148,10 +195,10 @@ public partial class PoptrackerImporter : WindowSetter
                 {
                     foreach (var mapLoc in loc.MapLocations)
                     {
-                        var size = mapLoc.Size;
-                        if (size is 0) size = 12;
-                        var x = mapLoc.X - size/2;
-                        var y = mapLoc.Y - size/2;
+                        var size = mapLoc.Size + DefaultMapLocationThickness[mapLoc.MapName] * 2;
+                        if (mapLoc.Size is 0) size += DefaultMapLocationSize[mapLoc.MapName];
+                        var x = mapLoc.X - size / 2;
+                        var y = mapLoc.Y - size / 2;
 
                         var mapName = MapIdNameToMapName[mapLoc.MapName];
                         if (!mapNodes.TryGetValue(mapName, out var possibleNodes))
@@ -163,17 +210,24 @@ public partial class PoptrackerImporter : WindowSetter
 
                             if (!maps.ContainsKey(mapName))
                             {
-                                GD.PrintErr($"Map [{mapName}] (pos: [{mapLoc.X},{mapLoc.Y}]) does not exist in the layout for [{id}] at [{loc.Name}]");
+                                GD.PrintErr(
+                                    $"Map [{mapName}] (pos: [{mapLoc.X},{mapLoc.Y}]) does not exist in the layout for [{id}] at [{loc.Name}]"
+                                );
                                 continue;
                             }
                             maps[mapName].Nodes.Add(node);
                         }
 
-                        node.Locations.Add(loc.Name);
+                        if (loc.Sections is null)
+                        {
+                            node.Locations.Add(loc.Name);
+                            continue;
+                        }
+                        foreach (var section in loc.Sections) node.Locations.Add(section.Name);
                     }
                 }
 
-                if (loc.Locations is null) continue;
+                if (loc.Locations is null) { continue; }
                 foreach (var newLoc in loc.Locations) locationsToCheck.Enqueue(newLoc);
             }
         }
@@ -211,6 +265,7 @@ public partial class PoptrackerImporter : WindowSetter
         Dictionary<string, TabStructure> tabs = new() { [""] = new TabStructure("") };
         Queue<(PoptrackerLayout layout, string parent)> convertQueue = [];
 
+        if (parentLayout.Maps.Any()) convertQueue.Enqueue((parentLayout, ""));
         if (parentLayout.Content is not null)
             foreach (var child in parentLayout.Content)
                 convertQueue.Enqueue((child, ""));
@@ -229,10 +284,17 @@ public partial class PoptrackerImporter : WindowSetter
                     tabs[layout.Title] = new TabStructure(layout.Title);
                     parentTab.SubTabs.Add(tabs[layout.Title]);
                     foreach (var content in layout.Content) convertQueue.Enqueue((content, layout.Title));
+                    foreach (var content in layout.Tabs) convertQueue.Enqueue((content, layout.Title));
                     break;
 
-                case "" or null:
-                    if (layout.Content.Length < 1) continue;
+                case "map":
+                    if (!MapToFileConversion.TryGetValue(layout.Maps[0], out var mapImage)) continue;
+                    mapData[layout.Title] = new Maps(layout.Title, mapImage, parent);
+                    MapIdNameToMapName[layout.Maps[0]] = layout.Title;
+                    break;
+                
+                default:
+                    if (layout.Content is null || layout.Content.Length < 1) continue;
                     var map = layout.Content[0];
                     if (map.Type is not "map" || map.Maps.Length < 1) continue;
                     if (!MapToFileConversion.TryGetValue(map.Maps[0], out var mapImg)) continue;

@@ -23,7 +23,7 @@ public struct Maps(string mapName, string imageName, string tab = "", params Lis
     public List<MapNode> Nodes = nodes;
 }
 
-public struct MapNode(string name, float x, float y, float w = 16, float h = 16, string group = "",
+public struct MapNode(string name, float x, float y, float w, float h, string group = "",
     params List<string> locationChecks)
 {
     public string LocationGroup = group;
@@ -90,7 +90,7 @@ public class PoptrackerLocation
 
     [JsonProperty("map_locations"), JsonConverter(typeof(SingleOrArray<PoptrackerMapLocation>))]
     public PoptrackerMapLocation[] MapLocations;
-    // [JsonProperty("sections")] public PoptrackerSection[] Sections;
+    [JsonProperty("sections")] public PoptrackerSection[] Sections;
 }
 
 public struct PoptrackerMapLocation

@@ -106,7 +106,7 @@ public partial class MapLoader : Control
         var container = MapTabs.GetValueOrDefault(map.Tab, MapTabs[""]);
 
         var mapContainer = MapNavMap[mapId] = MapContainer.Instantiate<MapNavigator>();
-        mapContainer.Name = map.MapName;
+        mapContainer.Name = map.MapName is "" ? "Default Map" : map.MapName;
         var image = ImageTexture.CreateFromImage(Image.LoadFromFile($"{path}/maps/{MapsList[mapId].ImageName}"));
         mapContainer.SetImage(image);
         var imageSize = image.GetSize();

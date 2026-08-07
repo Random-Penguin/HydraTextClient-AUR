@@ -45,6 +45,7 @@ public partial class MapLocation : TextureRect
 
     public override void _Process(double delta)
     {
+        if (Loader is null) return;
         if (QueueUpdate) LocationUpdate();
         if (SetSize is null) return;
         Size = SetSize!.Value;

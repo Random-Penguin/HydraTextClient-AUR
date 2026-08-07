@@ -84,9 +84,13 @@ public class PoptrackerLocation
     [JsonProperty("overlay_background")] public string OverlayBackground; // #(AA)RRGGBB
     [JsonProperty("color")] public string Color;
     [JsonProperty("parent")] public string Parent;
-    [JsonProperty("children")] public PoptrackerLocation[] Locations;
-    [JsonProperty("map_locations")] public PoptrackerMapLocation[] MapLocations;
-    [JsonProperty("sections")] public PoptrackerSection[] Sections;
+
+    [JsonProperty("children"), JsonConverter(typeof(SingleOrArray<PoptrackerLocation>))]
+    public PoptrackerLocation[] Locations;
+
+    [JsonProperty("map_locations"), JsonConverter(typeof(SingleOrArray<PoptrackerMapLocation>))]
+    public PoptrackerMapLocation[] MapLocations;
+    // [JsonProperty("sections")] public PoptrackerSection[] Sections;
 }
 
 public struct PoptrackerMapLocation
@@ -129,6 +133,7 @@ public class PoptrackerMap
 
     [JsonProperty("location_shape")] public string _LocationShape;
 }
+
 public class PoptrackerLayout // needed to find the stupid tabs and subtabs ;-;
 {
     [JsonProperty("tracker_default")] public PoptrackerLayout DefaultLayout;
@@ -153,7 +158,7 @@ public class PoptrackerLayout // needed to find the stupid tabs and subtabs ;-;
 
     [JsonProperty("content"), JsonConverter(typeof(SingleOrArray<PoptrackerLayout>))]
     public PoptrackerLayout[] Content = [];
-    
+
     [JsonProperty("tabs"), JsonConverter(typeof(SingleOrArray<PoptrackerLayout>))]
     public PoptrackerLayout[] Tabs = [];
 

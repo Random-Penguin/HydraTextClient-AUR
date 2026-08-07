@@ -60,6 +60,7 @@ text = "Select Which Layout to use"
 
 [node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=1513037669]
 layout_mode = 2
+fit_to_longest_item = false
 
 [node name="Label2" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1264176547]
 layout_mode = 2
@@ -102,5 +103,6 @@ filters = PackedStringArray("manifest.json")
 use_native_dialog = true
 
 [connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button" to="FileDialog" method="popup_file_dialog"]
+[connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Button" to="." method="FinishConversionAndClose"]
 [connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Button2" to="." method="Close"]
 [connection signal="file_selected" from="FileDialog" to="." method="CallReadPack"]

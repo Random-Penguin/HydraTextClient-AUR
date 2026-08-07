@@ -84,6 +84,7 @@ public partial class MapTracker : HSplitContainer
     private void PopupImporter()
     {
         var popup = PackImporterPopup.Instantiate<PoptrackerImporter>();
+        popup.CloseCalled += Reload;
         AddChild(popup);
         popup.Show();
     }

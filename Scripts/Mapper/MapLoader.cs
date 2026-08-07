@@ -107,7 +107,7 @@ public partial class MapLoader : Control
 
         var mapContainer = MapNavMap[mapId] = MapContainer.Instantiate<MapNavigator>();
         mapContainer.Name = map.MapName;
-        var image = ImageTexture.CreateFromImage(Image.LoadFromFile($"{path}/maps/{MapsList[0].ImageName}"));
+        var image = ImageTexture.CreateFromImage(Image.LoadFromFile($"{path}/maps/{MapsList[mapId].ImageName}"));
         mapContainer.SetImage(image);
         var imageSize = image.GetSize();
 
@@ -139,7 +139,7 @@ public partial class MapLoader : Control
                 node.SetImage(mapId, nodeId, path, "", nodeSize, this);
                 GD.PrintErr($"Location Icon not found for: [{group.MappedIcon}]");
             }
-        }
+        } else node.SetImage(mapId, nodeId, path, "", nodeSize, this);
 
         node.OnEntered += () =>
         {
@@ -182,6 +182,7 @@ public partial class MapLoader : Control
                                || !LocationGroupingMap.TryGetValue(node.LocationGroup, out var tGroup) ? null : tGroup;
         foreach (var loc in node.Locations)
         {
+            // if (Client.Locations.All(kv => kv.Key != loc)) continue;
             var i = List.AddItem(loc);
             if (group is null) continue;
             var icon = Client.MissingLocations.Contains(loc) ? group!.Value.AvailableIcon : group!.Value.CollectedIcon;

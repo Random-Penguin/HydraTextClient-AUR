@@ -54,8 +54,8 @@ public partial class AutoUpdater : WindowSetter
         Container.AddChild(scroll);
     }
 
-    public bool CanRunUpdater()
-    {
+    public bool CanRunUpdater() { GD.Print("Auto-updates are disabled for the AUR release."; return false; }
+/*    {
         var selfFile = System.Environment.ProcessPath;
         if (Path.GetFileNameWithoutExtension(selfFile)!.ToLower() is "godot") return false;
 
@@ -104,7 +104,7 @@ public partial class AutoUpdater : WindowSetter
         MaxVersion = VersionInfos.Values.Aggregate((i1, i2) => i1 > i2 ? i1 : i2);
         if (CurrentVersion == MaxVersion) GD.Print("No new updates");
         return CurrentVersion != MaxVersion;
-    }
+    }*/
 
     public void Update(ButtonAnimation sender)
     {

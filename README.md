@@ -9,7 +9,7 @@
   - make sure that in hydra `Settings -> Main Settings` that your archipelago directory is set 
   - Hydra *should* auto download/update the HydraUTBridge.apworld when needed
 
-### Support me and hydra's development on [Patreon](https://www.patreon.com/SW_CreeperKing)
+### Support SW_CreeperKing and hydra's development on [Patreon](https://www.patreon.com/SW_CreeperKing)
 
 ## Features
 
